@@ -10,16 +10,14 @@
 //https://10.17.2.72/api/2.0/int?min=1&max=100&quantity=10"
 
 
-struct memory_t {
-    char *memory;
-    size_t size;
-};
+
+static const char *API_INTEGERS_IN_RANGE="https://%s/api/2.0/int?min=%lu&max=%lu&quantity=%lu";
+
+static char ip_address[16] = {0};
 
 static CURL *p_curl_handle = NULL;
 
 
-static int init_curl(const char *url);
-static int close_curl(void);
 static int curl_progress_cbk(void *clientp,
                       curl_off_t dltotal,
                       curl_off_t dlnow,
@@ -34,50 +32,13 @@ static size_t curl_write_cbk(void *content,
 
 static void (*curl_progress_callback)(size_t now, size_t total) = NULL;
 
-int qrng_open(const char *url){
-    init_curl(url); 
-    return 0;
-}
-
-
-void qrng_close(void)
-{
-    close_curl()
-}
-
-
-int qrng_random_stream(FILE *stream, void (*progress_cbk)(size_t now, size_t total))
-
-{
-    FILE *f;
-    (void)curl_easy_setopt(p_curl_handle, CURLOPT_XFERINFODATA, f);
+int qrng_open(const char *device_ip_address){
     
-    curl_progress_callback = progress_cbk;
-}
-
-int qrng_random_u32(int min, int max, size_t samples)
-{
-    struct memory_t mem_buffer;
-    
-    memset(&mem_buffer, 0, sizeof(struct memory_t));
-    
-    mem_buffer.memory = malloc(sizeof(char));
-
-    if (!mem_buffer.memory) {
-	//error
-    }
-
-    (void)curl_easy_setopt(p_curl_handle, CURLOPT_WRITEFUNCTION, &curl_write_cbk);
-    (void)curl_easy_setopt(p_curl_handle, CURLOPT_WRITEDATA, (void *)&mem_buffer);
-}
-
-
-int init_curl(const char *url)
-{
     int retval = 0;
 
-    CURLcode error = CURLE_OK;    
-    
+    strncpy(ip_address, device_ip_address, 16);
+     
+
     if(curl_global_init(CURL_GLOBAL_ALL)!=0) {
 	fprintf(stderr, "Error in curl_global_init");
 	retval = -1;
@@ -89,7 +50,6 @@ int init_curl(const char *url)
 	    fprintf(stderr, "Error in curl_easy_init");
 	    retval = -2;
 	} else {
-	    (void)curl_easy_setopt(p_curl_handle, CURLOPT_URL, url);
 
 #ifdef DEBUG
 	    (void)curl_easy_setopt(p_curl_handle, CURLOPT_VERBOSE, 1L);
@@ -98,22 +58,72 @@ int init_curl(const char *url)
 
 	    (void)curl_easy_setopt(p_curl_handle, CURLOPT_SSL_VERIFYPEER, 0L);
 
-	    (void)curl_easy_setopt(p_curl_handle, CURLOPT_XFERINFOFUNCTION, &curl_progress_cbk);
 	    	    
 	    (void)curl_easy_setopt(p_curl_handle, CURLOPT_FAILONERROR, 1L);
 	}
     }
 
     return retval;
-}	
+ 
+}
 
-void close_curl()
+
+void qrng_close(void)
 {
     if (p_curl_handle) {
 	curl_easy_cleanup(p_curl_handle);
     }
     curl_global_cleanup();
 }
+
+
+int qrng_random_stream(FILE *stream, void (*progress_cbk)(size_t now, size_t total))
+
+{
+    FILE *f;
+    (void)curl_easy_setopt(p_curl_handle, CURLOPT_XFERINFODATA, f);
+
+    if (progress_cbk) {
+	(void)curl_easy_setopt(p_curl_handle, CURLOPT_XFERINFOFUNCTION, &curl_progress_cbk);
+    }
+    
+    curl_progress_callback = progress_cbk;
+}
+
+int qrng_random_u32(uint32_t min, uint32_t max, size_t samples, memory_t *buffer)
+{
+    int retval = 0;
+
+    CURLcode error = CURLE_OK;    
+
+    char final_url[256]={0};
+
+    
+    
+
+    if (ip_address[0] != '\0') {
+	snprintf(final_url, 256, API_INTEGERS_IN_RANGE, ip_address, min, max, samples);
+
+        (void)curl_easy_setopt(p_curl_handle, CURLOPT_URL, final_url);
+	(void)curl_easy_setopt(p_curl_handle, CURLOPT_WRITEFUNCTION, &curl_write_cbk);
+        (void)curl_easy_setopt(p_curl_handle, CURLOPT_WRITEDATA, (void *)buffer);
+
+	error = curl_easy_perform(p_curl_handle);
+
+
+	if(error != CURLE_OK) {
+	    fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(error));
+	    retval = -1;
+	    goto exit_curl_perform;
+	}
+
+    } else {
+	retval = -2;
+    }
+    return retval;
+}
+
+
 
 int curl_progress_cbk(void *clientp,
                       curl_off_t dltotal,
