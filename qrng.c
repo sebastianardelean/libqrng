@@ -7,11 +7,10 @@
 #include <curl/curl.h>
 #include "qrng.h"
 
-//https://10.17.2.72/api/2.0/int?min=1&max=100&quantity=10"
-
-
 
 static const char *API_INTEGERS_IN_RANGE="https://%s/api/2.0/int?min=%lu&max=%lu&quantity=%lu";
+static const char *API_DOUBLE_IN_RANGE="https://%s/api/2.0/double?min=%lu&max=%lu&quantity=%lu";
+
 static const char *API_STREAM_BINARY = "https://%s/api/2.0/streambytes?size=%lu";
 
 static char ip_address[16] = {0};
@@ -34,7 +33,7 @@ static size_t curl_write_cbk(void *content,
 static void (*curl_progress_callback)(size_t now, size_t total) = NULL;
 
 int qrng_open(const char *device_ip_address){
-    
+
     int retval = 0;
 
     strncpy(ip_address, device_ip_address, 16);
@@ -144,6 +143,37 @@ int qrng_random_u32(uint32_t min, uint32_t max, size_t samples, memory_t *buffer
 }
 
 
+int qrng_rangom_double(uint32_t min, uint32_t max, size_t samples, memory_t *buffer) 
+{
+    int retval = 0;
+
+    CURLcode error = CURLE_OK;    
+
+    char final_url[256]={0};
+
+    
+    
+
+    if (ip_address[0] != '\0') {
+	snprintf(final_url, 256, API_DOUBLE_IN_RANGE, ip_address, min, max, samples);
+
+        (void)curl_easy_setopt(p_curl_handle, CURLOPT_URL, final_url);
+	(void)curl_easy_setopt(p_curl_handle, CURLOPT_WRITEFUNCTION, &curl_write_cbk);
+        (void)curl_easy_setopt(p_curl_handle, CURLOPT_WRITEDATA, (void *)buffer);
+
+	error = curl_easy_perform(p_curl_handle);
+
+
+	if(error != CURLE_OK) {
+	    fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(error));
+	    retval = -1;
+	}
+
+    } else {
+	retval = -2;
+    }
+    return retval;
+}
 
 int curl_progress_cbk(void *clientp,
                       curl_off_t dltotal,
