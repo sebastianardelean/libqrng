@@ -9,7 +9,7 @@
 #include <linux/random.h>
 
 #include "qrng.h"
-#if 0
+
 struct pool_t {
     size_t entropy_count;
     size_t buf_size;
@@ -120,8 +120,8 @@ int main(int argc, char **argv)
     qrng_close();
     return 0;
 }
-#endif
 
+#if 0
 int main(void)
 {
     char ip_address[]="10.17.2.72";
@@ -136,3 +136,25 @@ int main(void)
     qrng_close();
     return 0;
 }
+int main(void)
+{
+    char ip_address[]="10.17.2.72";
+
+    qrng_open(ip_address);
+
+    memory_t buffer;
+
+
+    memset(&buffer, 0, sizeof(memory_t));
+
+    buffer.memory = malloc(sizeof(char));
+
+    (void)qrng_random_double(0,1,15,&buffer);
+
+    free(buffer.memory);
+    qrng_close();
+    return 0;
+}
+
+#endif
+
