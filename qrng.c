@@ -139,7 +139,7 @@ int curl_progress_cbk(void *clientp,
 size_t curl_write_cbk(void *content, size_t size, size_t nmemb, void *userp)
 {
     size_t real_size = size * nmemb;
-    struct memory_t *mem = (struct memory_t *)userp;
+    memory_t *mem = (memory_t *)userp;
     char *ptr = realloc(mem->memory, mem->size + real_size + 1);
     if (!ptr) {
 	fprintf(stderr, "Not enough memory (realloc returned NULL)\n");

@@ -1,6 +1,8 @@
 #ifndef QRNG_H
 #define QRNG_H
 
+
+
 typedef struct {
     char *memory;
     size_t size;
