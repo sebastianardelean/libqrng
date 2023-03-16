@@ -12,6 +12,7 @@
 
 
 static const char *API_INTEGERS_IN_RANGE="https://%s/api/2.0/int?min=%lu&max=%lu&quantity=%lu";
+static const char *API_STREAM_BINARY = "https://%s/api/2.0/streambytes?size=%lu";
 
 static char ip_address[16] = {0};
 
@@ -78,16 +79,36 @@ void qrng_close(void)
 
 
 int qrng_random_stream(FILE *stream, void (*progress_cbk)(size_t now, size_t total))
-
 {
-    FILE *f;
+    int retval = 0;
+    char final_url[256] = {0};
+    CURLcode error = CURLE_OK
+
     (void)curl_easy_setopt(p_curl_handle, CURLOPT_XFERINFODATA, f);
 
     if (progress_cbk) {
 	(void)curl_easy_setopt(p_curl_handle, CURLOPT_XFERINFOFUNCTION, &curl_progress_cbk);
+	curl_progress_callback = progress_cbk;
     }
-    
-    curl_progress_callback = progress_cbk;
+
+    if (ip_address[0] != '\0') {
+	snprintf(final_url, 256, API_STREAM_BINARY, ip_address, size);
+        (void)curl_easy_setopt(p_curl_handle, CURLOPT_URL, final_url);
+
+	error = curl_easy_perform(p_curl_handle);
+
+
+	if(error != CURLE_OK) {
+	    fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(error));
+	    retval = -1;
+	}
+	
+
+    } else {
+	retval = -2;
+    }
+
+    return retval;
 }
 
 int qrng_random_u32(uint32_t min, uint32_t max, size_t samples, memory_t *buffer)
@@ -114,7 +135,6 @@ int qrng_random_u32(uint32_t min, uint32_t max, size_t samples, memory_t *buffer
 	if(error != CURLE_OK) {
 	    fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(error));
 	    retval = -1;
-	    goto exit_curl_perform;
 	}
 
     } else {
