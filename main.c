@@ -9,7 +9,7 @@
 #include <linux/random.h>
 
 #include "qrng.h"
-
+#if 0
 struct pool_t {
     size_t entropy_count;
     size_t buf_size;
@@ -114,11 +114,25 @@ int main(int argc, char **argv)
 	return -1;
     }
 
-	
-
     free(buffer.memory);
     free(entropy_pool.buf);
     close(fd);
+    qrng_close();
+    return 0;
+}
+#endif
+
+int main(void)
+{
+    char ip_address[]="10.17.2.72";
+
+    qrng_open(ip_address);
+
+    /*Get stream*/
+    FILE *stream = fopen("test.bin", "wb");
+    (void)qrng_random_stream(stream, 256, NULL);
+    fclose(stream);
+
     qrng_close();
     return 0;
 }

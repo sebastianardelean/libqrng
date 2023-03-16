@@ -83,10 +83,12 @@ int qrng_random_stream(FILE *stream, size_t size, void (*progress_cbk)(size_t no
     char final_url[256] = {0};
     CURLcode error = CURLE_OK;
 
-    (void)curl_easy_setopt(p_curl_handle, CURLOPT_XFERINFODATA, stream);
+
+    (void)curl_easy_setopt(p_curl_handle, CURLOPT_WRITEDATA, (void *)stream);
 
     if (progress_cbk) {
 	(void)curl_easy_setopt(p_curl_handle, CURLOPT_XFERINFOFUNCTION, &curl_progress_cbk);
+	(void)curl_easy_setopt(p_curl_handle, CURLOPT_XFERINFODATA, stream);
 	progress_callback = progress_cbk;
     }
 
