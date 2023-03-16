@@ -1,15 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
 #include <curl/curl.h>
+#include "qrng.h"
 
-#include <fcntl.h>
-#include <errno.h>
-#include <sys/ioctl.h>
-#include <linux/random.h>
-
+//https://10.17.2.72/api/2.0/int?min=1&max=100&quantity=10"
 
 
 struct memory_t {
@@ -17,14 +15,118 @@ struct memory_t {
     size_t size;
 };
 
-struct pool_t {
-    size_t entropy_count;
-    size_t buf_size;
-    uint32_t *buf;
-};
+static CURL *p_curl_handle = NULL;
 
-static size_t 
-write_memory_callback(void *content, size_t size, size_t nmemb, void *userp)
+
+static int init_curl(const char *url);
+static int close_curl(void);
+static int curl_progress_cbk(void *clientp,
+                      curl_off_t dltotal,
+                      curl_off_t dlnow,
+                      curl_off_t ultotal,
+                      curl_off_t ulnow);
+
+static size_t curl_write_cbk(void *content, 
+		      size_t size, 
+		      size_t nmemb, 
+		      void *userp);
+
+
+static void (*curl_progress_callback)(size_t now, size_t total) = NULL;
+
+int qrng_open(const char *url){
+    init_curl(url); 
+    return 0;
+}
+
+
+void qrng_close(void)
+{
+    close_curl()
+}
+
+
+int qrng_random_stream(FILE *stream, void (*progress_cbk)(size_t now, size_t total))
+
+{
+    FILE *f;
+    (void)curl_easy_setopt(p_curl_handle, CURLOPT_XFERINFODATA, f);
+    
+    curl_progress_callback = progress_cbk;
+}
+
+int qrng_random_u32(int min, int max, size_t samples)
+{
+    struct memory_t mem_buffer;
+    
+    memset(&mem_buffer, 0, sizeof(struct memory_t));
+    
+    mem_buffer.memory = malloc(sizeof(char));
+
+    if (!mem_buffer.memory) {
+	//error
+    }
+
+    (void)curl_easy_setopt(p_curl_handle, CURLOPT_WRITEFUNCTION, &curl_write_cbk);
+    (void)curl_easy_setopt(p_curl_handle, CURLOPT_WRITEDATA, (void *)&mem_buffer);
+}
+
+
+int init_curl(const char *url)
+{
+    int retval = 0;
+
+    CURLcode error = CURLE_OK;    
+    
+    if(curl_global_init(CURL_GLOBAL_ALL)!=0) {
+	fprintf(stderr, "Error in curl_global_init");
+	retval = -1;
+	
+    }
+    else {
+	p_curl_handle = curl_easy_init();
+	if (!p_curl_handle) {
+	    fprintf(stderr, "Error in curl_easy_init");
+	    retval = -2;
+	} else {
+	    (void)curl_easy_setopt(p_curl_handle, CURLOPT_URL, url);
+
+#ifdef DEBUG
+	    (void)curl_easy_setopt(p_curl_handle, CURLOPT_VERBOSE, 1L);
+#endif
+	    (void)curl_easy_setopt(p_curl_handle, CURLOPT_SSL_VERIFYHOST, 0L);
+
+	    (void)curl_easy_setopt(p_curl_handle, CURLOPT_SSL_VERIFYPEER, 0L);
+
+	    (void)curl_easy_setopt(p_curl_handle, CURLOPT_XFERINFOFUNCTION, &curl_progress_cbk);
+	    	    
+	    (void)curl_easy_setopt(p_curl_handle, CURLOPT_FAILONERROR, 1L);
+	}
+    }
+
+    return retval;
+}	
+
+void close_curl()
+{
+    if (p_curl_handle) {
+	curl_easy_cleanup(p_curl_handle);
+    }
+    curl_global_cleanup();
+}
+
+int curl_progress_cbk(void *clientp,
+                      curl_off_t dltotal,
+                      curl_off_t dlnow,
+                      curl_off_t ultotal,
+                      curl_off_t ulnow)
+{
+    if (curl_progress_callback) {
+	curl_progress_callback(dlnow, dltotal);
+    }
+}
+
+size_t curl_write_cbk(void *content, size_t size, size_t nmemb, void *userp)
 {
     size_t real_size = size * nmemb;
     struct memory_t *mem = (struct memory_t *)userp;
@@ -41,131 +143,3 @@ write_memory_callback(void *content, size_t size, size_t nmemb, void *userp)
     return real_size;
 }
 
-int main(int argc, char **argv)
-{
-    CURL *p_curl_handle;
-    CURLcode error;
-    int fd = 0;
-    int retval = 0;
-    struct memory_t mem_buffer;
-    struct pool_t entropy_pool;
-
-    memset(&mem_buffer, 0, sizeof(struct memory_t));
-    memset(&entropy_pool, 0, sizeof(struct pool_t));
-
-    mem_buffer.memory = malloc(1);
-    if (!mem_buffer.memory) {
-	fprintf(stderr, "Error allocating memory");
-	retval = 1;
-	goto exit_prog;
-    }
-
-
-    if(curl_global_init(CURL_GLOBAL_ALL)!=0) {
-	fprintf(stderr, "Error in curl_global_init");
-	retval = 2;
-	goto exit_curl;
-    }
-  
-   
-    p_curl_handle = curl_easy_init();
-    if(p_curl_handle) {
-	(void)curl_easy_setopt(p_curl_handle, CURLOPT_URL, argv[1]);
-	/*Setup verbose*/
-#ifdef DEBUG
-	(void)curl_easy_setopt(p_curl_handle, CURLOPT_VERBOSE, 1L);
-#endif
-	(void)curl_easy_setopt(p_curl_handle, CURLOPT_SSL_VERIFYHOST, 0L);
-
-	(void)curl_easy_setopt(p_curl_handle, CURLOPT_SSL_VERIFYPEER, 0L);
-
-	(void)curl_easy_setopt(p_curl_handle, CURLOPT_WRITEFUNCTION, write_memory_callback);
-
-	(void)curl_easy_setopt(p_curl_handle, CURLOPT_WRITEDATA, (void *)&mem_buffer);
-    
-	/* Perform the request, res will get the return code */
-	error = curl_easy_perform(p_curl_handle);
-	
-	/* Check for errors */
-	if(error != CURLE_OK) {
-	    fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(error));
-	    retval = 3;
-	    goto exit_curl_perform;
-	}
-	else {
-	    /* Do nothing */
-	    fd = open("/dev/random", O_WRONLY);
-	    if (fd == -1) {
-		fprintf(stderr, "FD open: %s", strerror(errno));
-		retval = 4;
-		goto exit_fd_error;
-	    }
-
-    
-	    printf("%lu bytes retrieved\n", (unsigned long)mem_buffer.size);
-	    
-	    char *random_values_array = mem_buffer.memory;
-	    /*Skip first character because is [*/
-	    random_values_array++;
-	    /*Skip last character because is ]*/
-	    random_values_array[strlen(random_values_array)-1] = 0;
-
-	    char *delimiter = ",";
-	    char *token = strtok(random_values_array, delimiter);
-	    size_t i = 0;
-	    entropy_pool.buf_size++;
-	    
-	    entropy_pool.buf = malloc(entropy_pool.buf_size * sizeof(uint32_t));
-	    if (!entropy_pool.buf) {
-		fprintf(stderr, "Could not allocate memory for entropy pool");
-		retval = 5;
-		goto exit_entropy_pool;
-	    }
-	    
-	    do {
-		
-		uint32_t *ptr = realloc(entropy_pool.buf, entropy_pool.buf_size*sizeof(uint32_t));
-		if (!ptr) {
-		    fprintf(stderr, "Could not reallocate memory for entropy pool");
-		    retval = 7;
-		    goto exit_full;
-		}
-		
-		entropy_pool.buf = ptr;
-		entropy_pool.buf[i] = atol(token);
-		printf("%u ",entropy_pool.buf[i]);
-		
-		entropy_pool.buf_size++;
-		i++;
-		
-		
-		token = strtok(NULL, delimiter);
-	    } while (token != NULL); 
-
-	    entropy_pool.buf_size--;
-	    printf("\nRetrieved %lu values\n", entropy_pool.buf_size); 
-	    entropy_pool.entropy_count = entropy_pool.buf_size * sizeof(uint32_t)*8;//number of bits
-	
-
-	    if(ioctl(fd, RNDADDENTROPY, &entropy_pool)<0) {
-		fprintf(stderr, "%s", strerror(errno));
-		retval = 6;
-		goto exit_full;
-	    }
-	    
-	}
-    }
-
-exit_full:
-    free(entropy_pool.buf);
-exit_entropy_pool:
-    close(fd);
-exit_fd_error:
-exit_curl_perform:
-    curl_easy_cleanup(p_curl_handle);
-exit_curl:
-    curl_global_cleanup();
-    free(mem_buffer.memory); 
-exit_prog:
-    return retval;
-}
