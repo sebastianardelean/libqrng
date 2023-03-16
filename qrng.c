@@ -18,19 +18,12 @@ static char ip_address[16] = {0};
 static CURL *p_curl_handle = NULL;
 
 
-static int curl_progress_cbk(void *clientp,
-                      curl_off_t dltotal,
-                      curl_off_t dlnow,
-                      curl_off_t ultotal,
-                      curl_off_t ulnow);
-
 static size_t curl_write_cbk(void *content, 
 		      size_t size, 
 		      size_t nmemb, 
 		      void *userp);
 
 
-static void (*progress_callback)(size_t now, size_t total) = NULL;
 
 int qrng_open(const char *device_ip_address){
 
@@ -77,7 +70,7 @@ void qrng_close(void)
 }
 
 
-int qrng_random_stream(FILE *stream, size_t size, void (*progress_cbk)(size_t now, size_t total))
+int qrng_random_stream(FILE *stream, size_t size, int (*progress_cbk)(void *clientp, int64_t dltotal, int64_t dlnow, int64_t ultotal, int64_t ulnow))
 {
     int retval = 0;
     char final_url[256] = {0};
@@ -87,9 +80,8 @@ int qrng_random_stream(FILE *stream, size_t size, void (*progress_cbk)(size_t no
     (void)curl_easy_setopt(p_curl_handle, CURLOPT_WRITEDATA, (void *)stream);
 
     if (progress_cbk) {
-	(void)curl_easy_setopt(p_curl_handle, CURLOPT_XFERINFOFUNCTION, &curl_progress_cbk);
+	(void)curl_easy_setopt(p_curl_handle, CURLOPT_XFERINFOFUNCTION, progress_cbk);
 	(void)curl_easy_setopt(p_curl_handle, CURLOPT_XFERINFODATA, stream);
-	progress_callback = progress_cbk;
     }
 
     if (ip_address[0] != '\0') {
@@ -177,17 +169,6 @@ int qrng_random_double(uint32_t min, uint32_t max, size_t samples, memory_t *buf
     return retval;
 }
 
-int curl_progress_cbk(void *clientp,
-                      curl_off_t dltotal,
-                      curl_off_t dlnow,
-                      curl_off_t ultotal,
-                      curl_off_t ulnow)
-{
-    if (progress_callback) {
-	progress_callback(dlnow, dltotal);
-    }
-    return 0;
-}
 
 size_t curl_write_cbk(void *content, size_t size, size_t nmemb, void *userp)
 {

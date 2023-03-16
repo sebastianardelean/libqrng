@@ -9,7 +9,7 @@
 #include <linux/random.h>
 
 #include "qrng.h"
-
+#if 1
 struct pool_t {
     size_t entropy_count;
     size_t buf_size;
@@ -120,8 +120,12 @@ int main(int argc, char **argv)
     qrng_close();
     return 0;
 }
-
+#endif
 #if 0
+
+static int callback(void *clientp, int64_t dltotal, int64_t dlnow, int64_t ultotal, int64_t ulnow) {
+    printf("%ld out of %ld\n", dlnow, dltotal);
+}
 int main(void)
 {
     char ip_address[]="10.17.2.72";
@@ -130,12 +134,14 @@ int main(void)
 
     /*Get stream*/
     FILE *stream = fopen("test.bin", "wb");
-    (void)qrng_random_stream(stream, 256, NULL);
+    (void)qrng_random_stream(stream, 4096000, &callback);
     fclose(stream);
 
     qrng_close();
     return 0;
 }
+#endif
+#if 0
 int main(void)
 {
     char ip_address[]="10.17.2.72";
