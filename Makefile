@@ -1,23 +1,38 @@
 CC=gcc
-CFLAGS = -Wall -extra -c -g -O -DDEBUG
-LDFLAGS=-lcurl
+CFLAGS=-Wall -c -g -fPIC -Wno-parentheses -fno-strict-aliasing
+LFLAGS=-shared -Wl,-soname,-lcurl
+SRC=qrng.c
+COMPILE=$(patsubst %.c, %.o, $(SRC))
+OBJ=$(wildcard bin/*.o)
 
-OUTDIR = bin
+SO_OBJ=libqrng
 
-OBJ=qrng
+SO_FILE=$(SO_OBJ).so.1.0
 
 
-all: createdir compile link
 
-compile:
-	$(CC) $(CFLAGS) $(OBJ).c -o $(OUTDIR)/$(OBJ).o
+all: create_dir $(COMPILE) link
 
-link:
-	$(CC) $(OUTDIR)/$(OBJ).o -o $(OUTDIR)/$(OBJ) $(LDFLAGS)
+copy_objects:
+	mv *.o bin/
+
+create_dir:
+	mkdir -p bin
+
+%: %.c
+	$(CC) $(CFLAGS) -o $@ $<
+
+link: copy_objects
+	$(CC) $(LFLAGS) $(OBJ) -o bin/$(SO_FILE)
+
+install:
+	cp bin/$(SO_FILE) /usr/lib
+	ln -sf /usr/lib/$(SO_FILE) /usr/lib/$(SO_OBJ).so.1
+	ln -sf /usr/lib/$(SO_FILE) /usr/lib/$(SO_OBJ).so
+	ln -sf /usr/lib/$(SO_FILE) /usr/lib/$(SO_OBJ).o.1
 
 clean:
-	rm -r -f $(OUTDIR)/
+	rm -rf bin/
 
-createdir:
-	mkdir -p $(OUTDIR)
-
+exec:
+	$(CC) -Wall -g main.c -o main -lcurl -lqrng
