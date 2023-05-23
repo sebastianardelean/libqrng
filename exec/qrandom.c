@@ -116,6 +116,12 @@ int main(int argc, char **argv)
                 exit(EXIT_FAILURE);
         }
     }
+
+    if (random_number_type >= NUMBER_OF_REQUESTS) {
+	print_help();
+	exit(EXIT_FAILURE);
+    }
+
     if (min_value_f > max_value_f) {
 	print_help();
 	exit(EXIT_FAILURE);
