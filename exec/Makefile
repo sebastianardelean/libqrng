@@ -1,11 +1,11 @@
 CC=gcc
 CFLAGS=-Wall -Wextra -Wpedantic -c -g -Wno-parentheses -fno-strict-aliasing -I../lib/
-LFLAGS=-lcurl -lqrng
+LFLAGS=-lqrng -lcurl
 SRC=$(wildcard *.c)
 COMPILE=$(patsubst %.c, %.o, $(SRC))
 OBJ=$(wildcard bin/*.o)
 
-OUT=qrandom
+OUT=qrand
 
 
 all: create_dir $(COMPILE) link
@@ -20,7 +20,7 @@ create_dir:
 	$(CC) $(CFLAGS) -o $@ $<
 
 link: copy_objects
-	$(CC) $(LFLAGS) $(OBJ) -o bin/$(OUT)
+	$(CC) $(OBJ) -o bin/$(OUT) $(LFLAGS)
 
 clean:
 	rm -rf bin/
