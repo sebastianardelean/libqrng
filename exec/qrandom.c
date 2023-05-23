@@ -29,7 +29,6 @@
 #define DEFAULT_MAX_VALUE_F 1.0f
 #define DEFAULT_MIN_VALUE_I 0
 #define DEFAULT_MAX_VALUE_I 1
-#define DEFAULT_RANDOM_VALUE_TYPE 7
 
 #define DOMAIN_ADDR_LENGTH 256u
 
@@ -234,7 +233,7 @@ void print_help(void)
     fprintf(stderr, "-M \t max value double. [Default 1.0]\n");
     fprintf(stderr, "-i \t min value int64. [Default 0]\n");
     fprintf(stderr, "-I \t max value int64. [Default 1]\n");
-    fprintf(stderr, "-t \t type. [Default 7]\n");
+    fprintf(stderr, "-t \t type.\n");
     fprintf(stderr, "-f \t stream.\n");
     fprintf(stderr, "\n================================\n");
     fprintf(stderr, "Possible values for t:\n");
