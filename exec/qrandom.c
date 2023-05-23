@@ -19,21 +19,21 @@
 #define DEFAULT_MAX_VALUE 1.0f
 #define DEFAULT_RANDOM_VALUE_TYPE 1
 
+#define IPV4_IP_LENGTH 16u
+
 
 
 typedef enum {
-  UINT64_RANDOM_NUMBER = 0,
-  UINT32_RANDOM_NUMBER,
-  UINT16_RANDOM_NUMBER,
-  UINT8_RANDOM_NUMBER,
-  INT64_RANDOM_NUMBER,
-  INT32_RANDOM_NUMBER,
-  INT16_RANDOM_NUMBER,
-  INT8_RANDOM_NUMBER,
+  SHORT_RANDOM_NUMBER = 0,
+  INT_RANDOM_NUMBER,
+  DOUBLE_RANDOM_NUMBER,
   FLOAT_RANDOM_NUMBER,
-  DOUBLE_RANDOM_NUMBER
+  STREAM_BINARY,
+  PERFORMANCE_REQUEST,
+  FIRMWARE_INFO_REQUEST,
+  SYSTEM_INFO_REQUEST,
+  NUMBER_OF_REQUESTS
 }e_rand_number_t;
-
 
 static const char default_ip_address[]="10.17.2.72";
 
@@ -47,10 +47,10 @@ int main(int argc, char **argv)
 {
 
   int opt = -1;
-  char ip_address[32] = "\0";
+  char ip_address[IPV4_IP_LENGTH] = "\0";
   int retval = 0;
 
-  strncpy(ip_address, default_ip_address, strlen(default_ip_address));
+  strncpy(ip_address, default_ip_address, IPV4_IP_LENGTH);
   
   uint32_t number_of_samples = DEFAULT_NUMBER_OF_SAMPLES;
   double min_value = DEFAULT_MIN_VALUE;
@@ -103,25 +103,21 @@ int main(int argc, char **argv)
   }
   
   switch (random_number_type) {
-  case UINT64_RANDOM_NUMBER:
+  case SHORT_RANDOM_NUMBER:
     break;
-  case UINT32_RANDOM_NUMBER:
+  case INT_RANDOM_NUMBER:
     break;
-  case UINT16_RANDOM_NUMBER:
-    break;
-  case UINT8_RANDOM_NUMBER:
-    break;
-  case INT64_RANDOM_NUMBER:
-    break;
-  case INT32_RANDOM_NUMBER:
-    break;
-  case INT16_RANDOM_NUMBER:
-    break;
-  case INT8_RANDOM_NUMBER:
+  case DOUBLE_RANDOM_NUMBER:
     break;
   case FLOAT_RANDOM_NUMBER:
     break;
-  case DOUBLE_RANDOM_NUMBER:
+  case STREAM_BINARY:
+    break;
+  case PERFORMANCE_REQUEST:
+    break;
+  case FIRMWARE_INFO_REQUEST:
+    break;
+  case SYSTEM_INFO_REQUEST:
     break;
   default:
     exit(EXIT_FAILURE);
