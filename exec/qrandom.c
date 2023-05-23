@@ -215,7 +215,7 @@ int main(int argc, char **argv)
         free(datad);
     }
 
-    if (stream != NULL) {
+    if (stream != NULL && stream != stdout) {
 	fclose(stream);
     }
     exit(EXIT_SUCCESS);
