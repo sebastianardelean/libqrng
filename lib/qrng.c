@@ -8,8 +8,8 @@
 #include "qrng.h"
 
 
-#define IPV4_IP_LENGTH 16u
-#define URL_MAX_LENGTH 256u
+#define DOMAIN_ADDRESS_LENGTH 254u
+#define URL_MAX_LENGTH 512u
 #define DEFAULT_NUMBER_OF_SAMPLES 1u
 #define MIN_VALUE_INT 0u
 #define MAX_VALUE_INT 1u
@@ -35,7 +35,7 @@ typedef struct
 {
   e_req_type_t type;
   const char *api_url;
-  char ip_address[IPV4_IP_LENGTH];
+  char domain_address[DOMAIN_ADDRESS_LENGTH];
   size_t samples;
   int64_t min_range_i;
   int64_t max_range_i;
@@ -52,8 +52,8 @@ typedef struct {
 static s_api_t api_types[]={
   {
     .type = SHORT_RANDOM_NUMBER,
-    .api_url = "",
-    .ip_address = "",
+    .api_url = "https://%s/api/2.0/short?min=%d&max=%d&quantity=%lu",
+    .domain_address = "",
     .samples = DEFAULT_NUMBER_OF_SAMPLES,
     .min_range_i = MIN_VALUE_INT,
     .max_range_i = MAX_VALUE_INT,
@@ -62,8 +62,8 @@ static s_api_t api_types[]={
   },
   {
     .type = INT_RANDOM_NUMBER,
-    .api_url = "https://%s/api/2.0/int?min=%lu&max=%lu&quantity=%lu",
-    .ip_address = "",
+    .api_url = "https://%s/api/2.0/int?min=%ld&max=%ld&quantity=%lu",
+    .domain_address = "",
     .samples = DEFAULT_NUMBER_OF_SAMPLES,
     .min_range_i = MIN_VALUE_INT,
     .max_range_i = MAX_VALUE_INT,
@@ -73,7 +73,7 @@ static s_api_t api_types[]={
   {
     .type = DOUBLE_RANDOM_NUMBER,
     .api_url = "https://%s/api/2.0/double?min=%lf&max=%lf&quantity=%lu",
-    .ip_address = "",
+    .domain_address = "",
     .samples = DEFAULT_NUMBER_OF_SAMPLES,
     .min_range_i = MIN_VALUE_INT,
     .max_range_i = MAX_VALUE_INT,
@@ -82,8 +82,8 @@ static s_api_t api_types[]={
   },
   {
     .type = FLOAT_RANDOM_NUMBER,
-    .api_url = "",
-    .ip_address = "",
+    .api_url = "https://%s/api/2.0/double?min=%lf&max=%lf&quantity=%lu",
+    .domain_address = "",
     .samples = DEFAULT_NUMBER_OF_SAMPLES,
     .min_range_i = MIN_VALUE_INT,
     .max_range_i = MAX_VALUE_INT,
@@ -93,7 +93,7 @@ static s_api_t api_types[]={
   {
     .type = STREAM_BINARY,
     .api_url = "https://%s/api/2.0/streambytes?size=%lu",
-    .ip_address = "",
+    .domain_address = "",
     .samples = DEFAULT_NUMBER_OF_SAMPLES,
     .min_range_i = MIN_VALUE_INT,
     .max_range_i = MAX_VALUE_INT,
@@ -103,7 +103,7 @@ static s_api_t api_types[]={
   {
     .type = PERFORMANCE_REQUEST,
     .api_url = "",
-    .ip_address = "",
+    .domain_address = "",
     .samples = DEFAULT_NUMBER_OF_SAMPLES,
     .min_range_i = MIN_VALUE_INT,
     .max_range_i = MAX_VALUE_INT,
@@ -113,7 +113,7 @@ static s_api_t api_types[]={
   {
     .type = FIRMWARE_INFO_REQUEST,
     .api_url = "",
-    .ip_address = "",
+    .domain_address = "",
     .samples = DEFAULT_NUMBER_OF_SAMPLES,
     .min_range_i = MIN_VALUE_INT,
     .max_range_i = MAX_VALUE_INT,
@@ -123,7 +123,7 @@ static s_api_t api_types[]={
   {
     .type = SYSTEM_INFO_REQUEST,
     .api_url = "",
-    .ip_address = "",
+    .domain_address = "",
     .samples = DEFAULT_NUMBER_OF_SAMPLES,
     .min_range_i = MIN_VALUE_INT,
     .max_range_i = MAX_VALUE_INT,
@@ -142,17 +142,16 @@ static size_t curl_write_cbk(void *content,
 		      size_t nmemb, 
 		      void *userp);
 static void create_req_url(e_req_type_t req_type, char *api_url);
-static int execute_request();
+static int execute_request(char *url, void *buffer);
+static int execute_stream_request(char *url, void *buffer);
 
-
-int qrng_open(const char *device_ip_address){
+int qrng_open(const char *device_domain_address){
 
     int retval = 0;
     size_t i = 0;
-
-    if (device_ip_address[0] != '\0') {
+    if (device_domain_address[0] != '\0') {
       for (i = 0 ; i < NUMBER_OF_REQUESTS; i++) {
-        strncpy(api_types[i].ip_address, device_ip_address, IPV4_IP_LENGTH);
+        strncpy(api_types[i].domain_address, device_domain_address, DOMAIN_ADDRESS_LENGTH);
       }
 
       
@@ -201,41 +200,178 @@ void qrng_close(void)
 
 int qrng_random_stream(FILE *stream, size_t size)
 {
-  return 0;
+  int retval = 0;
+  char final_url[URL_MAX_LENGTH] = {0};
+  api_types[STREAM_BINARY].samples = size;
+  create_req_url(STREAM_BINARY, final_url);
+  retval = execute_stream_request(final_url, (void *)stream);
+  return retval;
 }
 
 
 int qrng_random_double(double min, double max, size_t samples, double *buffer)
 {
-  return 0;
+    int retval = 0;
+
+    char final_url[URL_MAX_LENGTH]={0};
+
+    //allocate only 1 char, the callback will allocate more memory
+    memory_t mem_buffer;
+    mem_buffer.memory = malloc(sizeof(char));
+    api_types[DOUBLE_RANDOM_NUMBER].samples = samples;
+    api_types[DOUBLE_RANDOM_NUMBER].min_range_f = min;
+    api_types[DOUBLE_RANDOM_NUMBER].max_range_f = max;
+    if (mem_buffer.memory) {
+      memset(&mem_buffer, 0, sizeof(mem_buffer));
+
+      create_req_url(DOUBLE_RANDOM_NUMBER, final_url);
+
+
+      retval = execute_request(final_url, (void *)&mem_buffer);
+      
+      if (!retval) {
+        /* parse values array */
+        char *random_values_string = mem_buffer.memory;
+        /* Skip first character because it's [ */
+        random_values_string ++;
+        /* Skip last character because is ] */
+        random_values_string[strlen(random_values_string)-1]=0;
+        char *token = strtok(random_values_string,",");
+        size_t i = 0;
+        
+        for (i = 0; i < samples; i++) {
+          buffer[i] = atof(token);
+          token = strtok(NULL, ",");
+        }   
+      }
+      else {
+        fprintf(stderr, "could not execute curl request");
+      }
+    }
+    else {
+      retval = -1;
+    }
+    if (mem_buffer.memory) {
+      free(mem_buffer.memory);
+    }
+    return retval;
 }
 
 int qrng_random_float(float min, float max, size_t samples, float *buffer)
 {
-  return 0;
+    int retval = 0;
+
+    char final_url[URL_MAX_LENGTH]={0};
+
+    //allocate only 1 char, the callback will allocate more memory
+    memory_t mem_buffer;
+    mem_buffer.memory = malloc(sizeof(char));
+    api_types[FLOAT_RANDOM_NUMBER].samples = samples;
+    api_types[FLOAT_RANDOM_NUMBER].min_range_f = min;
+    api_types[FLOAT_RANDOM_NUMBER].max_range_f = max;
+    if (mem_buffer.memory) {
+      memset(&mem_buffer, 0, sizeof(mem_buffer));
+
+      create_req_url(FLOAT_RANDOM_NUMBER, final_url);
+
+
+      retval = execute_request(final_url, (void *)&mem_buffer);
+      
+      if (!retval) {
+        /* parse values array */
+        char *random_values_string = mem_buffer.memory;
+        /* Skip first character because it's [ */
+        random_values_string ++;
+        /* Skip last character because is ] */
+        random_values_string[strlen(random_values_string)-1]=0;
+        char *token = strtok(random_values_string,",");
+        size_t i = 0;
+        
+        for (i = 0; i < samples; i++) {
+          buffer[i] = atof(token);
+          token = strtok(NULL, ",");
+        }   
+      }
+      else {
+        fprintf(stderr, "could not execute curl request");
+      }
+    }
+    else {
+      retval = -1;
+    }
+    if (mem_buffer.memory) {
+      free(mem_buffer.memory);
+    }
+    return retval;
 }
 
 int qrng_random_int64(int64_t min, int64_t max, size_t samples, int64_t *buffer)
 {
-  return 0;
+    int retval = 0;
+
+    char final_url[URL_MAX_LENGTH]={0};
+
+    //allocate only 1 char, the callback will allocate more memory
+    memory_t mem_buffer;
+    mem_buffer.memory = malloc(sizeof(char));
+    api_types[INT_RANDOM_NUMBER].samples = samples;
+    api_types[INT_RANDOM_NUMBER].min_range_i = min;
+    api_types[INT_RANDOM_NUMBER].max_range_i = max;
+    if (mem_buffer.memory) {
+      memset(&mem_buffer, 0, sizeof(mem_buffer));
+
+      create_req_url(INT_RANDOM_NUMBER, final_url);
+
+
+      retval = execute_request(final_url, (void *)&mem_buffer);
+      
+      if (!retval) {
+        /* parse values array */
+        char *random_values_string = mem_buffer.memory;
+        /* Skip first character because it's [ */
+        random_values_string ++;
+        /* Skip last character because is ] */
+        random_values_string[strlen(random_values_string)-1]=0;
+        char *token = strtok(random_values_string,",");
+        size_t i = 0;
+        
+        for (i = 0; i < samples; i++) {
+          buffer[i] = atoll(token);
+          token = strtok(NULL, ",");
+        }   
+      }
+      else {
+        fprintf(stderr, "could not execute curl request");
+      }
+    }
+    else {
+      retval = -1;
+    }
+    if (mem_buffer.memory) {
+      free(mem_buffer.memory);
+    }
+    return retval;
 }
 
 int qrng_random_int32(int32_t min, int32_t max, size_t samples, int32_t *buffer)
 {
     int retval = 0;
 
-    char final_url[256]={0};
+    char final_url[URL_MAX_LENGTH]={0};
 
     //allocate only 1 char, the callback will allocate more memory
     memory_t mem_buffer;
     mem_buffer.memory = malloc(sizeof(char));
-
+    api_types[SHORT_RANDOM_NUMBER].samples = samples;
+    api_types[SHORT_RANDOM_NUMBER].min_range_i = min;
+    api_types[SHORT_RANDOM_NUMBER].max_range_i = max;
     if (mem_buffer.memory) {
       memset(&mem_buffer, 0, sizeof(mem_buffer));
-        
+
       create_req_url(SHORT_RANDOM_NUMBER, final_url);
-      
-      retval = execute_request(final_url, (void *)(&mem_buffer));
+
+
+      retval = execute_request(final_url, (void *)&mem_buffer);
       
       if (!retval) {
         /* parse values array */
@@ -292,6 +428,24 @@ int execute_request(char *url, void *buffer) {
 }
 
 
+int execute_stream_request(char *url, void *buffer) {
+    CURLcode error = CURLE_OK;
+    int retval = 0;
+
+    (void)curl_easy_setopt(p_curl_handle, CURLOPT_URL, url);
+    (void)curl_easy_setopt(p_curl_handle, CURLOPT_WRITEDATA, buffer);
+
+    error = curl_easy_perform(p_curl_handle);
+    if(error != CURLE_OK) {
+	fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(error));
+        retval = -1;
+    }
+    else {
+	//do nothing
+    }
+  
+    return retval;
+}
 
 
 void create_req_url(e_req_type_t req_type, char *api_url)
@@ -301,7 +455,7 @@ void create_req_url(e_req_type_t req_type, char *api_url)
   case SHORT_RANDOM_NUMBER:
   case INT_RANDOM_NUMBER:
     snprintf(api_url, URL_MAX_LENGTH, api_types[req_type].api_url,
-             api_types[req_type].ip_address,
+             api_types[req_type].domain_address,
              api_types[req_type].min_range_i,
              api_types[req_type].max_range_i,
              api_types[req_type].samples);
@@ -309,14 +463,14 @@ void create_req_url(e_req_type_t req_type, char *api_url)
   case DOUBLE_RANDOM_NUMBER:
   case FLOAT_RANDOM_NUMBER:
     snprintf(api_url, URL_MAX_LENGTH, api_types[req_type].api_url,
-             api_types[req_type].ip_address,
+             api_types[req_type].domain_address,
              api_types[req_type].min_range_f,
              api_types[req_type].max_range_f,
              api_types[req_type].samples);
     break;
   case STREAM_BINARY:
     snprintf(api_url, URL_MAX_LENGTH, api_types[req_type].api_url,
-             api_types[req_type].ip_address,
+             api_types[req_type].domain_address,
              api_types[req_type].samples);
     break;
   case PERFORMANCE_REQUEST:

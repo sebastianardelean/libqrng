@@ -4,7 +4,7 @@
 
 
 
-int qrng_open(const char *device_ip_address); 
+int qrng_open(const char *device_domain_address); 
 int qrng_random_stream(FILE *stream, size_t size);
 int qrng_random_double(double min, double max, size_t samples, double *buffer);
 int qrng_random_float(float min, float max, size_t samples, float *buffer);
