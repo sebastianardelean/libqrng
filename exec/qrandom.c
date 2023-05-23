@@ -8,9 +8,7 @@
 
 /*TODO:
  * 1. Default type to 7 -> to be implemented. Do not exit failure
- * 2. Check ranges for min/max values
- * 3. Check for samples to not be 0*/
-
+*/
 #define PROGRAM_NAME "qrand"
 
 #define VERSION "1.0.0"
@@ -72,7 +70,7 @@ int main(int argc, char **argv)
     double max_value_f = DEFAULT_MAX_VALUE_F;
     int64_t min_value_i = DEFAULT_MIN_VALUE_I;
     int64_t max_value_i = DEFAULT_MAX_VALUE_I;
-    e_rand_number_t random_number_type = DEFAULT_RANDOM_VALUE_TYPE;
+    e_rand_number_t random_number_type = NUMBER_OF_REQUESTS;
 
 
 
@@ -191,8 +189,10 @@ int main(int argc, char **argv)
         case PERFORMANCE_REQUEST:
             break;
         case FIRMWARE_INFO_REQUEST:
+	    (void)qrng_firmware_info(stdout);
             break;
         case SYSTEM_INFO_REQUEST:
+	    (void)qrng_system_info(stdout);
             break;
         default:
             break;

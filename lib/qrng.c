@@ -112,7 +112,7 @@ static s_api_t api_types[]={
   },
   {
     .type = FIRMWARE_INFO_REQUEST,
-    .api_url = "",
+    .api_url = "https://%s/api/2.0/firmwareinfo",
     .domain_address = "",
     .samples = DEFAULT_NUMBER_OF_SAMPLES,
     .min_range_i = MIN_VALUE_INT,
@@ -122,7 +122,7 @@ static s_api_t api_types[]={
   },
   {
     .type = SYSTEM_INFO_REQUEST,
-    .api_url = "",
+    .api_url = "https://%s/api/2.0/systeminfo",
     .domain_address = "",
     .samples = DEFAULT_NUMBER_OF_SAMPLES,
     .min_range_i = MIN_VALUE_INT,
@@ -402,6 +402,21 @@ int qrng_random_int32(int32_t min, int32_t max, size_t samples, int32_t *buffer)
 }
 
 
+int qrng_firmware_info(void *buffer) {
+  int retval = 0;
+  char final_url[URL_MAX_LENGTH] = {0};
+  create_req_url(FIRMWARE_INFO_REQUEST, final_url);
+  retval = execute_stream_request(final_url, (void *)buffer);
+  return retval;
+}
+
+int qrng_system_info(void *buffer) {
+  int retval = 0;
+  char final_url[URL_MAX_LENGTH] = {0};
+  create_req_url(SYSTEM_INFO_REQUEST, final_url);
+  retval = execute_stream_request(final_url, (void *)buffer);
+  return retval;
+}
 
 
 int execute_request(char *url, void *buffer) {
@@ -476,8 +491,12 @@ void create_req_url(e_req_type_t req_type, char *api_url)
   case PERFORMANCE_REQUEST:
     break;
   case FIRMWARE_INFO_REQUEST:
+    snprintf(api_url, URL_MAX_LENGTH, api_types[req_type].api_url,
+	    api_types[req_type].domain_address);
     break;
   case SYSTEM_INFO_REQUEST:
+    snprintf(api_url, URL_MAX_LENGTH, api_types[req_type].api_url,
+	    api_types[req_type].domain_address);
     break;
   default:
     break;
