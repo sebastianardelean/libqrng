@@ -1,3 +1,28 @@
+/****************************************************************************
+ * qrandom - Quantum Random Number Generator using IDQ's Quantis Appliance  *
+ *                                                                          *
+ * Copyright (C) 2023  Sebastian Mihai Ardelean                             *
+ *                                                                          *
+ * This program is free software: you can redistribute it and/or modify     *
+ * it under the terms of the GNU General Public License as published by     *
+ * the Free Software Foundation, either version 3 of the License, or        *
+ * (at your option) any later version.                                      *
+ *                                                                          *
+ * This program is distributed in the hope that it will be useful,          *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of           *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            *
+ * GNU General Public License for more details.                             *
+ *                                                                          *
+ * You should have received a copy of the GNU General Public License        *
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.   *
+ ****************************************************************************/
+
+/**
+ * @file qrandom.c
+ * @author Sebastian Mihai Ardelean <sebastian.ardelean@cs.upt.ro>
+ * @date 24 May 2023
+ * @brief API for interacting with IDQ's Quantis Appliance
+ */
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -16,13 +41,7 @@
 #define AUTHORS "Sebastian M. Ardelean"
 
 
-#ifdef DEBUG
-#define debug_print(fmt, ...) \
-    do { if (DEBUG) fprintf(stderr, "%s:%d:%s(): " fmt, __FILE__, \
-	__LINE__, __func__, __VA_ARGS__); } while (0)
-#else
-#define debug_print
-#endif
+
 
 #define DEFAULT_NUMBER_OF_SAMPLES 1u
 #define DEFAULT_MIN_VALUE_F 0.0f
@@ -131,7 +150,7 @@ int main(int argc, char **argv)
 	exit(EXIT_FAILURE);
     }
 
-    debug_print("Domain address: %s\n", domain_addr);
+
     /*Initialize qrng library*/
     retval = qrng_open(domain_addr);
     if (retval) {
@@ -140,7 +159,6 @@ int main(int argc, char **argv)
 
     switch (random_number_type) {
         case SHORT_RANDOM_NUMBER:
-            debug_print("Short random number, %d samples %d %d\n",number_of_samples,min_value_i, max_value_i);
             data32 = malloc(number_of_samples * sizeof(int32_t));
             if (data32) {
                 if (qrng_random_int32(min_value_i, max_value_i, number_of_samples, data32) == 0) {
@@ -230,7 +248,6 @@ int main(int argc, char **argv)
 void print_help(void)
 {
     fprintf(stderr, "\n\n\t\t%s version %s\n\n", PROGRAM_NAME, VERSION);
-    fprintf(stderr, "\n\tAuthors:%s\n\n", AUTHORS);
     fprintf(stderr, "%s [-h] [-a domain] [-s no of samples] [-m min double value] [-M max double value] [-i min int value] [-I max int value] [-t type] [-f stream]\n", PROGRAM_NAME);
     fprintf(stderr, "-h \t help\n");
     fprintf(stderr, "-a \t domain address. [Default: random.cs.upt.ro]\n");
