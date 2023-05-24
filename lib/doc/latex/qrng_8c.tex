@@ -1,0 +1,618 @@
+\hypertarget{qrng_8c}{}\doxysection{qrng.\+c File Reference}
+\label{qrng_8c}\index{qrng.c@{qrng.c}}
+
+
+API for interacting with IDQ\textquotesingle{}s Quantis Appliance.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$curl/curl.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}qrng.\+h\char`\"{}}\newline
+Include dependency graph for qrng.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{qrng_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structs__api__t}{s\+\_\+api\+\_\+t}}
+\item 
+struct \mbox{\hyperlink{structmemory__t}{memory\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{qrng_8c_a50b135225c070c73df32bbd1c9c6e1de}\label{qrng_8c_a50b135225c070c73df32bbd1c9c6e1de}} 
+\#define {\bfseries DOMAIN\+\_\+\+ADDRESS\+\_\+\+LENGTH}~254u
+\item 
+\mbox{\Hypertarget{qrng_8c_a7a8693c7f04e4fb47c13202e7216f186}\label{qrng_8c_a7a8693c7f04e4fb47c13202e7216f186}} 
+\#define {\bfseries URL\+\_\+\+MAX\+\_\+\+LENGTH}~512u
+\item 
+\mbox{\Hypertarget{qrng_8c_add4b840def087badeb91b36c8f030664}\label{qrng_8c_add4b840def087badeb91b36c8f030664}} 
+\#define {\bfseries DEFAULT\+\_\+\+NUMBER\+\_\+\+OF\+\_\+\+SAMPLES}~1u
+\item 
+\mbox{\Hypertarget{qrng_8c_a7c65c8745444a875462d14eb4b4d29bf}\label{qrng_8c_a7c65c8745444a875462d14eb4b4d29bf}} 
+\#define {\bfseries MIN\+\_\+\+VALUE\+\_\+\+INT}~0u
+\item 
+\mbox{\Hypertarget{qrng_8c_a451b1c0b913b3b733622217cf1770340}\label{qrng_8c_a451b1c0b913b3b733622217cf1770340}} 
+\#define {\bfseries MAX\+\_\+\+VALUE\+\_\+\+INT}~1u
+\item 
+\mbox{\Hypertarget{qrng_8c_a5eeb375b66401272af844fb4498fd92b}\label{qrng_8c_a5eeb375b66401272af844fb4498fd92b}} 
+\#define {\bfseries MIN\+\_\+\+VALUE\+\_\+\+FLOAT}~0.\+0f
+\item 
+\mbox{\Hypertarget{qrng_8c_aa6b071084500ef1784cd26b9f5834615}\label{qrng_8c_aa6b071084500ef1784cd26b9f5834615}} 
+\#define {\bfseries MAX\+\_\+\+VALUE\+\_\+\+FLOAT}~1.\+0f
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{qrng_8c_ac82df00a39d9a82e1d4a4f27231d7e70}\label{qrng_8c_ac82df00a39d9a82e1d4a4f27231d7e70}} 
+enum {\bfseries e\+\_\+req\+\_\+type\+\_\+t} \{ \newline
+{\bfseries SHORT\+\_\+\+RANDOM\+\_\+\+NUMBER} = 0
+, {\bfseries INT\+\_\+\+RANDOM\+\_\+\+NUMBER}
+, {\bfseries DOUBLE\+\_\+\+RANDOM\+\_\+\+NUMBER}
+, {\bfseries FLOAT\+\_\+\+RANDOM\+\_\+\+NUMBER}
+, \newline
+{\bfseries STREAM\+\_\+\+BINARY}
+, {\bfseries PERFORMANCE\+\_\+\+REQUEST}
+, {\bfseries FIRMWARE\+\_\+\+INFO\+\_\+\+REQUEST}
+, {\bfseries SYSTEM\+\_\+\+INFO\+\_\+\+REQUEST}
+, \newline
+{\bfseries NUMBER\+\_\+\+OF\+\_\+\+REQUESTS}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{qrng_8c_a722703e4302df6bf5a8ab29f2cce7e59}{qrng\+\_\+open}} (const char $\ast$device\+\_\+domain\+\_\+address)
+\begin{DoxyCompactList}\small\item\em Initialization function This function must be called to initialize libcurl and to configure the URL addresses. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{qrng_8c_ac11a56e95649a115157e5453a9dde45a}{qrng\+\_\+close}} (void)
+\begin{DoxyCompactList}\small\item\em Close function This function must be called for clean-\/up. It performs libcurl clean-\/up. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{qrng_8c_a8ad8faa8dd32d5318a555fecc19240f3}{qrng\+\_\+random\+\_\+stream}} (FILE $\ast$stream, size\+\_\+t size)
+\begin{DoxyCompactList}\small\item\em Generate a stream of random bytes. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{qrng_8c_a4fa90401c1662fddcef5957bbed5ebf4}{qrng\+\_\+random\+\_\+double}} (double min, double max, size\+\_\+t samples, double $\ast$buffer)
+\begin{DoxyCompactList}\small\item\em Generate random @double@ values. This function generates random @double@ values in the specified interval. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{qrng_8c_a2c5528ce6b077d99098bab24ce9f67c1}{qrng\+\_\+random\+\_\+float}} (float min, float max, size\+\_\+t samples, float $\ast$buffer)
+\begin{DoxyCompactList}\small\item\em Generate random @float@ values. This function generates random @float@ values in the specified interval. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{qrng_8c_ad5962c31d7b292a19b670531ddedae30}{qrng\+\_\+random\+\_\+int64}} (int64\+\_\+t min, int64\+\_\+t max, size\+\_\+t samples, int64\+\_\+t $\ast$buffer)
+\begin{DoxyCompactList}\small\item\em Generate random @int64@ values. This function generates random @int64@ values in the specified interval. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{qrng_8c_aa98a78c89b2e3f7eee40660490baee6c}{qrng\+\_\+random\+\_\+int32}} (int32\+\_\+t min, int32\+\_\+t max, size\+\_\+t samples, int32\+\_\+t $\ast$buffer)
+\begin{DoxyCompactList}\small\item\em Generate random @int32@ values. This function generates random @int32@ values in the specified interval. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{qrng_8c_a720a56cf423984312a8454c0e883cf3e}{qrng\+\_\+firmware\+\_\+info}} (void $\ast$buffer)
+\begin{DoxyCompactList}\small\item\em Requests the IDQ\textquotesingle{}s Quantis Appliance firmware version. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{qrng_8c_af43a0f42bfbc5f7785824e3a8b05bb2f}{qrng\+\_\+system\+\_\+info}} (void $\ast$buffer)
+\begin{DoxyCompactList}\small\item\em Requests the IDQ\textquotesingle{}s Quantis Appliance system info. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+API for interacting with IDQ\textquotesingle{}s Quantis Appliance. 
+
+\begin{DoxyAuthor}{Author}
+Sebastian Mihai Ardelean \href{mailto:sebastian.ardelean@cs.upt.ro}{\texttt{ sebastian.\+ardelean@cs.\+upt.\+ro}} 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+24 May 2023 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{qrng_8c_ac11a56e95649a115157e5453a9dde45a}\label{qrng_8c_ac11a56e95649a115157e5453a9dde45a}} 
+\index{qrng.c@{qrng.c}!qrng\_close@{qrng\_close}}
+\index{qrng\_close@{qrng\_close}!qrng.c@{qrng.c}}
+\doxysubsubsection{\texorpdfstring{qrng\_close()}{qrng\_close()}}
+{\footnotesize\ttfamily void qrng\+\_\+close (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Close function This function must be called for clean-\/up. It performs libcurl clean-\/up. 
+
+\begin{DoxyNote}{Note}
+If @qrng\+\_\+open@ fails, is not mandatory to call this function. 
+\end{DoxyNote}
+
+
+Definition at line 216 of file qrng.\+c.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{217 \{}
+\DoxyCodeLine{218     \textcolor{keywordflow}{if} (p\_curl\_handle) \{}
+\DoxyCodeLine{219     curl\_easy\_cleanup(p\_curl\_handle);}
+\DoxyCodeLine{220         curl\_global\_cleanup();}
+\DoxyCodeLine{221     \}}
+\DoxyCodeLine{222 }
+\DoxyCodeLine{223 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{qrng_8c_a720a56cf423984312a8454c0e883cf3e}\label{qrng_8c_a720a56cf423984312a8454c0e883cf3e}} 
+\index{qrng.c@{qrng.c}!qrng\_firmware\_info@{qrng\_firmware\_info}}
+\index{qrng\_firmware\_info@{qrng\_firmware\_info}!qrng.c@{qrng.c}}
+\doxysubsubsection{\texorpdfstring{qrng\_firmware\_info()}{qrng\_firmware\_info()}}
+{\footnotesize\ttfamily int qrng\+\_\+firmware\+\_\+info (\begin{DoxyParamCaption}\item[{void $\ast$}]{buffer }\end{DoxyParamCaption})}
+
+
+
+Requests the IDQ\textquotesingle{}s Quantis Appliance firmware version. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buffer} & pointer to FILE or @stdout@ to which data will be sent. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Function returns 0 on SUCCESS and -\/1 if libcurl cannot perform the request. 
+\end{DoxyReturn}
+
+
+Definition at line 430 of file qrng.\+c.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{430                                      \{}
+\DoxyCodeLine{431   \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{432   \textcolor{keywordtype}{char} final\_url[URL\_MAX\_LENGTH] = \{0\};}
+\DoxyCodeLine{433   create\_req\_url(FIRMWARE\_INFO\_REQUEST, final\_url);}
+\DoxyCodeLine{434   retval = execute\_stream\_request(final\_url, (\textcolor{keywordtype}{void} *)buffer);}
+\DoxyCodeLine{435   \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{436 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{qrng_8c_a722703e4302df6bf5a8ab29f2cce7e59}\label{qrng_8c_a722703e4302df6bf5a8ab29f2cce7e59}} 
+\index{qrng.c@{qrng.c}!qrng\_open@{qrng\_open}}
+\index{qrng\_open@{qrng\_open}!qrng.c@{qrng.c}}
+\doxysubsubsection{\texorpdfstring{qrng\_open()}{qrng\_open()}}
+{\footnotesize\ttfamily int qrng\+\_\+open (\begin{DoxyParamCaption}\item[{const char $\ast$}]{device\+\_\+domain\+\_\+address }\end{DoxyParamCaption})}
+
+
+
+Initialization function This function must be called to initialize libcurl and to configure the URL addresses. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device\+\_\+domain\+\_\+address} & domain address of the IDQ Quantis Appliance device. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Function returns 0 on SUCCESS, -\/1 if @curl\+\_\+global\+\_\+init@ fails, -\/2 if the libcurl handle cannot be initialized, and -\/3 if the @device\+\_\+domain\+\_\+address@ is NULL. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+On failure, the function performs clean-\/up. 
+\end{DoxyNote}
+
+
+Definition at line 173 of file qrng.\+c.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{173                                                 \{}
+\DoxyCodeLine{174 }
+\DoxyCodeLine{175     \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{176     \textcolor{keywordtype}{size\_t} i = 0;}
+\DoxyCodeLine{177     \textcolor{keywordflow}{if} (device\_domain\_address[0] != \textcolor{charliteral}{'\(\backslash\)0'}) \{}
+\DoxyCodeLine{178       \textcolor{keywordflow}{for} (i = 0 ; i < NUMBER\_OF\_REQUESTS; i++) \{}
+\DoxyCodeLine{179         strncpy(api\_types[i].domain\_address, device\_domain\_address, DOMAIN\_ADDRESS\_LENGTH);}
+\DoxyCodeLine{180       \}}
+\DoxyCodeLine{181 }
+\DoxyCodeLine{182       }
+\DoxyCodeLine{183       \textcolor{keywordflow}{if}(curl\_global\_init(CURL\_GLOBAL\_ALL)!=0) \{}
+\DoxyCodeLine{184     fprintf(stderr, \textcolor{stringliteral}{"{}Error in curl\_global\_init"{}});}
+\DoxyCodeLine{185     retval = -\/1;}
+\DoxyCodeLine{186     }
+\DoxyCodeLine{187       \}}
+\DoxyCodeLine{188       \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{189     p\_curl\_handle = curl\_easy\_init();}
+\DoxyCodeLine{190     \textcolor{keywordflow}{if} (!p\_curl\_handle) \{}
+\DoxyCodeLine{191           fprintf(stderr, \textcolor{stringliteral}{"{}Error in curl\_easy\_init"{}});}
+\DoxyCodeLine{192           curl\_global\_cleanup();}
+\DoxyCodeLine{193           retval = -\/2;}
+\DoxyCodeLine{194     \}}
+\DoxyCodeLine{195         \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{196 }
+\DoxyCodeLine{197 \textcolor{preprocessor}{\#ifdef DEBUG }}
+\DoxyCodeLine{198           (void)curl\_easy\_setopt(p\_curl\_handle, CURLOPT\_VERBOSE, 1L);}
+\DoxyCodeLine{199 \textcolor{preprocessor}{\#endif }}
+\DoxyCodeLine{200           (void)curl\_easy\_setopt(p\_curl\_handle, CURLOPT\_SSL\_VERIFYHOST, 0L);}
+\DoxyCodeLine{201 }
+\DoxyCodeLine{202           (void)curl\_easy\_setopt(p\_curl\_handle, CURLOPT\_SSL\_VERIFYPEER, 0L);}
+\DoxyCodeLine{203                 }
+\DoxyCodeLine{204           (void)curl\_easy\_setopt(p\_curl\_handle, CURLOPT\_FAILONERROR, 1L);}
+\DoxyCodeLine{205     \}}
+\DoxyCodeLine{206       \}}
+\DoxyCodeLine{207     \}}
+\DoxyCodeLine{208     \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{209       retval = -\/3;}
+\DoxyCodeLine{210     \}}
+\DoxyCodeLine{211     \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{212  }
+\DoxyCodeLine{213 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{qrng_8c_a4fa90401c1662fddcef5957bbed5ebf4}\label{qrng_8c_a4fa90401c1662fddcef5957bbed5ebf4}} 
+\index{qrng.c@{qrng.c}!qrng\_random\_double@{qrng\_random\_double}}
+\index{qrng\_random\_double@{qrng\_random\_double}!qrng.c@{qrng.c}}
+\doxysubsubsection{\texorpdfstring{qrng\_random\_double()}{qrng\_random\_double()}}
+{\footnotesize\ttfamily int qrng\+\_\+random\+\_\+double (\begin{DoxyParamCaption}\item[{double}]{min,  }\item[{double}]{max,  }\item[{size\+\_\+t}]{samples,  }\item[{double $\ast$}]{buffer }\end{DoxyParamCaption})}
+
+
+
+Generate random @double@ values. This function generates random @double@ values in the specified interval. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em min} & interval minimum value. \\
+\hline
+{\em max} & interval maximum value. \\
+\hline
+{\em samples} & number of values to generate. \\
+\hline
+{\em buffer} & array of type @double@ in which the values will be stored. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns 0 on SUCCESS, -\/1 if the internal buffer cannot be initialized, or if libcurl cannot perform the request. 
+\end{DoxyReturn}
+
+
+Definition at line 237 of file qrng.\+c.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{238 \{}
+\DoxyCodeLine{239     \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{240 }
+\DoxyCodeLine{241     \textcolor{keywordtype}{char} final\_url[URL\_MAX\_LENGTH]=\{0\};}
+\DoxyCodeLine{242 }
+\DoxyCodeLine{243     \textcolor{comment}{//allocate only 1 char, the callback will allocate more memory}}
+\DoxyCodeLine{244     \mbox{\hyperlink{structmemory__t}{memory\_t}} mem\_buffer;}
+\DoxyCodeLine{245     mem\_buffer.memory = malloc(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}));}
+\DoxyCodeLine{246     api\_types[DOUBLE\_RANDOM\_NUMBER].samples = samples;}
+\DoxyCodeLine{247     api\_types[DOUBLE\_RANDOM\_NUMBER].min\_range\_f = min;}
+\DoxyCodeLine{248     api\_types[DOUBLE\_RANDOM\_NUMBER].max\_range\_f = max;}
+\DoxyCodeLine{249     \textcolor{keywordflow}{if} (mem\_buffer.memory) \{}
+\DoxyCodeLine{250       memset(\&mem\_buffer, 0, \textcolor{keyword}{sizeof}(mem\_buffer));}
+\DoxyCodeLine{251 }
+\DoxyCodeLine{252       create\_req\_url(DOUBLE\_RANDOM\_NUMBER, final\_url);}
+\DoxyCodeLine{253 }
+\DoxyCodeLine{254 }
+\DoxyCodeLine{255       retval = execute\_request(final\_url, (\textcolor{keywordtype}{void} *)\&mem\_buffer);}
+\DoxyCodeLine{256       }
+\DoxyCodeLine{257       \textcolor{keywordflow}{if} (!retval) \{}
+\DoxyCodeLine{258         \textcolor{comment}{/* parse values array */}}
+\DoxyCodeLine{259         \textcolor{keywordtype}{char} *random\_values\_string = mem\_buffer.memory;}
+\DoxyCodeLine{260         \textcolor{comment}{/* Skip first character because it's [ */}}
+\DoxyCodeLine{261         random\_values\_string ++;}
+\DoxyCodeLine{262         \textcolor{comment}{/* Skip last character because is ] */}}
+\DoxyCodeLine{263         random\_values\_string[strlen(random\_values\_string)-\/1]=0;}
+\DoxyCodeLine{264         \textcolor{keywordtype}{char} *token = strtok(random\_values\_string,\textcolor{stringliteral}{"{},"{}});}
+\DoxyCodeLine{265         \textcolor{keywordtype}{size\_t} i = 0;}
+\DoxyCodeLine{266         }
+\DoxyCodeLine{267         \textcolor{keywordflow}{for} (i = 0; i < samples; i++) \{}
+\DoxyCodeLine{268           buffer[i] = atof(token);}
+\DoxyCodeLine{269           token = strtok(NULL, \textcolor{stringliteral}{"{},"{}});}
+\DoxyCodeLine{270         \}   }
+\DoxyCodeLine{271       \}}
+\DoxyCodeLine{272       \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{273         fprintf(stderr, \textcolor{stringliteral}{"{}could not execute curl request"{}});}
+\DoxyCodeLine{274       \}}
+\DoxyCodeLine{275     \}}
+\DoxyCodeLine{276     \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{277       retval = -\/1;}
+\DoxyCodeLine{278     \}}
+\DoxyCodeLine{279     \textcolor{keywordflow}{if} (mem\_buffer.memory) \{}
+\DoxyCodeLine{280       free(mem\_buffer.memory);}
+\DoxyCodeLine{281     \}}
+\DoxyCodeLine{282     \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{283 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{qrng_8c_a2c5528ce6b077d99098bab24ce9f67c1}\label{qrng_8c_a2c5528ce6b077d99098bab24ce9f67c1}} 
+\index{qrng.c@{qrng.c}!qrng\_random\_float@{qrng\_random\_float}}
+\index{qrng\_random\_float@{qrng\_random\_float}!qrng.c@{qrng.c}}
+\doxysubsubsection{\texorpdfstring{qrng\_random\_float()}{qrng\_random\_float()}}
+{\footnotesize\ttfamily int qrng\+\_\+random\+\_\+float (\begin{DoxyParamCaption}\item[{float}]{min,  }\item[{float}]{max,  }\item[{size\+\_\+t}]{samples,  }\item[{float $\ast$}]{buffer }\end{DoxyParamCaption})}
+
+
+
+Generate random @float@ values. This function generates random @float@ values in the specified interval. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em min} & interval minimum value. \\
+\hline
+{\em max} & interval maximum value. \\
+\hline
+{\em samples} & number of values to generate. \\
+\hline
+{\em buffer} & array of type @float@ in which the values will be stored. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns 0 on SUCCESS, -\/1 if the internal buffer cannot be initialized, or if libcurl cannot perform the request. 
+\end{DoxyReturn}
+
+
+Definition at line 285 of file qrng.\+c.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{286 \{}
+\DoxyCodeLine{287     \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{288 }
+\DoxyCodeLine{289     \textcolor{keywordtype}{char} final\_url[URL\_MAX\_LENGTH]=\{0\};}
+\DoxyCodeLine{290 }
+\DoxyCodeLine{291     \textcolor{comment}{//allocate only 1 char, the callback will allocate more memory}}
+\DoxyCodeLine{292     \mbox{\hyperlink{structmemory__t}{memory\_t}} mem\_buffer;}
+\DoxyCodeLine{293     mem\_buffer.memory = malloc(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}));}
+\DoxyCodeLine{294     api\_types[FLOAT\_RANDOM\_NUMBER].samples = samples;}
+\DoxyCodeLine{295     api\_types[FLOAT\_RANDOM\_NUMBER].min\_range\_f = min;}
+\DoxyCodeLine{296     api\_types[FLOAT\_RANDOM\_NUMBER].max\_range\_f = max;}
+\DoxyCodeLine{297     \textcolor{keywordflow}{if} (mem\_buffer.memory) \{}
+\DoxyCodeLine{298       memset(\&mem\_buffer, 0, \textcolor{keyword}{sizeof}(mem\_buffer));}
+\DoxyCodeLine{299 }
+\DoxyCodeLine{300       create\_req\_url(FLOAT\_RANDOM\_NUMBER, final\_url);}
+\DoxyCodeLine{301 }
+\DoxyCodeLine{302 }
+\DoxyCodeLine{303       retval = execute\_request(final\_url, (\textcolor{keywordtype}{void} *)\&mem\_buffer);}
+\DoxyCodeLine{304       }
+\DoxyCodeLine{305       \textcolor{keywordflow}{if} (!retval) \{}
+\DoxyCodeLine{306         \textcolor{comment}{/* parse values array */}}
+\DoxyCodeLine{307         \textcolor{keywordtype}{char} *random\_values\_string = mem\_buffer.memory;}
+\DoxyCodeLine{308         \textcolor{comment}{/* Skip first character because it's [ */}}
+\DoxyCodeLine{309         random\_values\_string ++;}
+\DoxyCodeLine{310         \textcolor{comment}{/* Skip last character because is ] */}}
+\DoxyCodeLine{311         random\_values\_string[strlen(random\_values\_string)-\/1]=0;}
+\DoxyCodeLine{312         \textcolor{keywordtype}{char} *token = strtok(random\_values\_string,\textcolor{stringliteral}{"{},"{}});}
+\DoxyCodeLine{313         \textcolor{keywordtype}{size\_t} i = 0;}
+\DoxyCodeLine{314         }
+\DoxyCodeLine{315         \textcolor{keywordflow}{for} (i = 0; i < samples; i++) \{}
+\DoxyCodeLine{316           buffer[i] = atof(token);}
+\DoxyCodeLine{317           token = strtok(NULL, \textcolor{stringliteral}{"{},"{}});}
+\DoxyCodeLine{318         \}   }
+\DoxyCodeLine{319       \}}
+\DoxyCodeLine{320       \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{321         fprintf(stderr, \textcolor{stringliteral}{"{}could not execute curl request"{}});}
+\DoxyCodeLine{322       \}}
+\DoxyCodeLine{323     \}}
+\DoxyCodeLine{324     \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{325       retval = -\/1;}
+\DoxyCodeLine{326     \}}
+\DoxyCodeLine{327     \textcolor{keywordflow}{if} (mem\_buffer.memory) \{}
+\DoxyCodeLine{328       free(mem\_buffer.memory);}
+\DoxyCodeLine{329     \}}
+\DoxyCodeLine{330     \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{331 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{qrng_8c_aa98a78c89b2e3f7eee40660490baee6c}\label{qrng_8c_aa98a78c89b2e3f7eee40660490baee6c}} 
+\index{qrng.c@{qrng.c}!qrng\_random\_int32@{qrng\_random\_int32}}
+\index{qrng\_random\_int32@{qrng\_random\_int32}!qrng.c@{qrng.c}}
+\doxysubsubsection{\texorpdfstring{qrng\_random\_int32()}{qrng\_random\_int32()}}
+{\footnotesize\ttfamily int qrng\+\_\+random\+\_\+int32 (\begin{DoxyParamCaption}\item[{int32\+\_\+t}]{min,  }\item[{int32\+\_\+t}]{max,  }\item[{size\+\_\+t}]{samples,  }\item[{int32\+\_\+t $\ast$}]{buffer }\end{DoxyParamCaption})}
+
+
+
+Generate random @int32@ values. This function generates random @int32@ values in the specified interval. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em min} & interval minimum value. \\
+\hline
+{\em max} & interval maximum value. \\
+\hline
+{\em samples} & number of values to generate. \\
+\hline
+{\em buffer} & array of type @int32@ in which the values will be stored. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns 0 on SUCCESS, -\/1 if the internal buffer cannot be initialized, or if libcurl cannot perform the request. 
+\end{DoxyReturn}
+
+
+Definition at line 381 of file qrng.\+c.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{382 \{}
+\DoxyCodeLine{383     \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{384 }
+\DoxyCodeLine{385     \textcolor{keywordtype}{char} final\_url[URL\_MAX\_LENGTH]=\{0\};}
+\DoxyCodeLine{386 }
+\DoxyCodeLine{387     \textcolor{comment}{//allocate only 1 char, the callback will allocate more memory}}
+\DoxyCodeLine{388     \mbox{\hyperlink{structmemory__t}{memory\_t}} mem\_buffer;}
+\DoxyCodeLine{389     mem\_buffer.memory = malloc(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}));}
+\DoxyCodeLine{390     api\_types[SHORT\_RANDOM\_NUMBER].samples = samples;}
+\DoxyCodeLine{391     api\_types[SHORT\_RANDOM\_NUMBER].min\_range\_i = min;}
+\DoxyCodeLine{392     api\_types[SHORT\_RANDOM\_NUMBER].max\_range\_i = max;}
+\DoxyCodeLine{393     \textcolor{keywordflow}{if} (mem\_buffer.memory) \{}
+\DoxyCodeLine{394       memset(\&mem\_buffer, 0, \textcolor{keyword}{sizeof}(mem\_buffer));}
+\DoxyCodeLine{395 }
+\DoxyCodeLine{396       create\_req\_url(SHORT\_RANDOM\_NUMBER, final\_url);}
+\DoxyCodeLine{397 }
+\DoxyCodeLine{398 }
+\DoxyCodeLine{399       retval = execute\_request(final\_url, (\textcolor{keywordtype}{void} *)\&mem\_buffer);}
+\DoxyCodeLine{400       }
+\DoxyCodeLine{401       \textcolor{keywordflow}{if} (!retval) \{}
+\DoxyCodeLine{402         \textcolor{comment}{/* parse values array */}}
+\DoxyCodeLine{403         \textcolor{keywordtype}{char} *random\_values\_string = mem\_buffer.memory;}
+\DoxyCodeLine{404         \textcolor{comment}{/* Skip first character because it's [ */}}
+\DoxyCodeLine{405         random\_values\_string ++;}
+\DoxyCodeLine{406         \textcolor{comment}{/* Skip last character because is ] */}}
+\DoxyCodeLine{407         random\_values\_string[strlen(random\_values\_string)-\/1]=0;}
+\DoxyCodeLine{408         \textcolor{keywordtype}{char} *token = strtok(random\_values\_string,\textcolor{stringliteral}{"{},"{}});}
+\DoxyCodeLine{409         \textcolor{keywordtype}{size\_t} i = 0;}
+\DoxyCodeLine{410         }
+\DoxyCodeLine{411         \textcolor{keywordflow}{for} (i = 0; i < samples; i++) \{}
+\DoxyCodeLine{412           buffer[i] = atol(token);}
+\DoxyCodeLine{413           token = strtok(NULL, \textcolor{stringliteral}{"{},"{}});}
+\DoxyCodeLine{414         \}   }
+\DoxyCodeLine{415       \}}
+\DoxyCodeLine{416       \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{417         fprintf(stderr, \textcolor{stringliteral}{"{}could not execute curl request"{}});}
+\DoxyCodeLine{418       \}}
+\DoxyCodeLine{419     \}}
+\DoxyCodeLine{420     \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{421       retval = -\/1;}
+\DoxyCodeLine{422     \}}
+\DoxyCodeLine{423     \textcolor{keywordflow}{if} (mem\_buffer.memory) \{}
+\DoxyCodeLine{424       free(mem\_buffer.memory);}
+\DoxyCodeLine{425     \}}
+\DoxyCodeLine{426     \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{427 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{qrng_8c_ad5962c31d7b292a19b670531ddedae30}\label{qrng_8c_ad5962c31d7b292a19b670531ddedae30}} 
+\index{qrng.c@{qrng.c}!qrng\_random\_int64@{qrng\_random\_int64}}
+\index{qrng\_random\_int64@{qrng\_random\_int64}!qrng.c@{qrng.c}}
+\doxysubsubsection{\texorpdfstring{qrng\_random\_int64()}{qrng\_random\_int64()}}
+{\footnotesize\ttfamily int qrng\+\_\+random\+\_\+int64 (\begin{DoxyParamCaption}\item[{int64\+\_\+t}]{min,  }\item[{int64\+\_\+t}]{max,  }\item[{size\+\_\+t}]{samples,  }\item[{int64\+\_\+t $\ast$}]{buffer }\end{DoxyParamCaption})}
+
+
+
+Generate random @int64@ values. This function generates random @int64@ values in the specified interval. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em min} & interval minimum value. \\
+\hline
+{\em max} & interval maximum value. \\
+\hline
+{\em samples} & number of values to generate. \\
+\hline
+{\em buffer} & array of type @int64@ in which the values will be stored. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+This function returns 0 on SUCCESS, -\/1 if the internal buffer cannot be initialized, or if libcurl cannot perform the request. 
+\end{DoxyReturn}
+
+
+Definition at line 333 of file qrng.\+c.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{334 \{}
+\DoxyCodeLine{335     \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{336 }
+\DoxyCodeLine{337     \textcolor{keywordtype}{char} final\_url[URL\_MAX\_LENGTH]=\{0\};}
+\DoxyCodeLine{338 }
+\DoxyCodeLine{339     \textcolor{comment}{//allocate only 1 char, the callback will allocate more memory}}
+\DoxyCodeLine{340     \mbox{\hyperlink{structmemory__t}{memory\_t}} mem\_buffer;}
+\DoxyCodeLine{341     mem\_buffer.memory = malloc(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{char}));}
+\DoxyCodeLine{342     api\_types[INT\_RANDOM\_NUMBER].samples = samples;}
+\DoxyCodeLine{343     api\_types[INT\_RANDOM\_NUMBER].min\_range\_i = min;}
+\DoxyCodeLine{344     api\_types[INT\_RANDOM\_NUMBER].max\_range\_i = max;}
+\DoxyCodeLine{345     \textcolor{keywordflow}{if} (mem\_buffer.memory) \{}
+\DoxyCodeLine{346       memset(\&mem\_buffer, 0, \textcolor{keyword}{sizeof}(mem\_buffer));}
+\DoxyCodeLine{347 }
+\DoxyCodeLine{348       create\_req\_url(INT\_RANDOM\_NUMBER, final\_url);}
+\DoxyCodeLine{349 }
+\DoxyCodeLine{350 }
+\DoxyCodeLine{351       retval = execute\_request(final\_url, (\textcolor{keywordtype}{void} *)\&mem\_buffer);}
+\DoxyCodeLine{352       }
+\DoxyCodeLine{353       \textcolor{keywordflow}{if} (!retval) \{}
+\DoxyCodeLine{354         \textcolor{comment}{/* parse values array */}}
+\DoxyCodeLine{355         \textcolor{keywordtype}{char} *random\_values\_string = mem\_buffer.memory;}
+\DoxyCodeLine{356         \textcolor{comment}{/* Skip first character because it's [ */}}
+\DoxyCodeLine{357         random\_values\_string ++;}
+\DoxyCodeLine{358         \textcolor{comment}{/* Skip last character because is ] */}}
+\DoxyCodeLine{359         random\_values\_string[strlen(random\_values\_string)-\/1]=0;}
+\DoxyCodeLine{360         \textcolor{keywordtype}{char} *token = strtok(random\_values\_string,\textcolor{stringliteral}{"{},"{}});}
+\DoxyCodeLine{361         \textcolor{keywordtype}{size\_t} i = 0;}
+\DoxyCodeLine{362         }
+\DoxyCodeLine{363         \textcolor{keywordflow}{for} (i = 0; i < samples; i++) \{}
+\DoxyCodeLine{364           buffer[i] = atoll(token);}
+\DoxyCodeLine{365           token = strtok(NULL, \textcolor{stringliteral}{"{},"{}});}
+\DoxyCodeLine{366         \}   }
+\DoxyCodeLine{367       \}}
+\DoxyCodeLine{368       \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{369         fprintf(stderr, \textcolor{stringliteral}{"{}could not execute curl request"{}});}
+\DoxyCodeLine{370       \}}
+\DoxyCodeLine{371     \}}
+\DoxyCodeLine{372     \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{373       retval = -\/1;}
+\DoxyCodeLine{374     \}}
+\DoxyCodeLine{375     \textcolor{keywordflow}{if} (mem\_buffer.memory) \{}
+\DoxyCodeLine{376       free(mem\_buffer.memory);}
+\DoxyCodeLine{377     \}}
+\DoxyCodeLine{378     \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{379 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{qrng_8c_a8ad8faa8dd32d5318a555fecc19240f3}\label{qrng_8c_a8ad8faa8dd32d5318a555fecc19240f3}} 
+\index{qrng.c@{qrng.c}!qrng\_random\_stream@{qrng\_random\_stream}}
+\index{qrng\_random\_stream@{qrng\_random\_stream}!qrng.c@{qrng.c}}
+\doxysubsubsection{\texorpdfstring{qrng\_random\_stream()}{qrng\_random\_stream()}}
+{\footnotesize\ttfamily int qrng\+\_\+random\+\_\+stream (\begin{DoxyParamCaption}\item[{FILE $\ast$}]{stream,  }\item[{size\+\_\+t}]{size }\end{DoxyParamCaption})}
+
+
+
+Generate a stream of random bytes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em stream} & FILE pointer in which the bytes are stored. @stdout@ or @stderr@ can be used. \\
+\hline
+{\em size} & the number of bytes to request. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Function returns 0 on SUCCESS and -\/1 if libcurl cannot perform the request. 
+\end{DoxyReturn}
+
+
+Definition at line 226 of file qrng.\+c.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{227 \{}
+\DoxyCodeLine{228   \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{229   \textcolor{keywordtype}{char} final\_url[URL\_MAX\_LENGTH] = \{0\};}
+\DoxyCodeLine{230   api\_types[STREAM\_BINARY].samples = size;}
+\DoxyCodeLine{231   create\_req\_url(STREAM\_BINARY, final\_url);}
+\DoxyCodeLine{232   retval = execute\_stream\_request(final\_url, (\textcolor{keywordtype}{void} *)stream);}
+\DoxyCodeLine{233   \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{234 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{qrng_8c_af43a0f42bfbc5f7785824e3a8b05bb2f}\label{qrng_8c_af43a0f42bfbc5f7785824e3a8b05bb2f}} 
+\index{qrng.c@{qrng.c}!qrng\_system\_info@{qrng\_system\_info}}
+\index{qrng\_system\_info@{qrng\_system\_info}!qrng.c@{qrng.c}}
+\doxysubsubsection{\texorpdfstring{qrng\_system\_info()}{qrng\_system\_info()}}
+{\footnotesize\ttfamily int qrng\+\_\+system\+\_\+info (\begin{DoxyParamCaption}\item[{void $\ast$}]{buffer }\end{DoxyParamCaption})}
+
+
+
+Requests the IDQ\textquotesingle{}s Quantis Appliance system info. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buffer} & pointer to FILE or @stdout@ to which data will be sent. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Function returns 0 on SUCCESS and -\/1 if libcurl cannot perform the request. 
+\end{DoxyReturn}
+
+
+Definition at line 438 of file qrng.\+c.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{438                                    \{}
+\DoxyCodeLine{439   \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{440   \textcolor{keywordtype}{char} final\_url[URL\_MAX\_LENGTH] = \{0\};}
+\DoxyCodeLine{441   create\_req\_url(SYSTEM\_INFO\_REQUEST, final\_url);}
+\DoxyCodeLine{442   retval = execute\_stream\_request(final\_url, (\textcolor{keywordtype}{void} *)buffer);}
+\DoxyCodeLine{443   \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{444 \}}
+
+\end{DoxyCode}
