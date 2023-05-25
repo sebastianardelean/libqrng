@@ -18,7 +18,7 @@ build:
   # instead of calling g++ directly you can also use some build toolkit like make
   # install the necessary build tools when needed
   before_script:
-    - apt update && apt -y libcurl4-openssl-dev curl build-essential libcurl3-gnutls
+    - apt update && apt-get install --no-install-recommends -y libcurl4-openssl-dev curl build-essential libcurl3-gnutls
   script:
     - ./build_archive.sh
   artifacts:
