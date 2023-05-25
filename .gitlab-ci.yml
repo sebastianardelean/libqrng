@@ -25,6 +25,7 @@ build:
   artifacts:
     paths:
       - qrand*.deb
+      - qrand*.tar.gz
       # depending on your build setup it's most likely a good idea to cache outputs to reduce the build time
       # cache:
       #   paths:
