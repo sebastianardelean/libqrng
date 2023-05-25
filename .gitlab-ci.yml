@@ -20,6 +20,7 @@ build:
   before_script:
     - apt update && apt-get install --no-install-recommends -y libcurl4-openssl-dev curl build-essential libcurl3-gnutls
   script:
+    - chmod +x build_archive.sh
     - ./build_archive.sh
   artifacts:
     paths:
