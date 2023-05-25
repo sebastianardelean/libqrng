@@ -29,14 +29,15 @@
 #include <unistd.h>
 #include <string.h>
 #include "qrng.h"
+#include "version.h"
 
 
-/*TODO:
- * 1. Default type to 7 -> to be implemented. Do not exit failure
-*/
+#define STR(s) #s
+#define XSTR(s) STR(s)
+
 #define PROGRAM_NAME "qrand"
 
-#define VERSION "1.0.0"
+#define VERSION XSTR(MAJOR_VERSION) "." XSTR(MINOR_VERSION) "." XSTR(BUILD_NUMBER) "-" BUILD_DATE
 
 #define AUTHORS "Sebastian M. Ardelean"
 
