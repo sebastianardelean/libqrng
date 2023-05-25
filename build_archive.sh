@@ -38,6 +38,19 @@ function clean_project() {              #function will accept 1 parameter and wi
     cd $WORKING_DIRECTORY
 }
 
+function compile_install_library() {            #function will accept 1 parameter and will be called compile_project "parameter"
+    echo -e "\nCompiling $1...[$(date +"%T")]\n"
+    path=$1                             #$1 is the directory of the source code that will be compiled
+    cd $path                            #change directory to the provided path
+    make                                #first clean and then make the project
+    make install
+    ERROR_NUMBER=$(echo $?)             #get error number
+    if [ $ERROR_NUMBER -ne 0 ]; then
+        exit $ERROR_CODE
+    fi
+    cd $WORKING_DIRECTORY               #change back to the working directory
+    }
+
 
 function extract_version() {                                    #function has no parameter
     versionFile=$(ls exec/ | grep version.*)            #list DataTransfer directory and send result to grep to extract the file version.hpp
@@ -109,6 +122,14 @@ echo -e "\nCreating directory $FOLDER_NAME![$(date +"%T")]\n"
 mkdir $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH
 
 
+# Clean library
+clean_project lib
+
+#Compile library
+compile_install_library lib
+cp lib/bin/libqrng.so.1.0 $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH
+
+
 # Clean project
 clean_project exec
 
@@ -117,12 +138,6 @@ clean_project exec
 compile_project exec
 cp exec/bin/qrand $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH
 
-# Clean library
-clean_project lib
-
-#Compile library
-compile_project lib
-cp lib/bin/libqrng.so.1.0 $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH
 
 
 ###############################
