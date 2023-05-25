@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo "Build script created by Sebastian M. Ardelean <sebastian.ardelean@cs.upt.ro>"
 echo -e "Start deployment[$(date +"%T")]...\n"
 
 #GLOBAL_VARIABLES
