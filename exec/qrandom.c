@@ -48,7 +48,7 @@
 #define DEFAULT_MIN_VALUE_F 0.0f
 #define DEFAULT_MAX_VALUE_F 1.0f
 #define DEFAULT_MIN_VALUE_I 0
-#define DEFAULT_MAX_VALUE_I 1
+#define DEFAULT_MAX_VALUE_I 100
 
 #define DOMAIN_ADDR_LENGTH 256u
 
@@ -249,15 +249,15 @@ int main(int argc, char **argv)
 void print_help(void)
 {
     fprintf(stderr, "\n\n\t\t%s version %s\n\n", PROGRAM_NAME, VERSION);
-    fprintf(stderr, "%s [-h] [-a domain] [-s no of samples] [-m min double value] [-M max double value] [-i min int value] [-I max int value] [-t type] [-f stream]\n", PROGRAM_NAME);
+    fprintf(stderr, "%s -t type [-h] [-a domain] [-s no of samples] [-m min double value] [-M max double value] [-i min int value] [-I max int value] [-f stream]\n", PROGRAM_NAME);
     fprintf(stderr, "-h \t help\n");
     fprintf(stderr, "-a \t domain address. [Default: random.cs.upt.ro]\n");
     fprintf(stderr, "-s \t number of samples. [Default 1]\n");
     fprintf(stderr, "-m \t min value double. [Default 0.0]\n");
     fprintf(stderr, "-M \t max value double. [Default 1.0]\n");
     fprintf(stderr, "-i \t min value int64. [Default 0]\n");
-    fprintf(stderr, "-I \t max value int64. [Default 1]\n");
-    fprintf(stderr, "-t \t type.\n");
+    fprintf(stderr, "-I \t max value int64. [Default 100]\n");
+    fprintf(stderr, "-t \t type. Mandatory parameter!\n");
     fprintf(stderr, "-f \t stream.\n");
     fprintf(stderr, "\n================================\n");
     fprintf(stderr, "Possible values for t:\n");

@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Wall -c -g -fPIC -Wno-parentheses -fno-strict-aliasing 
-LFLAGS=-shared -Wl,-soname,-lcurl
+LFLAGS=-shared -Wl,-soname,libqrng
 SRC=$(wildcard *.c)
 COMPILE=$(patsubst %.c, %.o, $(SRC))
 OBJ=$(wildcard bin/*.o)
@@ -26,13 +26,12 @@ link: copy_objects
 	$(CC) $(LFLAGS) $(OBJ) -o bin/$(SO_FILE)
 
 install:
-	cp bin/$(SO_FILE) /usr/lib
-	ln -sf /usr/lib/$(SO_FILE) /usr/lib/$(SO_OBJ).so.1
-	ln -sf /usr/lib/$(SO_FILE) /usr/lib/$(SO_OBJ).so
-	ln -sf /usr/lib/$(SO_FILE) /usr/lib/$(SO_OBJ).o.1
+	cp bin/$(SO_FILE) /usr/local/lib
+	ln -sf /usr/local/lib/$(SO_FILE) /usr/local/lib/$(SO_OBJ).so.1
+	ln -sf /usr/local/lib/$(SO_FILE) /usr/local/lib/$(SO_OBJ).so
+	ln -sf /usr/local/lib/$(SO_FILE) /usr/local/lib/$(SO_OBJ).o.1
 
 clean:
 	rm -rf bin/
 
-exec:
-	$(CC) -Wall -g main.c -o main -lcurl -lqrng
+

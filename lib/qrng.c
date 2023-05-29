@@ -68,11 +68,18 @@ typedef struct
   double max_range_f;
 }s_api_t;
 
+#ifdef NO_DYNAMIC_MEMORY_ALLOCATION
+#define TOTAL_MAX_SIZE_RESPONSE CURL_MAX_HTTP_HEADER
+typedef struct {
+  char memory[TOTAL_MAX_SIZE_RESPONSE];
+  size_t size;
+}memory_t;
+#else
 typedef struct {
     char *memory;
     size_t size;
 }memory_t;
-
+#endif
 
 static s_api_t api_types[]={
   {
@@ -240,45 +247,43 @@ int qrng_random_double(double min, double max, size_t samples, double *buffer)
 
     char final_url[URL_MAX_LENGTH]={0};
 
-    //allocate only 1 char, the callback will allocate more memory
+    
     memory_t mem_buffer;
-    mem_buffer.memory = malloc(sizeof(char));
+    
     api_types[DOUBLE_RANDOM_NUMBER].samples = samples;
     api_types[DOUBLE_RANDOM_NUMBER].min_range_f = min;
     api_types[DOUBLE_RANDOM_NUMBER].max_range_f = max;
-    if (mem_buffer.memory) {
-      memset(&mem_buffer, 0, sizeof(mem_buffer));
+    
+    memset(&mem_buffer, 0, sizeof(mem_buffer));
 
-      create_req_url(DOUBLE_RANDOM_NUMBER, final_url);
+    create_req_url(DOUBLE_RANDOM_NUMBER, final_url);
 
 
-      retval = execute_request(final_url, (void *)&mem_buffer);
+    retval = execute_request(final_url, (void *)&mem_buffer);
       
-      if (!retval) {
-        /* parse values array */
-        char *random_values_string = mem_buffer.memory;
-        /* Skip first character because it's [ */
-        random_values_string ++;
-        /* Skip last character because is ] */
-        random_values_string[strlen(random_values_string)-1]=0;
-        char *token = strtok(random_values_string,",");
-        size_t i = 0;
+    if (!retval) {
+      /* parse values array */
+      char *random_values_string = mem_buffer.memory;
+      /* Skip first character because it's [ */
+      random_values_string ++;
+      /* Skip last character because is ] */
+      random_values_string[strlen(random_values_string)-1]=0;
+      char *token = strtok(random_values_string,",");
+      size_t i = 0;
         
-        for (i = 0; i < samples; i++) {
-          buffer[i] = atof(token);
-          token = strtok(NULL, ",");
-        }   
-      }
-      else {
-        fprintf(stderr, "could not execute curl request");
-      }
+      for (i = 0; i < samples; i++) {
+        buffer[i] = atof(token);
+        token = strtok(NULL, ",");
+      }   
     }
     else {
-      retval = -1;
+      fprintf(stderr, "could not execute curl request");
     }
+#ifndef NO_DYNAMIC_MEMORY_ALLOCATION    
     if (mem_buffer.memory) {
       free(mem_buffer.memory);
     }
+#endif
     return retval;
 }
 
@@ -288,45 +293,43 @@ int qrng_random_float(float min, float max, size_t samples, float *buffer)
 
     char final_url[URL_MAX_LENGTH]={0};
 
-    //allocate only 1 char, the callback will allocate more memory
+    
     memory_t mem_buffer;
-    mem_buffer.memory = malloc(sizeof(char));
+
     api_types[FLOAT_RANDOM_NUMBER].samples = samples;
     api_types[FLOAT_RANDOM_NUMBER].min_range_f = min;
     api_types[FLOAT_RANDOM_NUMBER].max_range_f = max;
-    if (mem_buffer.memory) {
-      memset(&mem_buffer, 0, sizeof(mem_buffer));
+    
+    memset(&mem_buffer, 0, sizeof(mem_buffer));
 
-      create_req_url(FLOAT_RANDOM_NUMBER, final_url);
+    create_req_url(FLOAT_RANDOM_NUMBER, final_url);
 
 
-      retval = execute_request(final_url, (void *)&mem_buffer);
+    retval = execute_request(final_url, (void *)&mem_buffer);
       
-      if (!retval) {
-        /* parse values array */
-        char *random_values_string = mem_buffer.memory;
-        /* Skip first character because it's [ */
-        random_values_string ++;
-        /* Skip last character because is ] */
-        random_values_string[strlen(random_values_string)-1]=0;
-        char *token = strtok(random_values_string,",");
-        size_t i = 0;
-        
-        for (i = 0; i < samples; i++) {
-          buffer[i] = atof(token);
-          token = strtok(NULL, ",");
-        }   
-      }
-      else {
-        fprintf(stderr, "could not execute curl request");
-      }
+    if (!retval) {
+      /* parse values array */
+      char *random_values_string = mem_buffer.memory;
+      /* Skip first character because it's [ */
+      random_values_string ++;
+      /* Skip last character because is ] */
+      random_values_string[strlen(random_values_string)-1]=0;
+      char *token = strtok(random_values_string,",");
+      size_t i = 0;
+      
+      for (i = 0; i < samples; i++) {
+        buffer[i] = atof(token);
+        token = strtok(NULL, ",");
+      }   
     }
     else {
-      retval = -1;
+      fprintf(stderr, "could not execute curl request");
     }
+#ifndef NO_DYNAMIC_MEMORY_ALLOCATION    
     if (mem_buffer.memory) {
       free(mem_buffer.memory);
     }
+#endif
     return retval;
 }
 
@@ -336,45 +339,44 @@ int qrng_random_int64(int64_t min, int64_t max, size_t samples, int64_t *buffer)
 
     char final_url[URL_MAX_LENGTH]={0};
 
-    //allocate only 1 char, the callback will allocate more memory
+    
     memory_t mem_buffer;
-    mem_buffer.memory = malloc(sizeof(char));
+
     api_types[INT_RANDOM_NUMBER].samples = samples;
     api_types[INT_RANDOM_NUMBER].min_range_i = min;
     api_types[INT_RANDOM_NUMBER].max_range_i = max;
-    if (mem_buffer.memory) {
-      memset(&mem_buffer, 0, sizeof(mem_buffer));
 
-      create_req_url(INT_RANDOM_NUMBER, final_url);
+    memset(&mem_buffer, 0, sizeof(mem_buffer));
+
+    create_req_url(INT_RANDOM_NUMBER, final_url);
 
 
-      retval = execute_request(final_url, (void *)&mem_buffer);
+    retval = execute_request(final_url, (void *)&mem_buffer);
       
-      if (!retval) {
-        /* parse values array */
-        char *random_values_string = mem_buffer.memory;
-        /* Skip first character because it's [ */
-        random_values_string ++;
-        /* Skip last character because is ] */
-        random_values_string[strlen(random_values_string)-1]=0;
-        char *token = strtok(random_values_string,",");
-        size_t i = 0;
+    if (!retval) {
+      /* parse values array */
+      char *random_values_string = mem_buffer.memory;
+      /* Skip first character because it's [ */
+      random_values_string ++;
+      /* Skip last character because is ] */
+      random_values_string[strlen(random_values_string)-1]=0;
+      char *token = strtok(random_values_string,",");
+      size_t i = 0;
         
-        for (i = 0; i < samples; i++) {
-          buffer[i] = atoll(token);
-          token = strtok(NULL, ",");
-        }   
-      }
-      else {
-        fprintf(stderr, "could not execute curl request");
-      }
+      for (i = 0; i < samples; i++) {
+        buffer[i] = atoll(token);
+        token = strtok(NULL, ",");
+      }   
     }
     else {
-      retval = -1;
+      fprintf(stderr, "could not execute curl request");
     }
+    
+#ifndef NO_DYNAMIC_MEMORY_ALLOCATION        
     if (mem_buffer.memory) {
       free(mem_buffer.memory);
     }
+#endif
     return retval;
 }
 
@@ -384,45 +386,44 @@ int qrng_random_int32(int32_t min, int32_t max, size_t samples, int32_t *buffer)
 
     char final_url[URL_MAX_LENGTH]={0};
 
-    //allocate only 1 char, the callback will allocate more memory
+    
     memory_t mem_buffer;
-    mem_buffer.memory = malloc(sizeof(char));
+
+
     api_types[SHORT_RANDOM_NUMBER].samples = samples;
     api_types[SHORT_RANDOM_NUMBER].min_range_i = min;
     api_types[SHORT_RANDOM_NUMBER].max_range_i = max;
-    if (mem_buffer.memory) {
-      memset(&mem_buffer, 0, sizeof(mem_buffer));
 
-      create_req_url(SHORT_RANDOM_NUMBER, final_url);
+    memset(&mem_buffer, 0, sizeof(mem_buffer));
+
+    create_req_url(SHORT_RANDOM_NUMBER, final_url);
 
 
-      retval = execute_request(final_url, (void *)&mem_buffer);
+    retval = execute_request(final_url, (void *)&mem_buffer);
       
-      if (!retval) {
-        /* parse values array */
-        char *random_values_string = mem_buffer.memory;
-        /* Skip first character because it's [ */
-        random_values_string ++;
-        /* Skip last character because is ] */
-        random_values_string[strlen(random_values_string)-1]=0;
-        char *token = strtok(random_values_string,",");
-        size_t i = 0;
+    if (!retval) {
+      /* parse values array */
+      char *random_values_string = mem_buffer.memory;
+      /* Skip first character because it's [ */
+      random_values_string ++;
+      /* Skip last character because is ] */
+      random_values_string[strlen(random_values_string)-1]=0;
+      char *token = strtok(random_values_string,",");
+      size_t i = 0;
         
-        for (i = 0; i < samples; i++) {
-          buffer[i] = atol(token);
-          token = strtok(NULL, ",");
-        }   
-      }
-      else {
-        fprintf(stderr, "could not execute curl request");
-      }
+      for (i = 0; i < samples; i++) {
+        buffer[i] = atol(token);
+        token = strtok(NULL, ",");
+      }   
     }
     else {
-      retval = -1;
+      fprintf(stderr, "could not execute curl request");
     }
+#ifndef NO_DYNAMIC_MEMORY_ALLOCATION        
     if (mem_buffer.memory) {
       free(mem_buffer.memory);
     }
+#endif   
     return retval;
 }
 
@@ -532,6 +533,19 @@ void create_req_url(e_req_type_t req_type, char *api_url)
 
 size_t curl_write_cbk(void *content, size_t size, size_t nmemb, void *userp)
 {
+#ifdef NO_DYNAMIC_MEMORY_ALLOCATION
+  size_t real_size = size *nmemb;
+  memory_t *mem = (memory_t *)userp;
+  size_t available_space = TOTAL_MAX_SIZE_RESPONSE - (mem->size + real_size + 1);
+  if (available_space > (real_size + 1)) {
+    memcpy(&(mem->memory[mem->size]), content, real_size);
+    mem->size += real_size;
+    mem->memory[mem->size] = 0;
+    return real_size;
+  }
+  fprintf(stderr, "Static buffer full!\n");
+  return 0;
+#else
     size_t real_size = size * nmemb;
     memory_t *mem = (memory_t *)userp;
     char *ptr = realloc(mem->memory, mem->size + real_size + 1);
@@ -545,4 +559,5 @@ size_t curl_write_cbk(void *content, size_t size, size_t nmemb, void *userp)
     mem->size += real_size;
     mem->memory[mem->size] = 0;
     return real_size;
+#endif
 }
