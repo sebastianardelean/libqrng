@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Wall -c -g -fPIC -Wno-parentheses -fno-strict-aliasing 
-LFLAGS=-shared -Wl,-soname,-lcurl
+LFLAGS=-shared -Wl,-soname,
 SRC=$(wildcard *.c)
 COMPILE=$(patsubst %.c, %.o, $(SRC))
 OBJ=$(wildcard bin/*.o)

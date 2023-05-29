@@ -7,8 +7,10 @@ extern "C" {
 
 #include <Python.h>
 
-PyObject* init(PyObject *, PyObject *);
-PyObject* random_int(PyObject*, PyObject *);
+PyObject* qrand_init(PyObject *, PyObject *);
+PyObject* qrand_close(PyObject *);
+PyObject* qrand_random_int(PyObject*, PyObject *);
+PyObject* qrand_random_float(PyObject *, PyObject *);
   
 #ifdef __cplusplus
 }
