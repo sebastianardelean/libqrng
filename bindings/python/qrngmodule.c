@@ -3,11 +3,14 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <qrng.h>
+#include <stdio.h>
 #include "qrngmodule.h"
+
 
 
 PyObject* qrand_init(PyObject *self, PyObject *args)
 {
+
   int retval = 0;
   char *device_domain_address;
   if (!PyArg_ParseTuple(args, "s", &device_domain_address)) {
@@ -26,7 +29,7 @@ PyObject* qrand_close(PyObject *self )
 }
 
 
-PyObject* qrand_random_int(PyObject *self, PyObject *args)
+PyObject* qrand_rand_int(PyObject *self, PyObject *args)
 {
   int64_t min = 0;
   int64_t max = 0;
@@ -60,7 +63,7 @@ PyObject* qrand_random_int(PyObject *self, PyObject *args)
 }
 
 
-PyObject* qrand_random_float(PyObject *self, PyObject *args)
+PyObject* qrand_rand_float(PyObject *self, PyObject *args)
 {
   double min = 0.0;
   double max = 1.0;
@@ -92,3 +95,6 @@ PyObject* qrand_random_float(PyObject *self, PyObject *args)
   
   return NULL;
 }
+
+
+

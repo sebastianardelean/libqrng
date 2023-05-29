@@ -9,8 +9,6 @@ library_dirs = ['/usr/lib', '/usr/local/lib']
 setup(
 	name = "qrng",
 	version = "1.0",
-#        libraries=['libqrng','libcurl'],
- #       library_dirs=library_dirs,
 	ext_modules = [Extension("qrng",
                                  ["bind.c", "qrngmodule.c"],
                                  libraries=libraries,

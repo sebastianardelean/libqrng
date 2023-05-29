@@ -4,6 +4,8 @@ char initfunc_docs[] = "Init function.";
 char randomintfunc_docs[] = "Generate random int numbers.";
 char closefunc_docs[] = "Close function";
 char randomdoublefunc_docs[] = "Generate random float numbers.";
+
+
 PyMethodDef  qrng_funcs[] = {
         {
           "qrand_close",
@@ -18,14 +20,14 @@ PyMethodDef  qrng_funcs[] = {
           initfunc_docs
         },
 	{
-          "qrand_random_int",
-            (PyCFunction)qrand_random_int,
+          "qrand_rand_int",
+            (PyCFunction)qrand_rand_int,
             METH_VARARGS,
             randomintfunc_docs
         },
         {
-          "qrand_random_float",
-          (PyCFunction)qrand_random_float,
+          "qrand_rand_float",
+          (PyCFunction)qrand_rand_float,
           METH_VARARGS,
           randomdoublefunc_docs
         },

@@ -9,8 +9,10 @@ extern "C" {
 
 PyObject* qrand_init(PyObject *, PyObject *);
 PyObject* qrand_close(PyObject *);
-PyObject* qrand_random_int(PyObject*, PyObject *);
-PyObject* qrand_random_float(PyObject *, PyObject *);
+PyObject* qrand_rand_int(PyObject*, PyObject *);
+PyObject* qrand_rand_float(PyObject *, PyObject *);
+
+
   
 #ifdef __cplusplus
 }
