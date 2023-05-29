@@ -68,11 +68,18 @@ typedef struct
   double max_range_f;
 }s_api_t;
 
+#ifdef NO_DYNAMIC_MEMORY_ALLOCATION
+#define TOTAL_MAX_SIZE_RESPONSE CURL_MAX_HTTP_HEADER
+typedef struct {
+  char memory[TOTAL_MAX_SIZE_RESPONSE];
+  size_t size;
+}memory_t;
+#else
 typedef struct {
     char *memory;
     size_t size;
 }memory_t;
-
+#endif
 
 static s_api_t api_types[]={
   {
@@ -272,10 +279,11 @@ int qrng_random_double(double min, double max, size_t samples, double *buffer)
     else {
       fprintf(stderr, "could not execute curl request");
     }
-    
+#ifndef NO_DYNAMIC_MEMORY_ALLOCATION    
     if (mem_buffer.memory) {
       free(mem_buffer.memory);
     }
+#endif
     return retval;
 }
 
@@ -317,10 +325,11 @@ int qrng_random_float(float min, float max, size_t samples, float *buffer)
     else {
       fprintf(stderr, "could not execute curl request");
     }
-    
+#ifndef NO_DYNAMIC_MEMORY_ALLOCATION    
     if (mem_buffer.memory) {
       free(mem_buffer.memory);
     }
+#endif
     return retval;
 }
 
@@ -363,10 +372,11 @@ int qrng_random_int64(int64_t min, int64_t max, size_t samples, int64_t *buffer)
       fprintf(stderr, "could not execute curl request");
     }
     
-    
+#ifndef NO_DYNAMIC_MEMORY_ALLOCATION        
     if (mem_buffer.memory) {
       free(mem_buffer.memory);
     }
+#endif
     return retval;
 }
 
@@ -409,10 +419,11 @@ int qrng_random_int32(int32_t min, int32_t max, size_t samples, int32_t *buffer)
     else {
       fprintf(stderr, "could not execute curl request");
     }
-    
+#ifndef NO_DYNAMIC_MEMORY_ALLOCATION        
     if (mem_buffer.memory) {
       free(mem_buffer.memory);
     }
+#endif   
     return retval;
 }
 
@@ -522,6 +533,19 @@ void create_req_url(e_req_type_t req_type, char *api_url)
 
 size_t curl_write_cbk(void *content, size_t size, size_t nmemb, void *userp)
 {
+#ifdef NO_DYNAMIC_MEMORY_ALLOCATION
+  size_t real_size = size *nmemb;
+  memory_t *mem = (memory_t *)userp;
+  size_t available_space = TOTAL_MAX_SIZE_RESPONSE - (mem->size + real_size + 1);
+  if (available_space > (real_size + 1)) {
+    memcpy(&(mem->memory[mem->size]), content, real_size);
+    mem->size += real_size;
+    mem->memory[mem->size] = 0;
+    return real_size;
+  }
+  fprintf(stderr, "Static buffer full!\n");
+  return 0;
+#else
     size_t real_size = size * nmemb;
     memory_t *mem = (memory_t *)userp;
     char *ptr = realloc(mem->memory, mem->size + real_size + 1);
@@ -535,4 +559,5 @@ size_t curl_write_cbk(void *content, size_t size, size_t nmemb, void *userp)
     mem->size += real_size;
     mem->memory[mem->size] = 0;
     return real_size;
+#endif
 }
