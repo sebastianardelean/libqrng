@@ -6,6 +6,7 @@ echo -e "Start deployment[$(date +"%T")]...\n"
 SW_NAME="qrand"           #archive name
 BUILD_DATE=$(date +%d.%m.%Y)    #build date
 ARCH="amd64"
+TYPE="no-dynamic-malloc"
 WORKING_DIRECTORY=$(pwd)        #save working directory
 MAJOR_VERSION=0
 MINOR_VERSION=0
@@ -42,7 +43,7 @@ function compile_install_library() {            #function will accept 1 paramete
     echo -e "\nCompiling $1...[$(date +"%T")]\n"
     path=$1                             #$1 is the directory of the source code that will be compiled
     cd $path                            #change directory to the provided path
-    make                                #first clean and then make the project
+    make FLAGS="$2"                     #first clean and then make the project
     make install
     ERROR_NUMBER=$(echo $?)             #get error number
     if [ $ERROR_NUMBER -ne 0 ]; then
@@ -101,6 +102,122 @@ function set_new_version_number() {                                             
     }
 
 
+
+
+function create_archive() {
+    ###############################
+    # Start Building Executable   #
+    # with memory allocation      #
+    ###############################
+
+    #create buffer directory for saving .so files
+    TYPE=$1
+    FOLDER_NAME=$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE
+    echo -e "\nCreating directory $FOLDER_NAME![$(date +"%T")]\n"
+    mkdir $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE
+
+
+    # Clean library
+    clean_project lib
+
+    #Compile library
+    compile_install_library lib $2
+    cp lib/bin/libqrng.so.1.0 $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE
+
+
+    # Clean project
+    clean_project exec
+
+    #Compile Executable
+
+    compile_project exec
+    cp exec/bin/qrand $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE
+
+
+
+    ###############################
+    # Create Install Script       #
+    ###############################
+    echo -e "\nCreating Install SHELL Script...[$(date +"%T")]\n"
+    cd $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE
+    touch install.sh
+
+    echo "#!/bin/bash" >> install.sh
+    echo "cp  *.so.* /usr/lib" >> install.sh
+    echo "ln -sf /usr/lib/libqrng.so.1.0 /usr/lib/libqrng.so" >> install.sh
+    echo "ldconfig" >> install.sh
+
+
+    cd $WORKING_DIRECTORY
+
+    ###############################
+    # Start Creating Archive      #
+    ###############################
+    echo -e "Creating deploy archive...[$(date +"%T")]\n"
+    tar -zcvf $SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE.tar.gz $SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE
+
+
+    ###############################
+    # Start Creating Archive      #
+    ###############################
+
+
+    echo -e "Clean install.sh from buffer folder...[$(date +"%T")]\n"
+    rm $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE/install.sh
+
+
+    echo -e "Create usr/local/bin for executable...[$(date +"%T")]\n"
+    mkdir -p $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE/usr/local/bin
+
+    echo -e "Copy executable to usr/local/bin...[$(date +"%T")]\n"
+    mv $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE/qrand $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE/usr/local/bin
+
+
+    echo -e "Create usr/local/lib for library...[$(date +"%T")]\n"
+    mkdir -p $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE/usr/local/lib
+
+    echo -e "Copy executable to usr/local/bin...[$(date +"%T")]\n"
+    mv $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE/libqrng.so.1.0 $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE/usr/local/lib/libqrng.so
+
+
+    echo -e "Create usr/local/include for library...[$(date +"%T")]\n"
+    mkdir -p $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE/usr/local/include
+
+    echo -e "Copy include to usr/local/include...[$(date +"%T")]\n"
+    cp lib/qrng.h $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE/usr/local/include
+
+    ###############################
+    # Create control file         #
+    ###############################
+    echo -e "\nCreating file...$(date +"%T")]\n"
+    mkdir -p $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE/DEBIAN
+    cd $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE/DEBIAN
+    touch control
+
+
+
+    echo "Package: qrand" >> control
+    echo "Version:" $MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER >> control
+    echo "Architecture:" $ARCH >> control
+    echo "Maintainer: Sebastian M. Ardelean <sebastian.ardelean@cs.upt.ro>" >> control
+    echo "Depends: libcurl3-gnutls" >> control
+    echo "Description: Application to generate quantum random numbers" >> control
+    echo " qrand is a command line application for generating random numbers using IDQ Quantis Appliance" >> control
+    echo -e "\n" >> control
+
+    cd $WORKING_DIRECTORY
+
+    dpkg-deb --build --root-owner-group $SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE
+
+    echo -e "Cleaning...[$(date +"%T")]\n"
+    # delete directory used for creating archive.tar.gz
+    rm -r $SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE
+    # clean obj and so files from projects
+    clean_project exec
+    clean_project lib
+}
+
+
 ###############################
 # PREPARING VERSION NUMBER    #
 ###############################
@@ -112,113 +229,10 @@ echo -e "\nSetting version number![$(date +"%T")]\n"
 set_new_version_number
 
 
-###############################
-# Start Building Executable   #
-###############################
+create_archive "no-malloc" "-DNO_DYNAMIC_MEMORY_ALLOCATION"
 
-#create buffer directory for saving .so files
-FOLDER_NAME=$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH
-echo -e "\nCreating directory $FOLDER_NAME![$(date +"%T")]\n"
-mkdir $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH
-
-
-# Clean library
-clean_project lib
-
-#Compile library
-compile_install_library lib
-cp lib/bin/libqrng.so.1.0 $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH
-
-
-# Clean project
-clean_project exec
-
-#Compile Executable
-
-compile_project exec
-cp exec/bin/qrand $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH
-
-
-
-###############################
-# Create Install Script       #
-###############################
-echo -e "\nCreating Install SHELL Script...[$(date +"%T")]\n"
-cd $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH
-touch install.sh
-
-echo "#!/bin/bash" >> install.sh
-echo "cp  *.so.* /usr/lib" >> install.sh
-echo "ln -sf /usr/lib/libqrng.so.1.0 /usr/lib/libqrng.so" >> install.sh
-echo "ldconfig" >> install.sh
-
-
-cd $WORKING_DIRECTORY
-
-###############################
-# Start Creating Archive      #
-###############################
-echo -e "Creating deploy archive...[$(date +"%T")]\n"
-tar -zcvf $SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH.tar.gz $SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH
-
-
-###############################
-# Start Creating Archive      #
-###############################
-
-
-echo -e "Clean install.sh from buffer folder...[$(date +"%T")]\n"
-rm $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH/install.sh
-
-
-echo -e "Create usr/local/bin for executable...[$(date +"%T")]\n"
-mkdir -p $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH/usr/local/bin
-
-echo -e "Copy executable to usr/local/bin...[$(date +"%T")]\n"
-mv $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH/qrand $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH/usr/local/bin
-
-
-echo -e "Create usr/local/lib for library...[$(date +"%T")]\n"
-mkdir -p $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH/usr/local/lib
-
-echo -e "Copy executable to usr/local/bin...[$(date +"%T")]\n"
-mv $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH/libqrng.so.1.0 $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH/usr/local/lib/libqrng.so
-
-
-echo -e "Create usr/local/include for library...[$(date +"%T")]\n"
-mkdir -p $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH/usr/local/include
-
-echo -e "Copy include to usr/local/include...[$(date +"%T")]\n"
-cp lib/qrng.h $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH/usr/local/include
-
-###############################
-# Create control file         #
-###############################
-echo -e "\nCreating file...$(date +"%T")]\n"
-mkdir -p $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH/DEBIAN
-cd $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH/DEBIAN
-touch control
-
-
-
-echo "Package: qrand" >> control
-echo "Version:" $MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER >> control
-echo "Architecture:" $ARCH >> control
-echo "Maintainer: Sebastian M. Ardelean <sebastian.ardelean@cs.upt.ro>" >> control
-echo "Depends: libcurl3-gnutls" >> control
-echo "Description: Application to generate quantum random numbers" >> control
-echo " qrand is a command line application for generating random numbers using IDQ Quantis Appliance" >> control
-echo -e "\n" >> control
-
-cd $WORKING_DIRECTORY
-
-dpkg-deb --build --root-owner-group $SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH
-
-echo -e "Cleaning...[$(date +"%T")]\n"
-# delete directory used for creating archive.tar.gz
-rm -r $SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH
-# clean obj and so files from projects
-clean_project exec
-clean_project lib
+create_archive "malloc" ""
 
 echo -e "Finished deployment![$(date +"%T")]\n"
+
+
