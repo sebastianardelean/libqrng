@@ -3,7 +3,7 @@ CFLAGS=-Wall -Wextra -Wpedantic -c -Wno-parentheses -fno-strict-aliasing -I../..
 LFLAGS=-lqrng -lcurl
 SRC=$(wildcard *.c)
 COMPILE=$(patsubst %.c, %.o, $(SRC))
-OBJ=$(wildcard ../../bin/*.o)
+OBJ=$(wildcard ../../bin/randdouble.o)
 
 OUT=randdouble
 
