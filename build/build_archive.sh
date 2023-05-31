@@ -242,3 +242,5 @@ echo -e "Finished deployment![$(date +"%T")]\n"
 compile_project ../examples/qrand
 
 compile_project ../examples/fwversion
+
+compile_project ../examples/sysinfo
