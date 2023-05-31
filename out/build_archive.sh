@@ -213,8 +213,8 @@ function create_archive() {
     # delete directory used for creating archive.tar.gz
     rm -r $SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE
     # clean obj and so files from projects
-    clean_project exec
-    clean_project lib
+    clean_project ../examples/qrand
+    clean_project ../src
 }
 
 
