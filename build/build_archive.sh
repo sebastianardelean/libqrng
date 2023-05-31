@@ -244,3 +244,7 @@ compile_project ../examples/qrand
 compile_project ../examples/fwversion
 
 compile_project ../examples/sysinfo
+
+compile_project ../examples/randint32
+
+compile_project ../examples/randint64

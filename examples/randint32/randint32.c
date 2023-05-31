@@ -1,5 +1,5 @@
 /****************************************************************************
- * sysinfo - Quantum Random Number Generator using IDQ's Quantis Appliance  *
+ * randint32 - Quantum Random Number Generator using IDQ's Quantis Appliance  *
  *                                                                          *
  * Copyright (C) 2023  Sebastian Mihai Ardelean                             *
  *                                                                          *
@@ -18,9 +18,9 @@
  ****************************************************************************/
 
 /**
- * @file sysinfo.c
+ * @file randint32.c
  * @author Sebastian Mihai Ardelean <sebastian.ardelean@cs.upt.ro>
- * @date 31 May 2023
+ * @date 24 May 2023
  * @brief API for interacting with IDQ's Quantis Appliance
  */
 #include <stdlib.h>
@@ -32,18 +32,17 @@
 
 
 
-
-#define PROGRAM_NAME "sysinfo"
+#define PROGRAM_NAME "randint32"
 
 #define VERSION "1.0.0"
 
 #define AUTHORS "Sebastian M. Ardelean"
 
-
-
+#define DEFAULT_NUMBER_OF_SAMPLES 1u
+#define DEFAULT_MIN_VALUE_I 0
+#define DEFAULT_MAX_VALUE_I 100
 
 #define DOMAIN_ADDR_LENGTH 256u
-
 
 static void print_help();
 
@@ -53,7 +52,16 @@ int main(int argc, char **argv)
     int opt = -1;
     char domain_addr[DOMAIN_ADDR_LENGTH] = "\0";
     int retval = 0;
+    int32_t *data32 = NULL;
 
+    size_t i = 0;
+
+
+
+
+    uint32_t number_of_samples = DEFAULT_NUMBER_OF_SAMPLES;
+    int64_t min_value_i = DEFAULT_MIN_VALUE_I;
+    int64_t max_value_i = DEFAULT_MAX_VALUE_I;
 
 
     if (argc == 1) {
@@ -61,7 +69,7 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
 
     }
-    while ((opt = getopt(argc, argv, "ha:")) != -1) {
+    while ((opt = getopt(argc, argv, "ha:s:i:I:")) != -1) {
         switch (opt) {
             case 'h':
                 print_help();
@@ -69,6 +77,18 @@ int main(int argc, char **argv)
                 break;
             case 'a':
                 strncpy(domain_addr, optarg, strlen(optarg));
+                break;
+            case 's':
+                number_of_samples = atol(optarg);
+		if (number_of_samples < 1) {
+		    number_of_samples = DEFAULT_NUMBER_OF_SAMPLES;
+		}
+                break;
+            case 'i':
+                min_value_i = atoll(optarg);
+                break;
+            case 'I':
+                max_value_i = atoll(optarg);
                 break;
             default:
                 print_help();
@@ -78,6 +98,12 @@ int main(int argc, char **argv)
 
 
 
+    if (min_value_i > max_value_i) {
+	print_help();
+	exit(EXIT_FAILURE);
+    }
+
+
     /*Initialize qrng library*/
     retval = qrng_open(domain_addr);
     if (retval) {
@@ -85,11 +111,23 @@ int main(int argc, char **argv)
     }
 
 
-    (void)qrng_system_info(stdout);
+    data32 = malloc(number_of_samples * sizeof(int32_t));
+    if (data32) {
+      if (qrng_random_int32(min_value_i, max_value_i, number_of_samples, data32) == 0) {
+        //print the value to stdout
+        for (i = 0; i < number_of_samples; i++) {
+          printf("%d ", data32[i]);
+        }
+      }
+      
+    }
 
 
     qrng_close();
-    
+    if (data32 != NULL) {
+        free(data32);
+    }
+
     exit(EXIT_SUCCESS);
 }
 
@@ -97,9 +135,11 @@ int main(int argc, char **argv)
 void print_help(void)
 {
     fprintf(stderr, "\n\n\t\t%s version %s\n\n", PROGRAM_NAME, VERSION);
-    fprintf(stderr, "%s [-h] [-a domain]\n", PROGRAM_NAME);
+    fprintf(stderr, "%s [-h] [-a domain] [-s no of samples] [-i min int value] [-I max int value]\n", PROGRAM_NAME);
     fprintf(stderr, "-h \t help\n");
     fprintf(stderr, "-a \t domain address.\n");
-    
+    fprintf(stderr, "-s \t number of samples. [Default 1]\n");
+    fprintf(stderr, "-i \t min value int64. [Default 0]\n");
+    fprintf(stderr, "-I \t max value int64. [Default 100]\n");
 }
 

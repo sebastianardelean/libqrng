@@ -5,7 +5,7 @@ SRC=$(wildcard *.c)
 COMPILE=$(patsubst %.c, %.o, $(SRC))
 OBJ=$(wildcard ../../bin/*.o)
 
-OUT=qrand
+OUT=randint64
 
 
 all: create_dir $(COMPILE) link
