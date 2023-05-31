@@ -28,7 +28,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
-#include "qrng.h"
+#include <qrng.h>
 #include "version.h"
 
 
