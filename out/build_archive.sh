@@ -54,21 +54,21 @@ function compile_install_library() {            #function will accept 1 paramete
 
 
 function extract_version() {                                    #function has no parameter
-    versionFile=$(ls exec/ | grep version.*)            #list DataTransfer directory and send result to grep to extract the file version.hpp
+    versionFile=$(ls ../examples/qrand/ | grep version.*)            #list qrand directory and send result to grep to extract the file version.hpp
     
     #grep previous values from version.hpp
-    MAJOR_VERSION=$(grep -Eo 'MAJOR_VERSION\s([0-9]{1,3})' exec/$versionFile | grep -Eo '[0-9]{1,3}')
+    MAJOR_VERSION=$(grep -Eo 'MAJOR_VERSION\s([0-9]{1,3})' ../examples/qrand/$versionFile | grep -Eo '[0-9]{1,3}')
     ERROR_NUMBER=$(echo $?)             #get error number
     if [ $ERROR_NUMBER -ne 0 ]; then
         exit $ERROR_CODE
     fi
     
-    MINOR_VERSION=$(grep -Eo 'MINOR_VERSION\s([0-9]{1,3})' exec/$versionFile | grep -Eo '[0-9]{1,3}')
+    MINOR_VERSION=$(grep -Eo 'MINOR_VERSION\s([0-9]{1,3})' ../examples/qrand/$versionFile | grep -Eo '[0-9]{1,3}')
     ERROR_NUMBER=$(echo $?)             #get error number
     if [ $ERROR_NUMBER -ne 0 ]; then
         exit $ERROR_CODE
     fi
-    BUILD_NUMBER=$(grep -Eo 'BUILD_NUMBER\s([0-9]{1,3})' exec/$versionFile | grep -Eo '[0-9]{1,3}')
+    BUILD_NUMBER=$(grep -Eo 'BUILD_NUMBER\s([0-9]{1,3})' ../examples/qrand/$versionFile | grep -Eo '[0-9]{1,3}')
     ERROR_NUMBER=$(echo $?)             #get error number
     if [ $ERROR_NUMBER -ne 0 ]; then
         exit $ERROR_CODE
@@ -94,11 +94,11 @@ function extract_version() {                                    #function has no
 }
 
 function set_new_version_number() {                                             #function has no parameters
-    versionFile=$(ls exec/ | grep version.*)                                    #list DataTransfer directory and send result to grep to extract the file version.hpp
-    sed -i "s/.*MAJOR_VERSION.*/#define MAJOR_VERSION ${MAJOR_VERSION}/" exec/$versionFile
-    sed -i "s/.*MINOR_VERSION.*/#define MINOR_VERSION ${MINOR_VERSION}/" exec/$versionFile
-    sed -i "s/.*BUILD_NUMBER.*/#define BUILD_NUMBER ${BUILD_NUMBER}/" exec/$versionFile
-    sed -i "s/.*BUILD_DATE.*/#define BUILD_DATE \"${BUILD_DATE}\"/" exec/$versionFile
+    versionFile=$(ls ../examples/qrand/ | grep version.*)                                    #list qrand directory and send result to grep to extract the file version.hpp
+    sed -i "s/.*MAJOR_VERSION.*/#define MAJOR_VERSION ${MAJOR_VERSION}/" ../examples/qrand/$versionFile
+    sed -i "s/.*MINOR_VERSION.*/#define MINOR_VERSION ${MINOR_VERSION}/" ../examples/qrand/$versionFile
+    sed -i "s/.*BUILD_NUMBER.*/#define BUILD_NUMBER ${BUILD_NUMBER}/" ../examples/qrand/$versionFile
+    sed -i "s/.*BUILD_DATE.*/#define BUILD_DATE \"${BUILD_DATE}\"/" ../examples/qrand/$versionFile
     }
 
 
@@ -118,20 +118,20 @@ function create_archive() {
 
 
     # Clean library
-    clean_project lib
+    clean_project ../src
 
     #Compile library
-    compile_install_library lib $2
-    cp lib/bin/libqrng.so.1.0 $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE
+    compile_install_library ../src $2
+    cp ../lib/libqrng.so.1.0 $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE
 
 
     # Clean project
-    clean_project exec
+    clean_project ../examples/qrand
 
     #Compile Executable
 
-    compile_project exec
-    cp exec/bin/qrand $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE
+    compile_project ../examples/qrand
+    cp ../bin/qrand $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE
 
 
 
@@ -184,7 +184,7 @@ function create_archive() {
     mkdir -p $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE/usr/local/include
 
     echo -e "Copy include to usr/local/include...[$(date +"%T")]\n"
-    cp lib/qrng.h $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE/usr/local/include
+    cp ../src/qrng.h $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE/usr/local/include
 
     ###############################
     # Create control file         #
