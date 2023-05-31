@@ -1,5 +1,5 @@
 /****************************************************************************
- * randint64 - Quantum Random Number Generator using IDQ's Quantis Appliance  *
+ * randdouble - Quantum Random Number Generator using IDQ's Quantis Appliance  *
  *                                                                          *
  * Copyright (C) 2023  Sebastian Mihai Ardelean                             *
  *                                                                          *
@@ -18,7 +18,7 @@
  ****************************************************************************/
 
 /**
- * @file randint64.c
+ * @file randdouble.c
  * @author Sebastian Mihai Ardelean <sebastian.ardelean@cs.upt.ro>
  * @date 24 May 2023
  * @brief API for interacting with IDQ's Quantis Appliance
@@ -34,7 +34,7 @@
 
 
 
-#define PROGRAM_NAME "randint64"
+#define PROGRAM_NAME "randdouble"
 
 #define VERSION "1.0.0"
 
@@ -44,9 +44,9 @@
 
 
 #define DEFAULT_NUMBER_OF_SAMPLES 1u
+#define DEFAULT_MIN_VALUE_F 0.0f
+#define DEFAULT_MAX_VALUE_F 1.0f
 
-#define DEFAULT_MIN_VALUE_I 0
-#define DEFAULT_MAX_VALUE_I 100
 
 #define DOMAIN_ADDR_LENGTH 256u
 
@@ -59,15 +59,16 @@ int main(int argc, char **argv)
     int opt = -1;
     char domain_addr[DOMAIN_ADDR_LENGTH] = "\0";
     int retval = 0;
-    int64_t *data64 = NULL;
+
+    double *datad = NULL;
     size_t i = 0;
 
 
 
 
     uint32_t number_of_samples = DEFAULT_NUMBER_OF_SAMPLES;
-    int64_t min_value_i = DEFAULT_MIN_VALUE_I;
-    int64_t max_value_i = DEFAULT_MAX_VALUE_I;
+    double min_value_f = DEFAULT_MIN_VALUE_F;
+    double max_value_f = DEFAULT_MAX_VALUE_F;
 
 
 
@@ -77,7 +78,7 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
 
     }
-    while ((opt = getopt(argc, argv, "ha:s:i:I:")) != -1) {
+    while ((opt = getopt(argc, argv, "ha:s:m:M:")) != -1) {
         switch (opt) {
             case 'h':
                 print_help();
@@ -92,11 +93,11 @@ int main(int argc, char **argv)
 		    number_of_samples = DEFAULT_NUMBER_OF_SAMPLES;
 		}
                 break;
-            case 'i':
-                min_value_i = atoll(optarg);
+            case 'm':
+                min_value_f = atof(optarg);
                 break;
-            case 'I':
-                max_value_i = atoll(optarg);
+            case 'M':
+                max_value_f = atof(optarg);
                 break;
             default:
                 print_help();
@@ -105,11 +106,10 @@ int main(int argc, char **argv)
     }
 
 
-    if (min_value_i > max_value_i) {
+    if (min_value_f > max_value_f) {
 	print_help();
 	exit(EXIT_FAILURE);
     }
-
 
     /*Initialize qrng library*/
     retval = qrng_open(domain_addr);
@@ -117,23 +117,23 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
 
-
-    data64 = malloc(number_of_samples * sizeof(int64_t));
-    if (data64) {
-      if (qrng_random_int64(min_value_i, max_value_i, number_of_samples, data64) == 0) {
+    datad = malloc(number_of_samples * sizeof(double));
+    if (datad) {
+      if (qrng_random_double(min_value_f, max_value_f, number_of_samples, datad) == 0) {
         //print the value to stdout
         for (i = 0; i < number_of_samples; i++) {
-          printf("%ld ", data64[i]);
+          printf("%lf ", datad[i]);
         }
       }
     }
-    
+
+
 
     qrng_close();
     
 
-    if (data64 != NULL) {
-        free(data64);
+    if (datad != NULL) {
+        free(datad);
     }
 
     
@@ -144,12 +144,11 @@ int main(int argc, char **argv)
 void print_help(void)
 {
     fprintf(stderr, "\n\n\t\t%s version %s\n\n", PROGRAM_NAME, VERSION);
-    fprintf(stderr, "%s [-h] [-a domain] [-s no of samples] [-i min int value] [-I max int value]\n", PROGRAM_NAME);
-    fprintf(stderr, "-h \t help\n");
+    fprintf(stderr, "%s [-h] [-a domain] [-s no of samples] [-m min double value] [-M max double value]\n", PROGRAM_NAME);
     fprintf(stderr, "-a \t domain address.\n");
     fprintf(stderr, "-s \t number of samples. [Default 1]\n");
-    fprintf(stderr, "-i \t min value int64. [Default 0]\n");
-    fprintf(stderr, "-I \t max value int64. [Default 100]\n");
+    fprintf(stderr, "-m \t min value double. [Default 0.0]\n");
+    fprintf(stderr, "-M \t max value double. [Default 1.0]\n");
 
 }
 
