@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -Wpedantic -c -Wno-parentheses -fno-strict-aliasing -I../../src
+CFLAGS=-Wall -Wextra -Wpedantic -c -Wno-parentheses -fno-strict-aliasing -I../lib/
 LFLAGS=-lqrng -lcurl
 SRC=$(wildcard *.c)
 COMPILE=$(patsubst %.c, %.o, $(SRC))
