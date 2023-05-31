@@ -252,3 +252,5 @@ compile_project ../examples/randint64
 compile_project ../examples/randfloat
 
 compile_project ../examples/randdouble
+
+compile_project ../examples/randbytestream
