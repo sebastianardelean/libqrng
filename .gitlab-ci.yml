@@ -20,12 +20,12 @@ build:
   before_script:
     - apt update && apt-get install --no-install-recommends -y libcurl4-openssl-dev curl build-essential libcurl3-gnutls
   script:
-    - chmod +x build_archive.sh
-    - ./build_archive.sh
+    - chmod +x out/build_archive.sh
+    - ./out/build_archive.sh
   artifacts:
     paths:
-      - qrand*.deb
-      - qrand*.tar.gz
+      - out/qrand*.deb
+      - out/qrand*.tar.gz
       # depending on your build setup it's most likely a good idea to cache outputs to reduce the build time
       # cache:
       #   paths:
