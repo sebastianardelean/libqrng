@@ -3,9 +3,9 @@ CFLAGS=-Wall -Wextra -Wpedantic -c -Wno-parentheses -fno-strict-aliasing -I../..
 LFLAGS=-lqrng -lcurl
 SRC=$(wildcard *.c)
 COMPILE=$(patsubst %.c, %.o, $(SRC))
-OBJ=$(wildcard ../../bin/qrandom.o)
+OBJ=$(wildcard ../../bin/sysinfo.o)
 
-OUT=qrand
+OUT=sysinfo
 
 
 all: create_dir $(COMPILE) link
