@@ -236,3 +236,9 @@ create_archive "malloc" ""
 echo -e "Finished deployment![$(date +"%T")]\n"
 
 
+###############################
+# Building examples           #
+###############################
+compile_project ../examples/qrand
+
+compile_project ../examples/fwversion
