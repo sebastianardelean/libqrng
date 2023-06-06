@@ -1,2 +1,2 @@
-from src.ga import Ga
+from src.ga_pool import Ga
 from src.sa import Sa

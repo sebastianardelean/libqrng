@@ -30,7 +30,6 @@ items = [(47, 72), (9, 2), (14, 11), (40, 12), (17, 19), (37, 64), (4, 6), (29, 
 def on_generation_callback(ga_instance):
     print("Generation: ", ga_instance.current_generation)
     print("Best solution {0} Fitness {1}".format(ga_instance.best_solution, ga_instance.best_fitness))
-    print("Item configuration {0}".format(items))
     return 0
 
 
@@ -61,16 +60,16 @@ if __name__ == '__main__':
         gene_low=0,
         gene_high=2,
         population_size=100,
-        mutation_rate=0.02,
-        crossover_rate=0.6,
+        mutation_rate=0.002,
+        crossover_rate=0.8,
         fitness_func=fitness_function,
         number_of_generations=50,
         crossover_type="uniform",
         selection_type="roulette-wheel-selection",
-        stop_criteria_saturate=10,
+        stop_criteria_saturate=100,
         on_generation_cbk=on_generation_callback,
-         #  on_population_init_cbk=population_init_cbk
     )
     solution, fitness = ga.run()
+    print(f"Item configuration: {items}")
     ga.visualize()
 
