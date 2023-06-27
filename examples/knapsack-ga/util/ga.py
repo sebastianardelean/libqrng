@@ -58,7 +58,7 @@ def run(chromosome_size,
 
     def __select_random(fitness_values, num_parents, population, chromosome_size, number_parents_mating, tournament_size):
         parents = np.zeros((num_parents, chromosome_size), dtype=np.uint32)
-        rand_indices = np.random.randint(low=0.0, high=fitness_values.shape[0], size=num_parents)
+        rand_indices = randint(0, fitness_values.shape[0], num_parents)
 
         for i in range(num_parents):
             parents[i, :] = population[rand_indices[i], :].copy()
@@ -67,7 +67,7 @@ def run(chromosome_size,
     def __select_tournament(fitness_values, num_parents, population, chromosome_size, number_parents_mating, tournament_size):
         parents = np.empty((num_parents, chromosome_size), dtype = np.uint32)
         for i in range(num_parents):
-            rand_indices = np.random.randint(low=0.0, high=fitness_values.shape[0], size=tournament_size)
+            rand_indices = randint(0, fitness_values.shape[0], tournament_size)
             k_fitness = fitness_values[rand_indices]
             selected_parent_idx = np.where(k_fitness == np.max(k_fitness))[0][0]
 
@@ -94,7 +94,7 @@ def run(chromosome_size,
             probs[min_probs_idx] = np.iinfo(np.int64).max
 
         pointers_distance = 1.0 / number_parents_mating
-        first_pointer = np.random.uniform(low=0.0, high=pointers_distance, size=1)
+        first_pointer = uniform(0.0, pointers_distance, 1)[0]
 
         parents = np.zeros((num_parents, chromosome_size), dtype=np.uint32)
 
@@ -166,9 +166,9 @@ def run(chromosome_size,
     def __crossover_single_point( parents, num_offsprings, chromosome_size, crossover_rate):
         offsprings = np.zeros((num_offsprings, chromosome_size), dtype = np.uint32)
         for k in range(num_offsprings):
-            crossover_point = np.random.randint(low=0, high=chromosome_size, size=1)[0]
+            crossover_point = randint(0, chromosome_size, 1)[0]
             if not (crossover_rate is None):
-                probs = np.random.random(size=parents.shape[0])
+                probs = uniform(0.0, 1.0, parents.shape[0])
                 indices = np.where(probs <= crossover_rate)[0]
 
                 if len(indices) == 0:
@@ -196,12 +196,12 @@ def run(chromosome_size,
             if parents.shape[1] == 1:
                 crossover_point1 = 0
             else:
-                crossover_point1 = np.random.randint(low=0, high=np.ceil(chromosome_size / 2 + 1), size=1)[0]
+                crossover_point1 = randint(0, np.ceil(chromosome_size / 2 + 1), 1)[0]
 
             crossover_point2 = crossover_point1 + int(chromosome_size / 2)
 
             if not (crossover_rate is None):
-                probs = np.random.random(size=parents.shape[0])
+                probs = uniform(0.0, 1.0, parents.shape[0])
                 indices = np.where(probs <= crossover_rate)[0]
 
                 if len(indices) == 0:
@@ -233,7 +233,7 @@ def run(chromosome_size,
 
         for k in range(num_offsprings):
             if not (crossover_rate is None):
-                probs = np.random.random(size=parents.shape[0])
+                probs = uniform(0.0, 1.0, size=parents.shape[0])
                 indices = np.where(probs <= crossover_rate)[0]
 
                 if len(indices) == 0:
@@ -252,7 +252,7 @@ def run(chromosome_size,
                 # Index of the second parent to mate.
                 parent2_idx = (k + 1) % parents.shape[0]
 
-            gene_sources = np.random.randint(0, 2, size=chromosome_size)
+            gene_sources = randint(0, 2, chromosome_size)
             offsprings[k, :] = np.where(gene_sources == 0, parents[parent1_idx, :], parents[parent2_idx, :])
         return offsprings
 
