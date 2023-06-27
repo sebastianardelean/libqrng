@@ -1,4 +1,4 @@
-from pyhealgo import Ga
+from util.ga import run, visualize
 
 import numpy as np
 
@@ -27,9 +27,9 @@ TOTAL_VALUE = 0
 items = [(47, 72), (9, 2), (14, 11), (40, 12), (17, 19), (37, 64), (4, 6), (29, 90), (17, 33), (43, 93), (36, 53), (32, 44), (29, 33), (22, 61), (35, 89), (8, 93), (25, 56), (41, 39), (44, 4), (9, 11), (36, 96), (34, 68), (2, 8), (43, 82), (42, 54), (29, 74), (5, 35), (43, 45), (4, 28), (25, 62), (30, 32), (34, 71)]
 
 
-def on_generation_callback(ga_instance):
-    print("Generation: ", ga_instance.current_generation)
-    print("Best solution {0} Fitness {1}".format(ga_instance.best_solution, ga_instance.best_fitness))
+def on_generation_callback(current_generation, best_solution,best_fitness):
+    print("Generation: ", current_generation)
+    print("Best solution {0} Fitness {1}".format(best_solution, best_fitness))
     return 0
 
 
@@ -55,12 +55,12 @@ def fitness_function(solution_idx, solution):
 
 
 if __name__ == '__main__':
-    ga = Ga(
+    solution, fitness = run(
         chromosome_size=len(items),
         gene_low=0,
         gene_high=2,
         population_size=100,
-        mutation_rate=0.002,
+        mutation_rate=0.02,
         crossover_rate=0.8,
         fitness_func=fitness_function,
         number_of_generations=50,
@@ -69,7 +69,7 @@ if __name__ == '__main__':
         stop_criteria_saturate=100,
         on_generation_cbk=on_generation_callback,
     )
-    solution, fitness = ga.run()
+    
     print(f"Item configuration: {items}")
-    ga.visualize()
+    visualize()
 
