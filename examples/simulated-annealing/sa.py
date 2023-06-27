@@ -75,7 +75,7 @@ class Sa:
         plt.subplot(122)
         plt.plot(self.costs, 'b')
         plt.title("Costs")
-        plt.show()
+        plt.savefig("Figure_1.png")
 
 
 def f(x):
