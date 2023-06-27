@@ -9,6 +9,9 @@ library_dirs = ['/usr/lib', '/usr/local/lib']
 setup(
 	name = "qrng",
 	version = "1.0",
+        description = "Python interface for the qrng library",
+        author = "Sebastian Mihai Ardelean",
+        author_email = "sebastian.ardelean@cs.upt.ro",
 	ext_modules = [Extension("qrng",
                                  ["bind.c", "qrngmodule.c"],
                                  libraries=libraries,
