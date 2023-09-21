@@ -32,20 +32,42 @@
 #include <qrng.h>
 
 
-
+/**
+ * @def PROGRAM_NAME
+ * @brief A macro for the program name.
+ *
+ */
 #define PROGRAM_NAME "fwversion"
 
+/**
+ * @def VERSION
+ * @brief A macro for the program version.
+ *
+ */
 #define VERSION "1.0.0"
 
+/**
+ * @def AUTHORS
+ * @brief A macro for the author.
+ *
+ */
 #define AUTHORS "Sebastian M. Ardelean"
 
 
 
-
+/**
+ * @def DOMAIN_ADDR_LENGTH
+ * @brief A macro for defining the IDQ's Quantis Appliance domain name address.
+ *
+ */
 #define DOMAIN_ADDR_LENGTH 256u
 
+/**
+ * @brief Print the help (command line options) for this program.
+ *
+ */
+static void print_help(void);
 
-static void print_help();
 
 int main(int argc, char **argv)
 {
@@ -60,6 +82,7 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
 
     }
+    /*Parse the command line arguments*/
     while ((opt = getopt(argc, argv, "ha:")) != -1) {
         switch (opt) {
             case 'h':
@@ -75,13 +98,13 @@ int main(int argc, char **argv)
         }
     }
 
-    /*Initialize qrng library*/
+    /* Initialize the qrng library */
     retval = qrng_open(domain_addr);
     if (retval) {
         exit(EXIT_FAILURE);
     }
 
-
+    /* Request firmware info and redirect the stream to stdout */
     (void)qrng_firmware_info(stdout);
 
     printf("\n");
