@@ -1,0 +1,208 @@
+\hypertarget{randbytestream_8c}{}\doxysection{examples/randbytestream/randbytestream.c File Reference}
+\label{randbytestream_8c}\index{examples/randbytestream/randbytestream.c@{examples/randbytestream/randbytestream.c}}
+
+
+API for interacting with IDQ\textquotesingle{}s Quantis Appliance.  
+
+
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$qrng.\+h$>$}\newline
+Include dependency graph for randbytestream.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d7/d38/randbytestream_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{randbytestream_8c_a3b6a35b8be8405a9db72cc5dea97954b}{PROGRAM\+\_\+\+NAME}}~\char`\"{}randbytestream\char`\"{}
+\begin{DoxyCompactList}\small\item\em A macro for the program name. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{randbytestream_8c_a1c6d5de492ac61ad29aec7aa9a436bbf}{VERSION}}~\char`\"{}1.\+0.\+0\char`\"{}
+\begin{DoxyCompactList}\small\item\em A macro for the program version. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{randbytestream_8c_a7e5da39fd3a4d5e827323372d91723aa}{AUTHORS}}~\char`\"{}Sebastian M. Ardelean\char`\"{}
+\begin{DoxyCompactList}\small\item\em A macro for the author. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{randbytestream_8c_add4b840def087badeb91b36c8f030664}{DEFAULT\+\_\+\+NUMBER\+\_\+\+OF\+\_\+\+SAMPLES}}~1u
+\begin{DoxyCompactList}\small\item\em A macro for defining the default number of samples to request. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{randbytestream_8c_a8f848f05b9593c04e3f4df1a99b28734}{DOMAIN\+\_\+\+ADDR\+\_\+\+LENGTH}}~256u
+\begin{DoxyCompactList}\small\item\em A macro for defining the IDQ\textquotesingle{}s Quantis Appliance domain name address. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{randbytestream_8c_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+API for interacting with IDQ\textquotesingle{}s Quantis Appliance. 
+
+\begin{DoxyAuthor}{Author}
+Sebastian Mihai Ardelean \href{mailto:sebastian.ardelean@cs.upt.ro}{\texttt{ sebastian.\+ardelean@cs.\+upt.\+ro}} 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+24 May 2023 
+\end{DoxyDate}
+
+
+Definition in file \mbox{\hyperlink{randbytestream_8c_source}{randbytestream.\+c}}.
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{randbytestream_8c_a7e5da39fd3a4d5e827323372d91723aa}\label{randbytestream_8c_a7e5da39fd3a4d5e827323372d91723aa}} 
+\index{randbytestream.c@{randbytestream.c}!AUTHORS@{AUTHORS}}
+\index{AUTHORS@{AUTHORS}!randbytestream.c@{randbytestream.c}}
+\doxysubsubsection{\texorpdfstring{AUTHORS}{AUTHORS}}
+{\footnotesize\ttfamily \#define AUTHORS~\char`\"{}Sebastian M. Ardelean\char`\"{}}
+
+
+
+A macro for the author. 
+
+
+
+Definition at line \mbox{\hyperlink{randbytestream_8c_source_l00055}{55}} of file \mbox{\hyperlink{randbytestream_8c_source}{randbytestream.\+c}}.
+
+\mbox{\Hypertarget{randbytestream_8c_add4b840def087badeb91b36c8f030664}\label{randbytestream_8c_add4b840def087badeb91b36c8f030664}} 
+\index{randbytestream.c@{randbytestream.c}!DEFAULT\_NUMBER\_OF\_SAMPLES@{DEFAULT\_NUMBER\_OF\_SAMPLES}}
+\index{DEFAULT\_NUMBER\_OF\_SAMPLES@{DEFAULT\_NUMBER\_OF\_SAMPLES}!randbytestream.c@{randbytestream.c}}
+\doxysubsubsection{\texorpdfstring{DEFAULT\_NUMBER\_OF\_SAMPLES}{DEFAULT\_NUMBER\_OF\_SAMPLES}}
+{\footnotesize\ttfamily \#define DEFAULT\+\_\+\+NUMBER\+\_\+\+OF\+\_\+\+SAMPLES~1u}
+
+
+
+A macro for defining the default number of samples to request. 
+
+
+
+Definition at line \mbox{\hyperlink{randbytestream_8c_source_l00064}{64}} of file \mbox{\hyperlink{randbytestream_8c_source}{randbytestream.\+c}}.
+
+\mbox{\Hypertarget{randbytestream_8c_a8f848f05b9593c04e3f4df1a99b28734}\label{randbytestream_8c_a8f848f05b9593c04e3f4df1a99b28734}} 
+\index{randbytestream.c@{randbytestream.c}!DOMAIN\_ADDR\_LENGTH@{DOMAIN\_ADDR\_LENGTH}}
+\index{DOMAIN\_ADDR\_LENGTH@{DOMAIN\_ADDR\_LENGTH}!randbytestream.c@{randbytestream.c}}
+\doxysubsubsection{\texorpdfstring{DOMAIN\_ADDR\_LENGTH}{DOMAIN\_ADDR\_LENGTH}}
+{\footnotesize\ttfamily \#define DOMAIN\+\_\+\+ADDR\+\_\+\+LENGTH~256u}
+
+
+
+A macro for defining the IDQ\textquotesingle{}s Quantis Appliance domain name address. 
+
+
+
+Definition at line \mbox{\hyperlink{randbytestream_8c_source_l00071}{71}} of file \mbox{\hyperlink{randbytestream_8c_source}{randbytestream.\+c}}.
+
+\mbox{\Hypertarget{randbytestream_8c_a3b6a35b8be8405a9db72cc5dea97954b}\label{randbytestream_8c_a3b6a35b8be8405a9db72cc5dea97954b}} 
+\index{randbytestream.c@{randbytestream.c}!PROGRAM\_NAME@{PROGRAM\_NAME}}
+\index{PROGRAM\_NAME@{PROGRAM\_NAME}!randbytestream.c@{randbytestream.c}}
+\doxysubsubsection{\texorpdfstring{PROGRAM\_NAME}{PROGRAM\_NAME}}
+{\footnotesize\ttfamily \#define PROGRAM\+\_\+\+NAME~\char`\"{}randbytestream\char`\"{}}
+
+
+
+A macro for the program name. 
+
+
+
+Definition at line \mbox{\hyperlink{randbytestream_8c_source_l00041}{41}} of file \mbox{\hyperlink{randbytestream_8c_source}{randbytestream.\+c}}.
+
+\mbox{\Hypertarget{randbytestream_8c_a1c6d5de492ac61ad29aec7aa9a436bbf}\label{randbytestream_8c_a1c6d5de492ac61ad29aec7aa9a436bbf}} 
+\index{randbytestream.c@{randbytestream.c}!VERSION@{VERSION}}
+\index{VERSION@{VERSION}!randbytestream.c@{randbytestream.c}}
+\doxysubsubsection{\texorpdfstring{VERSION}{VERSION}}
+{\footnotesize\ttfamily \#define VERSION~\char`\"{}1.\+0.\+0\char`\"{}}
+
+
+
+A macro for the program version. 
+
+
+
+Definition at line \mbox{\hyperlink{randbytestream_8c_source_l00048}{48}} of file \mbox{\hyperlink{randbytestream_8c_source}{randbytestream.\+c}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{randbytestream_8c_a3c04138a5bfe5d72780bb7e82a18e627}\label{randbytestream_8c_a3c04138a5bfe5d72780bb7e82a18e627}} 
+\index{randbytestream.c@{randbytestream.c}!main@{main}}
+\index{main@{main}!randbytestream.c@{randbytestream.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{randbytestream_8c_source_l00079}{79}} of file \mbox{\hyperlink{randbytestream_8c_source}{randbytestream.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00080 \{}
+\DoxyCodeLine{00081 }
+\DoxyCodeLine{00082     \textcolor{keywordtype}{int} opt = -\/1;}
+\DoxyCodeLine{00083     \textcolor{keywordtype}{char} domain\_addr[\mbox{\hyperlink{randbytestream_8c_a8f848f05b9593c04e3f4df1a99b28734}{DOMAIN\_ADDR\_LENGTH}}] = \textcolor{stringliteral}{"{}\(\backslash\)0"{}};}
+\DoxyCodeLine{00084     \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{00085     FILE *stream = NULL;}
+\DoxyCodeLine{00086 }
+\DoxyCodeLine{00087 }
+\DoxyCodeLine{00088 }
+\DoxyCodeLine{00089     uint32\_t number\_of\_samples = \mbox{\hyperlink{randbytestream_8c_add4b840def087badeb91b36c8f030664}{DEFAULT\_NUMBER\_OF\_SAMPLES}};}
+\DoxyCodeLine{00090 }
+\DoxyCodeLine{00091 }
+\DoxyCodeLine{00092 }
+\DoxyCodeLine{00093 }
+\DoxyCodeLine{00094     \textcolor{keywordflow}{if} (argc == 1) \{}
+\DoxyCodeLine{00095         print\_help();}
+\DoxyCodeLine{00096         exit(EXIT\_FAILURE);}
+\DoxyCodeLine{00097 }
+\DoxyCodeLine{00098     \}}
+\DoxyCodeLine{00099     \textcolor{keywordflow}{while} ((opt = getopt(argc, argv, \textcolor{stringliteral}{"{}ha:s:f:"{}})) != -\/1) \{}
+\DoxyCodeLine{00100         \textcolor{keywordflow}{switch} (opt) \{}
+\DoxyCodeLine{00101             \textcolor{keywordflow}{case} \textcolor{charliteral}{'h'}:}
+\DoxyCodeLine{00102                 print\_help();}
+\DoxyCodeLine{00103                 exit(EXIT\_SUCCESS);}
+\DoxyCodeLine{00104                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00105             \textcolor{keywordflow}{case} \textcolor{charliteral}{'a'}:}
+\DoxyCodeLine{00106                 strncpy(domain\_addr, optarg, strlen(optarg));}
+\DoxyCodeLine{00107                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00108             \textcolor{keywordflow}{case} \textcolor{charliteral}{'s'}:}
+\DoxyCodeLine{00109                 number\_of\_samples = atol(optarg);}
+\DoxyCodeLine{00110         \textcolor{keywordflow}{if} (number\_of\_samples < 1) \{}
+\DoxyCodeLine{00111             number\_of\_samples = \mbox{\hyperlink{randbytestream_8c_add4b840def087badeb91b36c8f030664}{DEFAULT\_NUMBER\_OF\_SAMPLES}};}
+\DoxyCodeLine{00112         \}}
+\DoxyCodeLine{00113                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00114         \textcolor{keywordflow}{case} \textcolor{charliteral}{'f'}:}
+\DoxyCodeLine{00115         stream = fopen(optarg, \textcolor{stringliteral}{"{}wb"{}});}
+\DoxyCodeLine{00116         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00117             \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00118                 print\_help();}
+\DoxyCodeLine{00119                 exit(EXIT\_FAILURE);}
+\DoxyCodeLine{00120         \}}
+\DoxyCodeLine{00121     \}}
+\DoxyCodeLine{00122 }
+\DoxyCodeLine{00123 }
+\DoxyCodeLine{00124     \textcolor{comment}{/*Initialize qrng library*/}}
+\DoxyCodeLine{00125     retval = \mbox{\hyperlink{qrng_8c_a722703e4302df6bf5a8ab29f2cce7e59}{qrng\_open}}(domain\_addr);}
+\DoxyCodeLine{00126     \textcolor{keywordflow}{if} (retval) \{}
+\DoxyCodeLine{00127         exit(EXIT\_FAILURE);}
+\DoxyCodeLine{00128     \}}
+\DoxyCodeLine{00129 }
+\DoxyCodeLine{00130 }
+\DoxyCodeLine{00131 }
+\DoxyCodeLine{00132     \textcolor{keywordflow}{if} (stream == NULL) \{}
+\DoxyCodeLine{00133       stream = stdout;}
+\DoxyCodeLine{00134     \}}
+\DoxyCodeLine{00135     (void)\mbox{\hyperlink{qrng_8c_a8ad8faa8dd32d5318a555fecc19240f3}{qrng\_random\_stream}}(stream, number\_of\_samples);}
+\DoxyCodeLine{00136 }
+\DoxyCodeLine{00137     \mbox{\hyperlink{qrng_8c_ac11a56e95649a115157e5453a9dde45a}{qrng\_close}}();}
+\DoxyCodeLine{00138 }
+\DoxyCodeLine{00139     \textcolor{keywordflow}{if} (stream != NULL \&\& (stream != stdout || stream != stderr)) \{}
+\DoxyCodeLine{00140     fclose(stream);}
+\DoxyCodeLine{00141     \}}
+\DoxyCodeLine{00142     exit(EXIT\_SUCCESS);}
+\DoxyCodeLine{00143 \}}
+
+\end{DoxyCode}

@@ -1,0 +1,109 @@
+\hypertarget{simulated-annealing_2util_2pyqrng_8py}{}\doxysection{examples/simulated-\/annealing/util/pyqrng.py File Reference}
+\label{simulated-annealing_2util_2pyqrng_8py}\index{examples/simulated-\/annealing/util/pyqrng.py@{examples/simulated-\/annealing/util/pyqrng.py}}
+
+
+libqrng -\/ library for interacting with IDQ\textquotesingle{}s Quantis Appliance \# \# Copyright (C) 2023 Sebastian Mihai Ardelean \# \# This program is free software\+: you can redistribute it and/or modify \# it under the terms of the GNU General Public License as published by \# the Free Software Foundation, either version 3 of the License, or \# (at your option) any later version.  
+
+
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{knapsack-ga_2util_2pyqrng_8py_a8cf626bcd419944d2cc8a5104142aeb4}{pyqrng.\+randint}} (l, h, n, pool\+\_\+size=1000)
+\item 
+def \mbox{\hyperlink{knapsack-ga_2util_2pyqrng_8py_a1d0aaf274a61918c31911b432026afe1}{pyqrng.\+uniform}} (l, h, n, pool\+\_\+size=1000)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+libqrng -\/ library for interacting with IDQ\textquotesingle{}s Quantis Appliance \# \# Copyright (C) 2023 Sebastian Mihai Ardelean \# \# This program is free software\+: you can redistribute it and/or modify \# it under the terms of the GNU General Public License as published by \# the Free Software Foundation, either version 3 of the License, or \# (at your option) any later version. 
+
+\# \# This program is distributed in the hope that it will be useful, \# but WITHOUT ANY WARRANTY; without even the implied warranty of \# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the \# GNU General Public License for more details. \# \# You should have received a copy of the GNU General Public License \# along with this program. If not, see \href{https://www.gnu.org/licenses/}{\texttt{ https\+://www.\+gnu.\+org/licenses/}}. \#
+
+\# \begin{DoxyAuthor}{Author}
+Sebastian Mihai Ardelean \href{mailto:sebastian.ardelean@cs.upt.ro}{\texttt{ sebastian.\+ardelean@cs.\+upt.\+ro}} \# 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+24 May 2023 \#
+\end{DoxyDate}
+API for interacting with IDQ\textquotesingle{}s Quantis Appliance \# 
+
+Definition in file \mbox{\hyperlink{simulated-annealing_2util_2pyqrng_8py_source}{pyqrng.\+py}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{knapsack-ga_2util_2pyqrng_8py_a8cf626bcd419944d2cc8a5104142aeb4}\label{knapsack-ga_2util_2pyqrng_8py_a8cf626bcd419944d2cc8a5104142aeb4}} 
+\index{pyqrng.py@{pyqrng.py}!randint@{randint}}
+\index{randint@{randint}!pyqrng.py@{pyqrng.py}}
+\doxysubsubsection{\texorpdfstring{randint()}{randint()}}
+{\footnotesize\ttfamily def pyqrng.\+randint (\begin{DoxyParamCaption}\item[{}]{l,  }\item[{}]{h,  }\item[{}]{n,  }\item[{}]{pool\+\_\+size = {\ttfamily 1000} }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{knapsack-ga_2util_2pyqrng_8py_source_l00031}{31}} of file \mbox{\hyperlink{knapsack-ga_2util_2pyqrng_8py_source}{pyqrng.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00031 \textcolor{keyword}{def }randint(l,h,n,pool\_size=1000):}
+\DoxyCodeLine{00032     \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} hasattr(randint, \textcolor{stringliteral}{"{}ivalues"{}}):}
+\DoxyCodeLine{00033         randint.ivalues = \{\}}
+\DoxyCodeLine{00034     }
+\DoxyCodeLine{00035 \textcolor{comment}{\#    print("{}Before init"{})}}
+\DoxyCodeLine{00036     key = str(l)+str(h)}
+\DoxyCodeLine{00037     \textcolor{keywordflow}{if} key \textcolor{keywordflow}{in} randint.ivalues:}
+\DoxyCodeLine{00038         \textcolor{comment}{\#found the key, let's check the values}}
+\DoxyCodeLine{00039         values = randint.ivalues[key]}
+\DoxyCodeLine{00040         \textcolor{keywordflow}{if} len(values) == 0 \textcolor{keywordflow}{or} len(values)<n:       }
+\DoxyCodeLine{00041             qrng.qrand\_init(\textcolor{stringliteral}{"{}random.cs.upt.ro"{}})}
+\DoxyCodeLine{00042             values = qrng.qrand\_rand\_int(l,h,(n+pool\_size))}
+\DoxyCodeLine{00043             qrng.qrand\_close()}
+\DoxyCodeLine{00044             randint.ivalues[key]+=values}
+\DoxyCodeLine{00045         \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00046             \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{00047     \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00048         qrng.qrand\_init(\textcolor{stringliteral}{"{}random.cs.upt.ro"{}})}
+\DoxyCodeLine{00049         randint.ivalues[key]=qrng.qrand\_rand\_int(l,h,(n+pool\_size))}
+\DoxyCodeLine{00050         qrng.qrand\_close()}
+\DoxyCodeLine{00051 }
+\DoxyCodeLine{00052     outvals = randint.ivalues[key][:n]}
+\DoxyCodeLine{00053     del randint.ivalues[key][:n]}
+\DoxyCodeLine{00054     \textcolor{keywordflow}{return} np.array(outvals, dtype=np.uint32)}
+\DoxyCodeLine{00055 }
+
+\end{DoxyCode}
+\mbox{\Hypertarget{knapsack-ga_2util_2pyqrng_8py_a1d0aaf274a61918c31911b432026afe1}\label{knapsack-ga_2util_2pyqrng_8py_a1d0aaf274a61918c31911b432026afe1}} 
+\index{pyqrng.py@{pyqrng.py}!uniform@{uniform}}
+\index{uniform@{uniform}!pyqrng.py@{pyqrng.py}}
+\doxysubsubsection{\texorpdfstring{uniform()}{uniform()}}
+{\footnotesize\ttfamily def pyqrng.\+uniform (\begin{DoxyParamCaption}\item[{}]{l,  }\item[{}]{h,  }\item[{}]{n,  }\item[{}]{pool\+\_\+size = {\ttfamily 1000} }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{knapsack-ga_2util_2pyqrng_8py_source_l00056}{56}} of file \mbox{\hyperlink{knapsack-ga_2util_2pyqrng_8py_source}{pyqrng.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00056 \textcolor{keyword}{def }uniform(l,h,n,pool\_size = 1000):}
+\DoxyCodeLine{00057     \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} hasattr(uniform, \textcolor{stringliteral}{"{}fvalues"{}}):}
+\DoxyCodeLine{00058         uniform.fvalues = \{\}}
+\DoxyCodeLine{00059     key = str(l)+str(h)}
+\DoxyCodeLine{00060     \textcolor{keywordflow}{if} key \textcolor{keywordflow}{in} uniform.fvalues:}
+\DoxyCodeLine{00061         \textcolor{comment}{\#found the key}}
+\DoxyCodeLine{00062         values = uniform.fvalues[key]}
+\DoxyCodeLine{00063         \textcolor{keywordflow}{if} len(values) == 0 \textcolor{keywordflow}{or} len(values)<n:}
+\DoxyCodeLine{00064             qrng.qrand\_init(\textcolor{stringliteral}{"{}random.cs.upt.ro"{}})}
+\DoxyCodeLine{00065             values = qrng.qrand\_rand\_float(l,h,(n+pool\_size))}
+\DoxyCodeLine{00066             qrng.qrand\_close()}
+\DoxyCodeLine{00067             uniform.fvalues[key]+=values}
+\DoxyCodeLine{00068         \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00069             \textcolor{keywordflow}{pass}}
+\DoxyCodeLine{00070     \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{00071         qrng.qrand\_init(\textcolor{stringliteral}{"{}random.cs.upt.ro"{}})}
+\DoxyCodeLine{00072         uniform.fvalues[key]=qrng.qrand\_rand\_float(l,h,(n+pool\_size))}
+\DoxyCodeLine{00073         qrng.qrand\_close()}
+\DoxyCodeLine{00074 }
+\DoxyCodeLine{00075     outvals = uniform.fvalues[key][:n]}
+\DoxyCodeLine{00076     del uniform.fvalues[key][:n]}
+\DoxyCodeLine{00077     \textcolor{keywordflow}{return} np.array(outvals, dtype=float)}
+
+\end{DoxyCode}

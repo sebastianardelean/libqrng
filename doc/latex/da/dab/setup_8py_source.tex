@@ -1,0 +1,30 @@
+\hypertarget{setup_8py_source}{}\doxysection{setup.\+py}
+\label{setup_8py_source}\index{bindings/python/setup.py@{bindings/python/setup.py}}
+\mbox{\hyperlink{setup_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00001}00001 \textcolor{comment}{\#!/usr/bin/env python3}}
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00002}00002 }
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00020}00020 }
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00021}00021 }
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00027}00027 \textcolor{keyword}{from} distutils.core \textcolor{keyword}{import} setup, Extension}
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00028}00028 }
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00029}00029 libraries = [\textcolor{stringliteral}{'qrng'}, \textcolor{stringliteral}{'curl'}]}
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00030}00030 library\_dirs = [\textcolor{stringliteral}{'/usr/lib'}, \textcolor{stringliteral}{'/usr/local/lib'}]}
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00031}00031 }
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00032}00032 }
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00033}00033 }
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00034}00034 \mbox{\hyperlink{namespacesetup}{setup}}(}
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00035}00035     name = \textcolor{stringliteral}{"{}qrng"{}},}
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00036}00036     version = \textcolor{stringliteral}{"{}1.0"{}},}
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00037}00037         description = \textcolor{stringliteral}{"{}Python interface for the qrng library"{}},}
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00038}00038         author = \textcolor{stringliteral}{"{}Sebastian Mihai Ardelean"{}},}
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00039}00039         author\_email = \textcolor{stringliteral}{"{}sebastian.ardelean@cs.upt.ro"{}},}
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00040}00040     ext\_modules = [Extension(\textcolor{stringliteral}{"{}qrng"{}},}
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00041}00041                                  [\textcolor{stringliteral}{"{}bind.c"{}}, \textcolor{stringliteral}{"{}qrngmodule.c"{}}],}
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00042}00042                                  libraries=libraries,}
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00043}00043                                  library\_dirs=library\_dirs,}
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00044}00044                                  extra\_link\_args=[\textcolor{stringliteral}{'-\/lqrng'}, \textcolor{stringliteral}{'-\/lcurl'}])}
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00045}00045                        ]}
+\DoxyCodeLine{\Hypertarget{setup_8py_source_l00046}00046     );}
+
+\end{DoxyCode}

@@ -1,3 +1,46 @@
+#+STARTUP: inlineimages
+
+* LibQrng
+
+** Introduction
+
+** Software Architecture
+
+#+CAPTION: This is the caption for the next figure link (or table)
+#+NAME:   fig:libqrng_initialization
+[[./images/libqrng_initialization.png]]
+
+
+#+CAPTION: This is the caption for the next figure link (or table)
+#+NAME:   fig:libqrng_random_stream
+[[./images/libqrng_random_stream.png]]
+
+
+#+CAPTION: This is the caption for the next figure link (or table)
+#+NAME:   fig:libqrng_double_value
+[[./images/libqrng_double_value.png]]
+
+
+#+CAPTION: This is the caption for the next figure link (or table)
+#+NAME:   fig:libqrng_int64
+[[./images/libqrng_int64.png]]
+
+#+CAPTION: This is the caption for the next figure link (or table)
+#+NAME:   fig:libqrng_cleanup
+[[./images/libqrng_cleanup.png]]
+
+** Build
+
+** Installation
+
+** Examples
+
+
+
+
+
+
+
 # qrand - Quantum Random Number Generator using IDQ's Quantis Appliance
 
 ```

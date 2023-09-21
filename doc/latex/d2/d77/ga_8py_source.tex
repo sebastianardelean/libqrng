@@ -1,0 +1,390 @@
+\hypertarget{ga_8py_source}{}\doxysection{ga.\+py}
+\label{ga_8py_source}\index{examples/knapsack-\/ga/util/ga.py@{examples/knapsack-\/ga/util/ga.py}}
+\mbox{\hyperlink{ga_8py}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00001}00001 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00019}00019 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00020}00020 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00026}00026 \textcolor{keyword}{import} random}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00027}00027 \textcolor{keyword}{from} .pyqrng \textcolor{keyword}{import} randint, uniform}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00028}00028 \textcolor{keyword}{import} numpy \textcolor{keyword}{as} np}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00029}00029 \textcolor{keyword}{import} matplotlib.pyplot \textcolor{keyword}{as} plt}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00030}00030 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00031}00031 fitness\_history = []}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00032}00032 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00033}00033 \textcolor{keyword}{def }run(chromosome\_size, }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00034}00034     gene\_low, }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00035}00035     gene\_high, }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00036}00036     population\_size, }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00037}00037     mutation\_rate,}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00038}00038     crossover\_rate,}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00039}00039     fitness\_func,}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00040}00040     number\_of\_generations,}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00041}00041     gene\_type="{}int"{},}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00042}00042     crossover\_type="{}single-\/point"{},}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00043}00043     tournament\_size=3,}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00044}00044     number\_parents\_mating=2,}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00045}00045     selection\_type="{}random-\/selection"{},}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00046}00046     save\_best\_solutions=False,}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00047}00047     save\_solutions=False,}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00048}00048     allow\_duplicate\_gene=True,}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00049}00049     stop\_criteria\_saturate=-\/1,}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00050}00050     stop\_fitness\_target\_value = -\/1,}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00051}00051     on\_generation\_cbk=None, \textcolor{comment}{\# pointer to callback functions}}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00052}00052     ):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00053}00053 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00054}00054     current\_generation = 0}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00055}00055     }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00056}00056     solutions = []}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00057}00057     best\_solutions = []}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00058}00058     best\_solution = np.zeros(chromosome\_size, dtype=np.uint32)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00059}00059     best\_fitness=0}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00060}00060     old\_fitness\_value = 0}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00061}00061     saturation\_counter = 0}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00062}00062     num\_parents = int(population\_size / 2)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00063}00063     num\_offsprings = population\_size -\/ num\_parents}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00064}00064     }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00065}00065 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00066}00066     \textcolor{keyword}{def }\_\_select\_steady\_state(fitness\_values, num\_parents, population, chromosome\_size, number\_parents\_mating, tournament\_size):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00067}00067         fitness\_sorted = sorted(range(len(fitness\_values)), key=\textcolor{keyword}{lambda} e: fitness\_values[e])}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00068}00068         fitness\_sorted.reverse()}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00069}00069 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00070}00070         parents = np.zeros((num\_parents, chromosome\_size), dtype=np.uint32)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00071}00071         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(num\_parents):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00072}00072             parents[i, :] = population[fitness\_sorted[i], :].copy()}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00073}00073         \textcolor{keywordflow}{return} parents}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00074}00074 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00075}00075     \textcolor{keyword}{def }\_\_select\_rank(fitness\_values, num\_parents, population, chromosome\_size, number\_parents\_mating, tournament\_size):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00076}00076         fitness\_sorted = sorted(range(len(fitness\_values)), key=\textcolor{keyword}{lambda} e: fitness\_values[e])}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00077}00077         fitness\_sorted.reverse()}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00078}00078 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00079}00079         parents = np.zeros((num\_parents, chromosome\_size), dtype=np.uint32)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00080}00080         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(num\_parents):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00081}00081             parents[i, :] = population[fitness\_sorted[i], :].copy()}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00082}00082         \textcolor{keywordflow}{return} parents}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00083}00083 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00084}00084     \textcolor{keyword}{def }\_\_select\_random(fitness\_values, num\_parents, population, chromosome\_size, number\_parents\_mating, tournament\_size):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00085}00085         parents = np.zeros((num\_parents, chromosome\_size), dtype=np.uint32)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00086}00086         rand\_indices = randint(0, fitness\_values.shape[0], num\_parents)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00087}00087 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00088}00088         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(num\_parents):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00089}00089             parents[i, :] = population[rand\_indices[i], :].copy()}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00090}00090         \textcolor{keywordflow}{return} parents}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00091}00091 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00092}00092     \textcolor{keyword}{def }\_\_select\_tournament(fitness\_values, num\_parents, population, chromosome\_size, number\_parents\_mating, tournament\_size):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00093}00093         parents = np.empty((num\_parents, chromosome\_size), dtype = np.uint32)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00094}00094         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(num\_parents):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00095}00095             rand\_indices = randint(0, fitness\_values.shape[0], tournament\_size)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00096}00096             k\_fitness = fitness\_values[rand\_indices]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00097}00097             selected\_parent\_idx = np.where(k\_fitness == np.max(k\_fitness))[0][0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00098}00098 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00099}00099             parents[i, :] = population[rand\_indices[selected\_parent\_idx], :].copy()}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00100}00100         \textcolor{keywordflow}{return} parents}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00101}00101 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00102}00102 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00103}00103     \textcolor{keyword}{def }\_\_select\_stochastic\_universal(fitness\_values, num\_parents, population, chromosome\_size, number\_parents\_mating):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00104}00104         fitness\_sum = np.sum(fitness\_values)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00105}00105         \textcolor{keywordflow}{if} fitness\_sum != 0:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00106}00106             probs = fitness\_values / fitness\_sum}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00107}00107         \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00108}00108             probs = fitness\_values / np.finfo(np.float64).eps}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00109}00109         probs\_start = np.zeros(probs.shape, dtype=float)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00110}00110         probs\_end = np.zeros(probs.shape, dtype=float)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00111}00111 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00112}00112         current = 0.0}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00113}00113 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00114}00114         \textcolor{keywordflow}{for} \_ \textcolor{keywordflow}{in} range(probs.shape[0]):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00115}00115             min\_probs\_idx = np.where(probs == np.min(probs))[0][0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00116}00116             probs\_start[min\_probs\_idx] = current}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00117}00117             current = current + probs[min\_probs\_idx]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00118}00118             probs\_end[min\_probs\_idx] = current}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00119}00119             probs[min\_probs\_idx] = np.iinfo(np.int64).max}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00120}00120 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00121}00121         pointers\_distance = 1.0 / number\_parents\_mating}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00122}00122         first\_pointer = uniform(0.0, pointers\_distance, 1)[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00123}00123 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00124}00124         parents = np.zeros((num\_parents, chromosome\_size), dtype=np.uint32)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00125}00125 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00126}00126         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(num\_parents):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00127}00127             rand\_pointer = first\_pointer + i * pointers\_distance}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00128}00128             \textcolor{keywordflow}{for} idx \textcolor{keywordflow}{in} range(probs.shape[0]):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00129}00129                 \textcolor{keywordflow}{if} probs\_start[idx] <= rand\_pointer < probs\_end[idx]:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00130}00130                     parents[i, :] = population[idx, :].copy()}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00131}00131                     \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00132}00132         \textcolor{keywordflow}{return} parents}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00133}00133 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00134}00134     \textcolor{keyword}{def }\_\_select\_roulette\_wheel(fitness\_values, num\_parents, population, chromosome\_size, number\_parents\_mating, tournament\_size):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00135}00135         fitness\_sum = np.sum(fitness\_values)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00136}00136         \textcolor{keywordflow}{if} fitness\_sum != 0:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00137}00137             probs = fitness\_values / fitness\_sum}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00138}00138         \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00139}00139             probs = fitness\_values / np.finfo(np.float64).max}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00140}00140         probs\_start = np.zeros(probs.shape, dtype=float)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00141}00141         probs\_end = np.zeros(probs.shape, dtype=float)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00142}00142 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00143}00143         current = 0.0}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00144}00144 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00145}00145         \textcolor{keywordflow}{for} \_ \textcolor{keywordflow}{in} range(probs.shape[0]):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00146}00146             min\_probs\_idx = np.where(probs == np.min(probs))[0][0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00147}00147             probs\_start[min\_probs\_idx] = current}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00148}00148             current = current + probs[min\_probs\_idx]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00149}00149             probs\_end[min\_probs\_idx] = current}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00150}00150             probs[min\_probs\_idx] = np.iinfo(np.int64).max}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00151}00151 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00152}00152         parents = np.zeros((num\_parents, chromosome\_size), dtype=np.uint32)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00153}00153         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(num\_parents):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00154}00154             rand\_prob = uniform(0.0,1.0,1)[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00155}00155             \textcolor{keywordflow}{for} idx \textcolor{keywordflow}{in} range(probs.shape[0]):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00156}00156                 \textcolor{keywordflow}{if} probs\_start[idx] <= rand\_prob < probs\_end[idx]:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00157}00157                     parents[i, :] = population[idx, :].copy()}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00158}00158                     \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00159}00159         \textcolor{keywordflow}{return} parents}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00160}00160 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00161}00161     \textcolor{keyword}{def }\_\_crossover\_uniform(parents, num\_offsprings, chromosome\_size, crossover\_rate):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00162}00162         offsprings = np.zeros((num\_offsprings, chromosome\_size), dtype=np.uint32)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00163}00163         \textcolor{keywordflow}{for} k \textcolor{keywordflow}{in} range(num\_offsprings):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00164}00164             \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} (crossover\_rate \textcolor{keywordflow}{is} \textcolor{keywordtype}{None}):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00165}00165                 probs = uniform(0,1,parents.shape[0]).copy()}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00166}00166                 indices = np.where(probs <= crossover\_rate)[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00167}00167 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00168}00168                 \textcolor{keywordflow}{if} len(indices) == 0:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00169}00169                     offsprings[k, :] = parents[k \% parents.shape[0], :]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00170}00170                     \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00171}00171                 \textcolor{keywordflow}{elif} len(indices) == 1:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00172}00172                     parent1\_idx = indices[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00173}00173                     parent2\_idx = parent1\_idx}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00174}00174                 \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00175}00175                     indices = np.random.choice(indices, 2)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00176}00176                     parent1\_idx = indices[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00177}00177                     parent2\_idx = indices[1]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00178}00178             \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00179}00179                 parent1\_idx = k \% parents.shape[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00180}00180                 parent2\_idx = (k + 1) \% parents.shape[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00181}00181 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00182}00182 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00183}00183             genes\_source = randint(0,2,chromosome\_size).copy()}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00184}00184             \textcolor{keywordflow}{for} gene\_idx \textcolor{keywordflow}{in} range(chromosome\_size):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00185}00185                 \textcolor{keywordflow}{if} genes\_source[gene\_idx] == 0:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00186}00186                     offsprings[k, gene\_idx] = parents[parent1\_idx, gene\_idx]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00187}00187                 \textcolor{keywordflow}{elif} genes\_source[gene\_idx] == 1:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00188}00188                     offsprings[k, gene\_idx] = parents[parent2\_idx, gene\_idx]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00189}00189         \textcolor{keywordflow}{return} offsprings}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00190}00190 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00191}00191     \textcolor{keyword}{def }\_\_crossover\_single\_point( parents, num\_offsprings, chromosome\_size, crossover\_rate):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00192}00192         offsprings = np.zeros((num\_offsprings, chromosome\_size), dtype = np.uint32)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00193}00193         \textcolor{keywordflow}{for} k \textcolor{keywordflow}{in} range(num\_offsprings):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00194}00194             crossover\_point = randint(0, chromosome\_size, 1)[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00195}00195             \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} (crossover\_rate \textcolor{keywordflow}{is} \textcolor{keywordtype}{None}):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00196}00196                 probs = uniform(0.0, 1.0, parents.shape[0])}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00197}00197                 indices = np.where(probs <= crossover\_rate)[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00198}00198 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00199}00199                 \textcolor{keywordflow}{if} len(indices) == 0:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00200}00200                     offsprings[k, :] = parents[k \% parents.shape[0], :]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00201}00201                     \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00202}00202                 \textcolor{keywordflow}{elif} len(indices) == 1:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00203}00203                     parent1\_idx = indices[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00204}00204                     parent2\_idx = parent1\_idx}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00205}00205                 \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00206}00206                     indices = random.sample(set(indices), 2)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00207}00207                     parent1\_idx = indices[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00208}00208                     parent2\_idx = indices[1]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00209}00209             \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00210}00210                 parent1\_idx = k \% parents.shape[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00211}00211                 parent2\_idx = (k + 1) \% parents.shape[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00212}00212 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00213}00213             offsprings[k, 0:crossover\_point] = parents[parent1\_idx, 0:crossover\_point]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00214}00214             offsprings[k, crossover\_point:] = parents[parent2\_idx, crossover\_point:]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00215}00215         \textcolor{keywordflow}{return} offsprings}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00216}00216 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00217}00217     \textcolor{keyword}{def }\_\_crossover\_two\_points( parents, num\_offsprings, chromosome\_size, crossover\_rate):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00218}00218         offsprings = np.zeros((num\_offsprings, chromosome\_size), dtype=np.uint32)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00219}00219 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00220}00220         \textcolor{keywordflow}{for} k \textcolor{keywordflow}{in} range(num\_offsprings):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00221}00221             \textcolor{keywordflow}{if} parents.shape[1] == 1:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00222}00222                 crossover\_point1 = 0}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00223}00223             \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00224}00224                 crossover\_point1 = randint(0, np.ceil(chromosome\_size / 2 + 1), 1)[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00225}00225 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00226}00226             crossover\_point2 = crossover\_point1 + int(chromosome\_size / 2)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00227}00227 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00228}00228             \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} (crossover\_rate \textcolor{keywordflow}{is} \textcolor{keywordtype}{None}):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00229}00229                 probs = uniform(0.0, 1.0, parents.shape[0])}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00230}00230                 indices = np.where(probs <= crossover\_rate)[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00231}00231 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00232}00232                 \textcolor{keywordflow}{if} len(indices) == 0:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00233}00233                     offsprings[k, :] = parents[k \% parents.shape[0], :]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00234}00234                     \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00235}00235                 \textcolor{keywordflow}{elif} len(indices) == 1:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00236}00236                     parent1\_idx = indices[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00237}00237                     parent2\_idx = parent1\_idx}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00238}00238                 \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00239}00239                     indices = np.random.choice(indices, 2)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00240}00240                     parent1\_idx = indices[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00241}00241                     parent2\_idx = indices[1]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00242}00242             \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00243}00243                 parent1\_idx = k \% parents.shape[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00244}00244                 parent2\_idx = (k + 1) \% parents.shape[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00245}00245 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00246}00246             offsprings[k, 0:crossover\_point1] = parents[parent1\_idx, 0:crossover\_point1]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00247}00247 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00248}00248             offsprings[k, crossover\_point2:] = parents[parent1\_idx, crossover\_point2:]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00249}00249 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00250}00250             offsprings[k, crossover\_point1:crossover\_point2] = parents[parent2\_idx, crossover\_point1:crossover\_point2]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00251}00251 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00252}00252         \textcolor{keywordflow}{return} offsprings}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00253}00253 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00254}00254        }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00255}00255 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00256}00256     \textcolor{keyword}{def }\_\_crossover\_scattered( parents, num\_offsprings, chromosome\_size, crossover\_rate):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00257}00257         offsprings = np.zeros((num\_offsprings, chromosome\_size), dtype=np.uint32)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00258}00258 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00259}00259         \textcolor{keywordflow}{for} k \textcolor{keywordflow}{in} range(num\_offsprings):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00260}00260             \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} (crossover\_rate \textcolor{keywordflow}{is} \textcolor{keywordtype}{None}):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00261}00261                 probs = uniform(0.0, 1.0, size=parents.shape[0])}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00262}00262                 indices = np.where(probs <= crossover\_rate)[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00263}00263 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00264}00264                 \textcolor{keywordflow}{if} len(indices) == 0:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00265}00265                     offsprings[k, :] = parents[k \% parents.shape[0], :]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00266}00266                     \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00267}00267                 \textcolor{keywordflow}{elif} len(indices) == 1:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00268}00268                     parent1\_idx = indices[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00269}00269                     parent2\_idx = parent1\_idx}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00270}00270                 \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00271}00271                     indices = np.random.choice(indices, 2)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00272}00272                     parent1\_idx = indices[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00273}00273                     parent2\_idx = indices[1]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00274}00274             \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00275}00275                 \textcolor{comment}{\# Index of the first parent to mate.}}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00276}00276                 parent1\_idx = k \% parents.shape[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00277}00277                 \textcolor{comment}{\# Index of the second parent to mate.}}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00278}00278                 parent2\_idx = (k + 1) \% parents.shape[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00279}00279 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00280}00280             gene\_sources = randint(0, 2, chromosome\_size)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00281}00281             offsprings[k, :] = np.where(gene\_sources == 0, parents[parent1\_idx, :], parents[parent2\_idx, :])}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00282}00282         \textcolor{keywordflow}{return} offsprings}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00283}00283 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00284}00284     \textcolor{keyword}{def }\_\_evaluate(population, population\_size, fitness\_func):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00285}00285         calculated\_fitness = np.zeros(population\_size,dtype=float)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00286}00286         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(population\_size):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00287}00287             calculated\_fitness[i] = fitness\_func(i, population[i])}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00288}00288         \textcolor{keywordflow}{return} calculated\_fitness}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00289}00289 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00290}00290     \textcolor{keyword}{def }\_\_mutate(offsprings, mutation\_rate):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00291}00291         mutants = np.zeros(offsprings.shape, dtype=np.uint32)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00292}00292         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(mutants.shape[0]):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00293}00293             random\_value = uniform(0.0,1.0,1)[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00294}00294             mutants[i, :] = offsprings[i, :]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00295}00295             \textcolor{keywordflow}{if} random\_value > mutation\_rate:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00296}00296                 \textcolor{keywordflow}{continue}}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00297}00297             \textcolor{comment}{\#int\_random\_value = randint(0, offsprings.shape[1] -\/ 1)}}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00298}00298     \textcolor{comment}{\#            int\_random\_value = qrand\_rand\_int(0, offsprings.shape[1] -\/ 1,1)[0]}}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00299}00299             int\_random\_value = randint(0, offsprings.shape[1] -\/ 1, 1)[0]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00300}00300             \textcolor{keywordflow}{if} mutants[i, int\_random\_value] == 0:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00301}00301                 mutants[i, int\_random\_value] = 1}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00302}00302             \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00303}00303                 mutants[i, int\_random\_value] = 0}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00304}00304         \textcolor{keywordflow}{return} mutants}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00305}00305 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00306}00306     crossover\_function = \_\_crossover\_single\_point}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00307}00307     \textcolor{keywordflow}{if} crossover\_type == \textcolor{stringliteral}{"{}single-\/point"{}}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00308}00308         crossover\_function = \_\_crossover\_single\_point}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00309}00309     \textcolor{keywordflow}{elif} crossover\_type == \textcolor{stringliteral}{"{}2-\/point"{}}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00310}00310         crossover\_function = \_\_crossover\_two\_points}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00311}00311     \textcolor{keywordflow}{elif} crossover\_type == \textcolor{stringliteral}{"{}uniform"{}}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00312}00312         crossover\_function = \_\_crossover\_uniform}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00313}00313     \textcolor{keywordflow}{elif} crossover\_type == \textcolor{stringliteral}{"{}scattered"{}}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00314}00314         crossover\_function = \_\_crossover\_scattered}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00315}00315     \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00316}00316         \textcolor{keywordflow}{raise} TypeError(\textcolor{stringliteral}{"{}Crossover function does not exist."{}})}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00317}00317 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00318}00318     selection\_function = \_\_select\_random}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00319}00319     \textcolor{keywordflow}{if} selection\_type == \textcolor{stringliteral}{"{}steady-\/state-\/selection"{}}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00320}00320         selection\_function = \_\_select\_steady\_state}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00321}00321     \textcolor{keywordflow}{elif} selection\_type == \textcolor{stringliteral}{"{}rank-\/selection"{}}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00322}00322         selection\_function = \_\_select\_rank}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00323}00323     \textcolor{keywordflow}{elif} selection\_type == \textcolor{stringliteral}{"{}random-\/selection"{}}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00324}00324         selection\_function = \_\_select\_random}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00325}00325     \textcolor{keywordflow}{elif} selection\_type == \textcolor{stringliteral}{"{}tournament-\/selection"{}}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00326}00326         selection\_function = \_\_select\_tournament}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00327}00327     \textcolor{keywordflow}{elif} selection\_type == \textcolor{stringliteral}{"{}roulette-\/wheel-\/selection"{}}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00328}00328         selection\_function = \_\_select\_roulette\_wheel}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00329}00329     \textcolor{keywordflow}{elif} selection\_type == \textcolor{stringliteral}{"{}stochastic-\/universal-\/selection"{}}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00330}00330         selection\_function = \_\_select\_stochastic\_universal}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00331}00331     \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00332}00332         \textcolor{keywordflow}{raise} TypeError(\textcolor{stringliteral}{"{}Selection function does not exist"{}})}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00333}00333     \textcolor{comment}{\# create population}}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00334}00334     }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00335}00335     population = np.zeros((population\_size, chromosome\_size),dtype=np.uint32)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00336}00336     \textcolor{keywordflow}{for} item \textcolor{keywordflow}{in} range(0, population\_size):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00337}00337         population[item] = randint(gene\_low, gene\_high,chromosome\_size).copy()}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00338}00338     }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00339}00339     \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(number\_of\_generations):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00340}00340         current\_generation = i}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00341}00341         current\_fitness = \_\_evaluate(population, population\_size,fitness\_func)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00342}00342         best\_fitness\_index = np.argmax(current\_fitness)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00343}00343         best\_solution = population[best\_fitness\_index, :].copy()}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00344}00344         best\_fitness = current\_fitness[best\_fitness\_index]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00345}00345         fitness\_history.append(current\_fitness)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00346}00346 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00347}00347         \textcolor{keywordflow}{if} save\_best\_solutions:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00348}00348             best\_solutions.append(best\_solution)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00349}00349         \textcolor{keywordflow}{if} save\_solutions:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00350}00350             solutions.append(population)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00351}00351         \textcolor{keywordflow}{if} stop\_criteria\_saturate != -\/1:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00352}00352             \textcolor{keywordflow}{if} old\_fitness\_value == best\_fitness:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00353}00353                 saturation\_counter+=1}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00354}00354             \textcolor{keywordflow}{else}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00355}00355                 old\_fitness\_value = best\_fitness}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00356}00356                 saturation\_counter=0}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00357}00357             \textcolor{keywordflow}{if} saturation\_counter == stop\_criteria\_saturate:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00358}00358                 number\_of\_generations = i+1}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00359}00359                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00360}00360         \textcolor{keywordflow}{if} stop\_fitness\_target\_value != -\/1:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00361}00361             \textcolor{keywordflow}{if} stop\_fitness\_target\_value == best\_fitness:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00362}00362                 number\_of\_generations = i + 1}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00363}00363                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00364}00364 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00365}00365         parents = selection\_function(current\_fitness, num\_parents, population, chromosome\_size, number\_parents\_mating, tournament\_size)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00366}00366         offsprings = crossover\_function(parents, num\_offsprings, chromosome\_size, crossover\_rate)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00367}00367         mutants = \_\_mutate(offsprings, mutation\_rate)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00368}00368         population[0:parents.shape[0], :] = parents}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00369}00369         population[parents.shape[0]:, :] = mutants}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00370}00370         \textcolor{keywordflow}{if} on\_generation\_cbk \textcolor{keywordflow}{is} \textcolor{keywordflow}{not} \textcolor{keywordtype}{None}:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00371}00371             ret\_value = on\_generation\_cbk(current\_generation, best\_solution, best\_fitness)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00372}00372             \textcolor{keywordflow}{if} ret\_value != 0:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00373}00373                 number\_of\_generations = i + 1}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00374}00374                 \textcolor{keywordflow}{break}}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00375}00375 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00376}00376     fitness\_last\_gen = \_\_evaluate(population, population\_size,fitness\_func)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00377}00377     best\_fitness\_index = np.argmax(fitness\_last\_gen)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00378}00378     best\_solution = population[best\_fitness\_index, :].copy()}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00379}00379     best\_fitness = fitness\_last\_gen[best\_fitness\_index]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00380}00380 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00381}00381     \textcolor{comment}{\#print('Last generation: \(\backslash\)n\{\}\(\backslash\)n'.format(population))}}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00382}00382     \textcolor{keywordflow}{return} best\_solution, best\_fitness}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00383}00383 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00384}00384 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00385}00385 \textcolor{keyword}{def }visualize():}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00386}00386     number\_of\_generations = len(fitness\_history)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00387}00387     fitness\_history\_mean = [np.mean(fitness\_value) \textcolor{keywordflow}{for} fitness\_value \textcolor{keywordflow}{in} fitness\_history]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00388}00388     fitness\_history\_max = [np.max(fitness\_value) \textcolor{keywordflow}{for} fitness\_value \textcolor{keywordflow}{in} fitness\_history]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00389}00389     plt.plot(list(range(number\_of\_generations)), fitness\_history\_mean, label=\textcolor{stringliteral}{'Mean Fitness'})}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00390}00390     plt.plot(list(range(number\_of\_generations)), fitness\_history\_max, label=\textcolor{stringliteral}{'Max Fitness'})}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00391}00391     plt.legend()}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00392}00392     plt.xlabel(\textcolor{stringliteral}{'Generations'})}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00393}00393     plt.ylabel(\textcolor{stringliteral}{'Fitness'})}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00394}00394     plt.savefig(\textcolor{stringliteral}{"{}Figure\_2.png"{}})}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00395}00395     plt.show()}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00396}00396 }
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00397}00397 \textcolor{keyword}{def }save\_to\_file(file):}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00398}00398     number\_of\_generations = len(fitness\_history)}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00399}00399     fitness\_history\_mean = [np.mean(fitness\_value) \textcolor{keywordflow}{for} fitness\_value \textcolor{keywordflow}{in} fitness\_history]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00400}00400     fitness\_history\_max = [np.max(fitness\_value) \textcolor{keywordflow}{for} fitness\_value \textcolor{keywordflow}{in} fitness\_history]}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00401}00401     \textcolor{keyword}{with} open(file, \textcolor{stringliteral}{'w'}) \textcolor{keyword}{as} f:}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00402}00402         f.write(f\textcolor{stringliteral}{'Number of generations:\{number\_of\_generations\}'})}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00403}00403         f.write(\textcolor{stringliteral}{'\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00404}00404         f.write(f\textcolor{stringliteral}{'Fitness history mean:\{fitness\_history\_mean\}'})}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00405}00405         f.write(\textcolor{stringliteral}{'\(\backslash\)n'})}
+\DoxyCodeLine{\Hypertarget{ga_8py_source_l00406}00406         f.write(f\textcolor{stringliteral}{'Fitness history max:\{fitness\_history\_max\}'})}
+
+\end{DoxyCode}

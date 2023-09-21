@@ -1,0 +1,102 @@
+\hypertarget{sysinfo_8c_source}{}\doxysection{sysinfo.\+c}
+\label{sysinfo_8c_source}\index{examples/sysinfo/sysinfo.c@{examples/sysinfo/sysinfo.c}}
+\mbox{\hyperlink{sysinfo_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00001}00001 \textcolor{comment}{/****************************************************************************}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00002}00002 \textcolor{comment}{ * sysinfo -\/ Quantum Random Number Generator using IDQ's Quantis Appliance  *}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00003}00003 \textcolor{comment}{ *                                                                          *}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00004}00004 \textcolor{comment}{ * Copyright (C) 2023  Sebastian Mihai Ardelean                             *}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00005}00005 \textcolor{comment}{ *                                                                          *}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00006}00006 \textcolor{comment}{ * This program is free software: you can redistribute it and/or modify     *}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00007}00007 \textcolor{comment}{ * it under the terms of the GNU General Public License as published by     *}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00008}00008 \textcolor{comment}{ * the Free Software Foundation, either version 3 of the License, or        *}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00009}00009 \textcolor{comment}{ * (at your option) any later version.                                      *}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00010}00010 \textcolor{comment}{ *                                                                          *}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00011}00011 \textcolor{comment}{ * This program is distributed in the hope that it will be useful,          *}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00012}00012 \textcolor{comment}{ * but WITHOUT ANY WARRANTY; without even the implied warranty of           *}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00013}00013 \textcolor{comment}{ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            *}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00014}00014 \textcolor{comment}{ * GNU General Public License for more details.                             *}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00015}00015 \textcolor{comment}{ *                                                                          *}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00016}00016 \textcolor{comment}{ * You should have received a copy of the GNU General Public License        *}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00017}00017 \textcolor{comment}{ * along with this program.  If not, see <https://www.gnu.org/licenses/>.   *}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00018}00018 \textcolor{comment}{ ****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00019}00019 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00026}00026 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00027}00027 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00028}00028 \textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00029}00029 \textcolor{preprocessor}{\#include <unistd.h>}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00030}00030 \textcolor{preprocessor}{\#include <string.h>}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00031}00031 \textcolor{preprocessor}{\#include <\mbox{\hyperlink{qrng_8h}{qrng.h}}>}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00032}00032 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00033}00033 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00034}00034 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00040}\mbox{\hyperlink{sysinfo_8c_a3b6a35b8be8405a9db72cc5dea97954b}{00040}} \textcolor{preprocessor}{\#define PROGRAM\_NAME "{}sysinfo"{}}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00041}00041 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00047}\mbox{\hyperlink{sysinfo_8c_a1c6d5de492ac61ad29aec7aa9a436bbf}{00047}} \textcolor{preprocessor}{\#define VERSION "{}1.0.0"{}}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00048}00048 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00054}\mbox{\hyperlink{sysinfo_8c_a7e5da39fd3a4d5e827323372d91723aa}{00054}} \textcolor{preprocessor}{\#define AUTHORS "{}Sebastian M. Ardelean"{}}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00055}00055 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00056}00056 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00057}00057 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00063}\mbox{\hyperlink{sysinfo_8c_a8f848f05b9593c04e3f4df1a99b28734}{00063}} \textcolor{preprocessor}{\#define DOMAIN\_ADDR\_LENGTH 256u}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00064}00064 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00069}00069 \textcolor{keyword}{static} \textcolor{keywordtype}{void} print\_help(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00070}00070 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00071}00071 \textcolor{keywordtype}{int} main(\textcolor{keywordtype}{int} argc, \textcolor{keywordtype}{char} **argv)}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00072}00072 \{}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00073}00073 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00074}00074     \textcolor{keywordtype}{int} opt = -\/1;}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00075}00075     \textcolor{keywordtype}{char} domain\_addr[\mbox{\hyperlink{sysinfo_8c_a8f848f05b9593c04e3f4df1a99b28734}{DOMAIN\_ADDR\_LENGTH}}] = \textcolor{stringliteral}{"{}\(\backslash\)0"{}};}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00076}00076     \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00077}00077 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00078}00078 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00079}00079 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00080}00080     \textcolor{keywordflow}{if} (argc == 1) \{}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00081}00081         print\_help();}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00082}00082         exit(EXIT\_FAILURE);}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00083}00083 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00084}00084     \}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00085}00085     \textcolor{keywordflow}{while} ((opt = getopt(argc, argv, \textcolor{stringliteral}{"{}ha:"{}})) != -\/1) \{}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00086}00086         \textcolor{keywordflow}{switch} (opt) \{}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00087}00087             \textcolor{keywordflow}{case} \textcolor{charliteral}{'h'}:}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00088}00088                 print\_help();}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00089}00089                 exit(EXIT\_SUCCESS);}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00090}00090                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00091}00091             \textcolor{keywordflow}{case} \textcolor{charliteral}{'a'}:}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00092}00092                 strncpy(domain\_addr, optarg, strlen(optarg));}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00093}00093                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00094}00094             \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00095}00095                 print\_help();}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00096}00096                 exit(EXIT\_FAILURE);}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00097}00097         \}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00098}00098     \}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00099}00099 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00100}00100 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00101}00101 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00102}00102     \textcolor{comment}{/*Initialize qrng library*/}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00103}00103     retval = \mbox{\hyperlink{qrng_8c_a722703e4302df6bf5a8ab29f2cce7e59}{qrng\_open}}(domain\_addr);}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00104}00104     \textcolor{keywordflow}{if} (retval) \{}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00105}00105         exit(EXIT\_FAILURE);}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00106}00106     \}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00107}00107 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00108}00108 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00109}00109     (void)\mbox{\hyperlink{qrng_8c_af43a0f42bfbc5f7785824e3a8b05bb2f}{qrng\_system\_info}}(stdout);}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00110}00110 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00111}00111 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00112}00112     \mbox{\hyperlink{qrng_8c_ac11a56e95649a115157e5453a9dde45a}{qrng\_close}}();}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00113}00113     }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00114}00114     exit(EXIT\_SUCCESS);}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00115}00115 \}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00116}00116 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00117}00117 }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00118}00118 \textcolor{keywordtype}{void} print\_help(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00119}00119 \{}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00120}00120     fprintf(stderr, \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)n\(\backslash\)t\(\backslash\)t\%s version \%s\(\backslash\)n\(\backslash\)n"{}}, \mbox{\hyperlink{sysinfo_8c_a3b6a35b8be8405a9db72cc5dea97954b}{PROGRAM\_NAME}}, \mbox{\hyperlink{sysinfo_8c_a1c6d5de492ac61ad29aec7aa9a436bbf}{VERSION}});}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00121}00121     fprintf(stderr, \textcolor{stringliteral}{"{}\%s [-\/h] [-\/a domain]\(\backslash\)n"{}}, \mbox{\hyperlink{sysinfo_8c_a3b6a35b8be8405a9db72cc5dea97954b}{PROGRAM\_NAME}});}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00122}00122     fprintf(stderr, \textcolor{stringliteral}{"{}-\/h \(\backslash\)t help\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00123}00123     fprintf(stderr, \textcolor{stringliteral}{"{}-\/a \(\backslash\)t domain address.\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00124}00124     }
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00125}00125 \}}
+\DoxyCodeLine{\Hypertarget{sysinfo_8c_source_l00126}00126 }
+
+\end{DoxyCode}

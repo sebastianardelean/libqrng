@@ -1,0 +1,127 @@
+\hypertarget{randbytestream_8c_source}{}\doxysection{randbytestream.\+c}
+\label{randbytestream_8c_source}\index{examples/randbytestream/randbytestream.c@{examples/randbytestream/randbytestream.c}}
+\mbox{\hyperlink{randbytestream_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00001}00001 \textcolor{comment}{/****************************************************************************}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00002}00002 \textcolor{comment}{ * randbytestream -\/ Quantum Random Number Generator using IDQ's Quantis Appliance  *}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00003}00003 \textcolor{comment}{ *                                                                          *}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00004}00004 \textcolor{comment}{ * Copyright (C) 2023  Sebastian Mihai Ardelean                             *}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00005}00005 \textcolor{comment}{ *                                                                          *}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00006}00006 \textcolor{comment}{ * This program is free software: you can redistribute it and/or modify     *}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00007}00007 \textcolor{comment}{ * it under the terms of the GNU General Public License as published by     *}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00008}00008 \textcolor{comment}{ * the Free Software Foundation, either version 3 of the License, or        *}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00009}00009 \textcolor{comment}{ * (at your option) any later version.                                      *}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00010}00010 \textcolor{comment}{ *                                                                          *}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00011}00011 \textcolor{comment}{ * This program is distributed in the hope that it will be useful,          *}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00012}00012 \textcolor{comment}{ * but WITHOUT ANY WARRANTY; without even the implied warranty of           *}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00013}00013 \textcolor{comment}{ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            *}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00014}00014 \textcolor{comment}{ * GNU General Public License for more details.                             *}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00015}00015 \textcolor{comment}{ *                                                                          *}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00016}00016 \textcolor{comment}{ * You should have received a copy of the GNU General Public License        *}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00017}00017 \textcolor{comment}{ * along with this program.  If not, see <https://www.gnu.org/licenses/>.   *}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00018}00018 \textcolor{comment}{ ****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00019}00019 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00026}00026 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00027}00027 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00028}00028 \textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00029}00029 \textcolor{preprocessor}{\#include <unistd.h>}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00030}00030 \textcolor{preprocessor}{\#include <string.h>}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00031}00031 \textcolor{preprocessor}{\#include <\mbox{\hyperlink{qrng_8h}{qrng.h}}>}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00032}00032 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00033}00033 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00034}00034 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00041}\mbox{\hyperlink{randbytestream_8c_a3b6a35b8be8405a9db72cc5dea97954b}{00041}} \textcolor{preprocessor}{\#define PROGRAM\_NAME "{}randbytestream"{}}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00042}00042 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00048}\mbox{\hyperlink{randbytestream_8c_a1c6d5de492ac61ad29aec7aa9a436bbf}{00048}} \textcolor{preprocessor}{\#define VERSION "{}1.0.0"{}}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00049}00049 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00055}\mbox{\hyperlink{randbytestream_8c_a7e5da39fd3a4d5e827323372d91723aa}{00055}} \textcolor{preprocessor}{\#define AUTHORS "{}Sebastian M. Ardelean"{}}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00056}00056 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00057}00057 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00058}00058 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00064}\mbox{\hyperlink{randbytestream_8c_add4b840def087badeb91b36c8f030664}{00064}} \textcolor{preprocessor}{\#define DEFAULT\_NUMBER\_OF\_SAMPLES 1u}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00065}00065 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00071}\mbox{\hyperlink{randbytestream_8c_a8f848f05b9593c04e3f4df1a99b28734}{00071}} \textcolor{preprocessor}{\#define DOMAIN\_ADDR\_LENGTH 256u}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00072}00072 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00077}00077 \textcolor{keyword}{static} \textcolor{keywordtype}{void} print\_help(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00078}00078 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00079}00079 \textcolor{keywordtype}{int} main(\textcolor{keywordtype}{int} argc, \textcolor{keywordtype}{char} **argv)}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00080}00080 \{}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00081}00081 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00082}00082     \textcolor{keywordtype}{int} opt = -\/1;}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00083}00083     \textcolor{keywordtype}{char} domain\_addr[\mbox{\hyperlink{randbytestream_8c_a8f848f05b9593c04e3f4df1a99b28734}{DOMAIN\_ADDR\_LENGTH}}] = \textcolor{stringliteral}{"{}\(\backslash\)0"{}};}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00084}00084     \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00085}00085     FILE *stream = NULL;}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00086}00086 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00087}00087 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00088}00088 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00089}00089     uint32\_t number\_of\_samples = \mbox{\hyperlink{randbytestream_8c_add4b840def087badeb91b36c8f030664}{DEFAULT\_NUMBER\_OF\_SAMPLES}};}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00090}00090 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00091}00091 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00092}00092 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00093}00093 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00094}00094     \textcolor{keywordflow}{if} (argc == 1) \{}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00095}00095         print\_help();}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00096}00096         exit(EXIT\_FAILURE);}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00097}00097 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00098}00098     \}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00099}00099     \textcolor{keywordflow}{while} ((opt = getopt(argc, argv, \textcolor{stringliteral}{"{}ha:s:f:"{}})) != -\/1) \{}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00100}00100         \textcolor{keywordflow}{switch} (opt) \{}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00101}00101             \textcolor{keywordflow}{case} \textcolor{charliteral}{'h'}:}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00102}00102                 print\_help();}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00103}00103                 exit(EXIT\_SUCCESS);}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00104}00104                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00105}00105             \textcolor{keywordflow}{case} \textcolor{charliteral}{'a'}:}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00106}00106                 strncpy(domain\_addr, optarg, strlen(optarg));}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00107}00107                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00108}00108             \textcolor{keywordflow}{case} \textcolor{charliteral}{'s'}:}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00109}00109                 number\_of\_samples = atol(optarg);}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00110}00110         \textcolor{keywordflow}{if} (number\_of\_samples < 1) \{}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00111}00111             number\_of\_samples = \mbox{\hyperlink{randbytestream_8c_add4b840def087badeb91b36c8f030664}{DEFAULT\_NUMBER\_OF\_SAMPLES}};}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00112}00112         \}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00113}00113                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00114}00114         \textcolor{keywordflow}{case} \textcolor{charliteral}{'f'}:}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00115}00115         stream = fopen(optarg, \textcolor{stringliteral}{"{}wb"{}});}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00116}00116         \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00117}00117             \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00118}00118                 print\_help();}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00119}00119                 exit(EXIT\_FAILURE);}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00120}00120         \}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00121}00121     \}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00122}00122 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00123}00123 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00124}00124     \textcolor{comment}{/*Initialize qrng library*/}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00125}00125     retval = \mbox{\hyperlink{qrng_8c_a722703e4302df6bf5a8ab29f2cce7e59}{qrng\_open}}(domain\_addr);}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00126}00126     \textcolor{keywordflow}{if} (retval) \{}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00127}00127         exit(EXIT\_FAILURE);}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00128}00128     \}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00129}00129 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00130}00130 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00131}00131 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00132}00132     \textcolor{keywordflow}{if} (stream == NULL) \{}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00133}00133       stream = stdout;}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00134}00134     \}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00135}00135     (void)\mbox{\hyperlink{qrng_8c_a8ad8faa8dd32d5318a555fecc19240f3}{qrng\_random\_stream}}(stream, number\_of\_samples);}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00136}00136 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00137}00137     \mbox{\hyperlink{qrng_8c_ac11a56e95649a115157e5453a9dde45a}{qrng\_close}}();}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00138}00138 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00139}00139     \textcolor{keywordflow}{if} (stream != NULL \&\& (stream != stdout || stream != stderr)) \{}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00140}00140     fclose(stream);}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00141}00141     \}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00142}00142     exit(EXIT\_SUCCESS);}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00143}00143 \}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00144}00144 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00145}00145 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00146}00146 \textcolor{keywordtype}{void} print\_help(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00147}00147 \{}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00148}00148     fprintf(stderr, \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)n\(\backslash\)t\(\backslash\)t\%s version \%s\(\backslash\)n\(\backslash\)n"{}}, \mbox{\hyperlink{randbytestream_8c_a3b6a35b8be8405a9db72cc5dea97954b}{PROGRAM\_NAME}}, \mbox{\hyperlink{randbytestream_8c_a1c6d5de492ac61ad29aec7aa9a436bbf}{VERSION}});}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00149}00149     fprintf(stderr, \textcolor{stringliteral}{"{}\%s [-\/h] [-\/a domain] [-\/s no of samples] [-\/f stream]\(\backslash\)n"{}}, \mbox{\hyperlink{randbytestream_8c_a3b6a35b8be8405a9db72cc5dea97954b}{PROGRAM\_NAME}});}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00150}00150     fprintf(stderr, \textcolor{stringliteral}{"{}-\/h \(\backslash\)t help\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00151}00151     fprintf(stderr, \textcolor{stringliteral}{"{}-\/a \(\backslash\)t domain address.\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00152}00152     fprintf(stderr, \textcolor{stringliteral}{"{}-\/s \(\backslash\)t number of samples. [Default 1]\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00153}00153     fprintf(stderr, \textcolor{stringliteral}{"{}-\/f \(\backslash\)t stream.\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00154}00154 }
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00155}00155 \}}
+\DoxyCodeLine{\Hypertarget{randbytestream_8c_source_l00156}00156 }
+
+\end{DoxyCode}
