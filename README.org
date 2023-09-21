@@ -41,9 +41,9 @@
 
 
 
-# qrand - Quantum Random Number Generator using IDQ's Quantis Appliance
 
-```
+
+#+BEGIN_SRC
                 qrand version 1.0.28-25.05.2023
 
 qrand [-h] [-a domain] [-s no of samples] [-m min double value] [-M max double value] [-i min int value] [-I max int value] [-t type] [-f stream]
@@ -69,6 +69,7 @@ Possible values for t:
         7 -> system info
 ```
 
+#+END_SRC
 # libqrng - library for interacting with IDQ's Quantis Appliance 
 
 
