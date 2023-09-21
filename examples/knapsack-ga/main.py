@@ -1,4 +1,4 @@
-from util.ga import run, visualize
+from util.ga import run, visualize,save_to_file
 
 import numpy as np
 
@@ -19,12 +19,12 @@ def to_decimal(x):
     return y
 
 
-MAX_ALLOWED_MASS = 200
+MAX_ALLOWED_MASS = 20
 TOTAL_VALUE = 0
 
 
 #items = [(np.random.randint(1,50),np.random.randint(1,100)) for _ in range(0,50)]
-items = [(47, 72), (9, 2), (14, 11), (40, 12), (17, 19), (37, 64), (4, 6), (29, 90), (17, 33), (43, 93), (36, 53), (32, 44), (29, 33), (22, 61), (35, 89), (8, 93), (25, 56), (41, 39), (44, 4), (9, 11), (36, 96), (34, 68), (2, 8), (43, 82), (42, 54), (29, 74), (5, 35), (43, 45), (4, 28), (25, 62), (30, 32), (34, 71)]
+items = [(10, 96), (13, 38), (15, 71), (1, 88), (4, 93), (18, 32), (16, 85), (7, 50), (15, 30), (13, 90), (18, 3), (7, 61), (4, 41), (19, 35), (16, 19), (14, 18), (13, 56), (1, 74), (19, 32), (3, 42), (10, 43), (3, 29), (3, 5), (18, 14), (7, 93), (19, 32), (3, 11), (3, 85), (19, 44), (2, 55), (2, 95), (13, 76)]
 
 
 def on_generation_callback(current_generation, best_solution,best_fitness):
@@ -72,4 +72,5 @@ if __name__ == '__main__':
     
     print(f"Item configuration: {items}")
     visualize()
+    save_to_file("quantum_random_ga")
 

@@ -25,7 +25,7 @@ class Sa:
 
         self.cost = self.__on_cost_hdl(self.state)
         self.states, self.costs = [self.state], [self.cost]
-
+        self.actual_steps = 0
     def __neighbor_selection(self, state, fraction):
         amplitude = (max(self.problem_domain) - min(self.problem_domain)) * fraction / 10
         delta = (-amplitude / 2.) + amplitude * uniform(0,1,1)[0]
@@ -60,6 +60,7 @@ class Sa:
                 self.state, self.cost = new_state, new_cost
                 self.states.append(self.state)
                 self.costs.append(self.cost)
+                self.actual_steps += 1
 
             if self.__on_step_completed_cbk is not None:
                 self.__on_step_completed_cbk(self)
@@ -70,17 +71,30 @@ class Sa:
         plt.figure()
         plt.suptitle("Evolution of states and costs of the simulated annealing")
         plt.subplot(121)
-        plt.plot(self.states, 'r')
-        plt.title("States")
+        plt.plot([i for i in range(0, self.actual_steps+1)], self.states, 'r')
+        plt.xlabel('Steps')
+        plt.ylabel('States')
         plt.subplot(122)
-        plt.plot(self.costs, 'b')
-        plt.title("Costs")
+        plt.plot([i for i in range(0, self.actual_steps+1)], self.costs, 'b')
+        plt.xlabel('Steps')
+        plt.ylabel('Costs')
         plt.savefig("Figure_1.png")
+
+    def save_to_file(self,file):
+        number_of_steps = self.actual_steps+1
+        states_array = self.states
+        costs_array = self.costs
+        with open(file, 'w') as f:
+            f.write(f'Number of steps: {number_of_steps}')
+            f.write('\n')
+            f.write(f'States array: {states_array}')
+            f.write('\n')
+            f.write(f'Costs array: {costs_array}')
 
 
 def f(x):
     """ Function to minimize."""
-    return x**2 + x - 10
+    return x**2
 
 def generate_initial_state(sa_instance):
     a, b = sa_instance.problem_domain
@@ -95,8 +109,9 @@ if __name__ == '__main__':
                  #generate_initial_state_hndl = generate_initial_state,
                  problem_domain=interval,
                  on_cost_hdl=cost_function,
-                 max_steps=5000
+                 max_steps=200
                  )
     state, cost = sa_instance.run()
     print("State: {0} Cost {1}".format(state,cost))
     sa_instance.visualize()
+    sa_instance.save_to_file('quantum_random_sa')

@@ -364,8 +364,18 @@ def visualize():
     plt.plot(list(range(number_of_generations)), fitness_history_mean, label='Mean Fitness')
     plt.plot(list(range(number_of_generations)), fitness_history_max, label='Max Fitness')
     plt.legend()
-    plt.title('Fitness through the generations')
     plt.xlabel('Generations')
     plt.ylabel('Fitness')
     plt.savefig("Figure_2.png")
     plt.show()
+
+def save_to_file(file):
+    number_of_generations = len(fitness_history)
+    fitness_history_mean = [np.mean(fitness_value) for fitness_value in fitness_history]
+    fitness_history_max = [np.max(fitness_value) for fitness_value in fitness_history]
+    with open(file, 'w') as f:
+        f.write(f'Number of generations:{number_of_generations}')
+        f.write('\n')
+        f.write(f'Fitness history mean:{fitness_history_mean}')
+        f.write('\n')
+        f.write(f'Fitness history max:{fitness_history_max}')
