@@ -8,7 +8,14 @@
 Through the software solution presented in this paper, we provide a method to interact with IDQ's Quantis Appliance network-attached device---a quantum random number generator that securely
 generates high-quality random numbers [cite:@noauthor_quantis_nodate]---through REST API. We deliver an easy-to-extend solution for various programming languages and integrated projects. As such,
 our solution's implementation supports the straightforward use of quantum-generated random numbers in applications and research areas in which the output of the experiments is highly dependent on
-the quality of random numbers.  
+the quality of random numbers.
+
+In the current form, /libqrng/ offers access to IDQ's Quantis Appliance through an API that can be easily integrated into applications that need true random numbers. The library is written in C language
+and is currently available as a library only on GNU/Linux-based operating systems. We decided to implement it as a library in native C since, to the best of our knowledge, it can be easily used with
+other programming languages via Foreign Function Interface (FFI). As a proof of concept, we implement Python bindings to /libqrng/ and provide examples of how to request random numbers from IDQ's device.
+
+We designed the software stack we provide to be easily extended to different scientific programming languages and scientific/engineering fields, such as 
+cryptography[cite:@bruce1996applied], Monte-Carlo methods[cite:@ferrenberg1992monte],  heuristic algorithms[cite:@navarro2022review], industrial testing and labeling, hazard games, [cite:@stipvcevic2011quantum], etc. 
 
 
 ** Software Architecture
@@ -111,47 +118,22 @@ If you choose to use the tar.gz archive:
    ~./install.sh~
    
 
-*Note* The amd64 binaries provided for download do not include the Python binding library.
+*Note* The amd64 binaries provided for download do not include the Python binding library!
 
 ** Examples
 
+In ~examples~ directory we provide examples of using each API of the library. As such, we provide the following examples:
 
-
-
-
-
-
-
-
-#+BEGIN_SRC
-                qrand version 1.0.28-25.05.2023
-
-qrand [-h] [-a domain] [-s no of samples] [-m min double value] [-M max double value] [-i min int value] [-I max int value] [-t type] [-f stream]
--h       help
--a       domain address. [Default: random.cs.upt.ro]
--s       number of samples. [Default 1]
--m       min value double. [Default 0.0]
--M       max value double. [Default 1.0]
--i       min value int64. [Default 0]
--I       max value int64. [Default 1]
--t       type.
--f       stream.
-
-================================
-Possible values for t:
-        0 -> 32-bit integer
-        1 -> 64-bit integer
-        2 -> double value
-        3 -> float value
-        4 -> stream of bytes
-        5 -> device performance
-        6 -> firmware info
-        7 -> system info
-```
-
-#+END_SRC
-# libqrng - library for interacting with IDQ's Quantis Appliance 
-
+1. ~fwversion~ to get the firmware version.
+2. ~randbytestream~ to request streams of random bytes.
+3. ~randdouble~ to request random double values.
+4. ~randfloat~ to request random float values.
+5. ~randint32~ to request random 32-bit integer values.
+6. ~randint64~ to request random 64-bit integer values.
+7. ~sysinfo~ to request the system informations.
+8. ~knapsack-ga~ presents the use of the Python bindings and ~libqrng~ to implement the genetic algorithm for solving the knapsack problem.
+9. ~simulated-annealing~ presents the use of the Python bindings and ~libqrng~ to implement the simulated annealing.
+10. ~qrand~ is a command-line tool that uses all the capabilities of the ~libqrng~ to request random values.
 
 #+CITE_EXPORT: csl ~/.emacs.d/ieee.csl
 #+PRINT_BIBLIOGRAPHY:
