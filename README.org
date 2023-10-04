@@ -54,9 +54,64 @@ and ~buffer~ that stores the values. Figure [[fig:libqrng_close]] presents the c
 #+NAME:   fig:libqrng_close
 [[./images/libqrng_cleanup.png]]
 
-** Build
+** Getting started
 
-** Installation
+*** Prerequisites
+
+**** Operating System
+
++ Linux based distribution
+
+**** Dependencies
++ gcc (GNU C Compiler)
++ libc (GNU C Library)
++ Make
++ libcurl-dev  
++ Python
+
+*** Installation
+
+1. Clone the repository or download the code.
+
+   ~git clone https://github.com/sebastianardelean/libqrng.git~
+
+2. Change directory to ~src~.
+
+   ~cd src~
+   
+3. Build and install the /libqrng/ library.
+
+   ~make && make install~
+
+The make script will build the library and create the shared object. The install target will copy the shared object libqrng.so.1.0 to ~/usr/local/lib~ and will create the symlinks to
+~/usr/local/lib/libqrng.so.1.0~ and ~/usr/local/lib/libqrng.so~.
+
+The Python FFI is *not built and installed by default*. To use the Python bindings, first build and install succcessfully /libqrng/ following the above mentioned steps. Then, the next steps must be followed:
+
+1. Change directory to ~bindings/python~.
+
+   ~cd bindings/python~
+
+2. Build and install.
+
+   ~make && make install~
+
+Another option to install the /libqrng/ library is to download the amd64 binaries provided as deb packages (only if you're using Debian based Linux distributions) or as tar.gz archives. The deb package can be installed using
+~dpkg -i package_name~.
+
+If you choose to use the tar.gz archive:
+
+1. Extract the content of the archive.
+   ~tar -xvf archive_name~
+
+2. Make the install script executable.
+   ~chmod +x install.sh~
+
+3. Run the install script. The install script will copy the shared object to ~/usr/lib/~, create the symlinks and run ~ldconfig~.
+   ~./install.sh~
+   
+
+*Note* The amd64 binaries provided for download do not include the Python binding library.
 
 ** Examples
 

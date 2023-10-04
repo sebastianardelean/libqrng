@@ -28,7 +28,7 @@
 
 #define MAJOR_VERSION 1
 #define MINOR_VERSION 0
-#define BUILD_NUMBER 70
-#define BUILD_DATE "21.09.2023"
+#define BUILD_NUMBER 71
+#define BUILD_DATE "04.10.2023"
 
 #endif /* QRNG_VERSION_H */
