@@ -1,0 +1,13 @@
+<map id="src/qrng.h" name="src/qrng.h">
+<area shape="rect" id="node1" title="API for interacting with IDQ&#39;s Quantis Appliance." alt="" coords="997,5,1083,32"/>
+<area shape="rect" id="node2" href="$da/dc1/qrngmodule_8c.html" title="API for interacting with IDQ&#39;s Quantis Appliance." alt="" coords="5,87,224,114"/>
+<area shape="rect" id="node3" href="$d0/d71/fwversion_8c.html" title="API for interacting with IDQ&#39;s Quantis Appliance." alt="" coords="249,80,402,121"/>
+<area shape="rect" id="node4" href="$de/dd8/qrandom_8c.html" title="API for interacting with IDQ&#39;s Quantis Appliance." alt="" coords="427,87,627,114"/>
+<area shape="rect" id="node5" href="$df/d10/randbytestream_8c.html" title="API for interacting with IDQ&#39;s Quantis Appliance." alt="" coords="651,80,845,121"/>
+<area shape="rect" id="node6" href="$de/d31/randdouble_8c.html" title="API for interacting with IDQ&#39;s Quantis Appliance." alt="" coords="869,80,1032,121"/>
+<area shape="rect" id="node7" href="$dc/ddf/randfloat_8c.html" title="API for interacting with IDQ&#39;s Quantis Appliance." alt="" coords="1057,80,1205,121"/>
+<area shape="rect" id="node8" href="$dc/d7d/randint32_8c.html" title="API for interacting with IDQ&#39;s Quantis Appliance." alt="" coords="1229,80,1381,121"/>
+<area shape="rect" id="node9" href="$d6/d31/randint64_8c.html" title="API for interacting with IDQ&#39;s Quantis Appliance." alt="" coords="1405,80,1557,121"/>
+<area shape="rect" id="node10" href="$d1/d84/sysinfo_8c.html" title="API for interacting with IDQ&#39;s Quantis Appliance." alt="" coords="1582,87,1781,114"/>
+<area shape="rect" id="node11" href="$db/d03/qrng_8c.html" title="API for interacting with IDQ&#39;s Quantis Appliance." alt="" coords="1804,87,1889,114"/>
+</map>

@@ -1,0 +1,563 @@
+\hypertarget{qrng_8c_source}{}\doxysection{qrng.\+c}
+\label{qrng_8c_source}\index{src/qrng.c@{src/qrng.c}}
+\mbox{\hyperlink{qrng_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00001}00001 \textcolor{comment}{/****************************************************************************}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00002}00002 \textcolor{comment}{ * libqrng -\/ library for interacting with IDQ's Quantis Appliance           *}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00003}00003 \textcolor{comment}{ *                                                                          *}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00004}00004 \textcolor{comment}{ * Copyright (C) 2023  Sebastian Mihai Ardelean                             *}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00005}00005 \textcolor{comment}{ *                                                                          *}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00006}00006 \textcolor{comment}{ * This program is free software: you can redistribute it and/or modify     *}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00007}00007 \textcolor{comment}{ * it under the terms of the GNU General Public License as published by     *}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00008}00008 \textcolor{comment}{ * the Free Software Foundation, either version 3 of the License, or        *}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00009}00009 \textcolor{comment}{ * (at your option) any later version.                                      *}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00010}00010 \textcolor{comment}{ *                                                                          *}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00011}00011 \textcolor{comment}{ * This program is distributed in the hope that it will be useful,          *}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00012}00012 \textcolor{comment}{ * but WITHOUT ANY WARRANTY; without even the implied warranty of           *}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00013}00013 \textcolor{comment}{ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            *}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00014}00014 \textcolor{comment}{ * GNU General Public License for more details.                             *}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00015}00015 \textcolor{comment}{ *                                                                          *}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00016}00016 \textcolor{comment}{ * You should have received a copy of the GNU General Public License        *}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00017}00017 \textcolor{comment}{ * along with this program.  If not, see <https://www.gnu.org/licenses/>.   *}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00018}00018 \textcolor{comment}{ ****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00019}00019 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00026}00026 \textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00027}00027 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00028}00028 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00029}00029 \textcolor{preprocessor}{\#include <stdbool.h>}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00030}00030 \textcolor{preprocessor}{\#include <string.h>}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00031}00031 \textcolor{preprocessor}{\#include <unistd.h>}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00032}00032 \textcolor{preprocessor}{\#include <curl/curl.h>}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00033}00033 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{qrng_8h}{qrng.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00034}00034 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00036}00036 \textcolor{preprocessor}{\#define DOMAIN\_ADDRESS\_LENGTH 254u}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00037}00037 \textcolor{preprocessor}{\#define URL\_MAX\_LENGTH 512u}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00038}00038 \textcolor{preprocessor}{\#define DEFAULT\_NUMBER\_OF\_SAMPLES 1u}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00039}00039 \textcolor{preprocessor}{\#define MIN\_VALUE\_INT 0u}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00040}00040 \textcolor{preprocessor}{\#define MAX\_VALUE\_INT 1u}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00041}00041 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00042}00042 \textcolor{preprocessor}{\#define MIN\_VALUE\_FLOAT 0.0f}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00043}00043 \textcolor{preprocessor}{\#define MAX\_VALUE\_FLOAT 1.0f}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00044}00044 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00045}00045 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00046}00046 \textcolor{keyword}{typedef} \textcolor{keyword}{enum} \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00047}00047   \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aaf271ed74082ceeee311dac09ac4eeefa}{SHORT\_RANDOM\_NUMBER}} = 0,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00048}00048   \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aac2b349c39cb9b5b10dbcfbd6fe69a84f}{INT\_RANDOM\_NUMBER}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00049}00049   \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aab36b7ae0d2a8e67ca391bd592b546788}{DOUBLE\_RANDOM\_NUMBER}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00050}00050   \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa8d4c32330e975e3b4a302a8fd354065b}{FLOAT\_RANDOM\_NUMBER}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00051}00051   \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa91e68db3a996cb6ff8818eb59aba956e}{STREAM\_BINARY}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00052}00052   \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa84f6761e4b3c8cee4ccd21a55b42f9f4}{PERFORMANCE\_REQUEST}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00053}00053   \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa22b82f0dc01b082b9780e62d30babfde}{FIRMWARE\_INFO\_REQUEST}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00054}00054   \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa5f2a0eb9f5b2c5d64e00f2d884ce20ba}{SYSTEM\_INFO\_REQUEST}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00055}00055   \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aae6871b1e45c6e46fa5c21bd36754b048}{NUMBER\_OF\_REQUESTS}}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00056}00056 \}e\_req\_type\_t;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00057}00057 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00058}00058 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00059}\mbox{\hyperlink{structs__api__t}{00059}} \textcolor{keyword}{typedef} \textcolor{keyword}{struct}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00060}00060 \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00061}00061   e\_req\_type\_t type;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00062}00062   \textcolor{keyword}{const} \textcolor{keywordtype}{char} *api\_url;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00063}00063   \textcolor{keywordtype}{char} domain\_address[DOMAIN\_ADDRESS\_LENGTH];}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00064}00064   \textcolor{keywordtype}{size\_t} samples;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00065}00065   int64\_t min\_range\_i;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00066}00066   int64\_t max\_range\_i;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00067}00067   \textcolor{keywordtype}{double} min\_range\_f;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00068}00068   \textcolor{keywordtype}{double} max\_range\_f;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00069}00069 \}\mbox{\hyperlink{structs__api__t}{s\_api\_t}};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00070}00070 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00071}00071 \textcolor{preprocessor}{\#ifdef NO\_DYNAMIC\_MEMORY\_ALLOCATION}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00072}00072 \textcolor{preprocessor}{\#define TOTAL\_MAX\_SIZE\_RESPONSE CURL\_MAX\_HTTP\_HEADER}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00073}00073 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00074}00074   \textcolor{keywordtype}{char} memory[TOTAL\_MAX\_SIZE\_RESPONSE];}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00075}00075   \textcolor{keywordtype}{size\_t} size;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00076}00076 \}\mbox{\hyperlink{structmemory__t}{memory\_t}};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00077}00077 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00078}\mbox{\hyperlink{structmemory__t}{00078}} \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00079}00079     \textcolor{keywordtype}{char} *memory;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00080}00080     \textcolor{keywordtype}{size\_t} size;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00081}00081 \}\mbox{\hyperlink{structmemory__t}{memory\_t}};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00082}00082 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00083}00083 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00084}00084 \textcolor{keyword}{static} \mbox{\hyperlink{structs__api__t}{s\_api\_t}} api\_types[]=\{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00085}00085   \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00086}00086     .type = \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aaf271ed74082ceeee311dac09ac4eeefa}{SHORT\_RANDOM\_NUMBER}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00087}00087     .api\_url = \textcolor{stringliteral}{"{}https://\%s/api/2.0/short?min=\%d\&max=\%d\&quantity=\%lu"{}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00088}00088     .domain\_address = \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00089}00089     .samples = \mbox{\hyperlink{qrandom_8c_add4b840def087badeb91b36c8f030664}{DEFAULT\_NUMBER\_OF\_SAMPLES}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00090}00090     .min\_range\_i = MIN\_VALUE\_INT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00091}00091     .max\_range\_i = MAX\_VALUE\_INT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00092}00092     .min\_range\_f = MIN\_VALUE\_FLOAT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00093}00093     .max\_range\_f = MAX\_VALUE\_FLOAT}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00094}00094   \},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00095}00095   \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00096}00096     .type = \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aac2b349c39cb9b5b10dbcfbd6fe69a84f}{INT\_RANDOM\_NUMBER}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00097}00097     .api\_url = \textcolor{stringliteral}{"{}https://\%s/api/2.0/int?min=\%ld\&max=\%ld\&quantity=\%lu"{}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00098}00098     .domain\_address = \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00099}00099     .samples = \mbox{\hyperlink{qrandom_8c_add4b840def087badeb91b36c8f030664}{DEFAULT\_NUMBER\_OF\_SAMPLES}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00100}00100     .min\_range\_i = MIN\_VALUE\_INT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00101}00101     .max\_range\_i = MAX\_VALUE\_INT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00102}00102     .min\_range\_f = MIN\_VALUE\_FLOAT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00103}00103     .max\_range\_f = MAX\_VALUE\_FLOAT}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00104}00104   \},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00105}00105   \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00106}00106     .type = \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aab36b7ae0d2a8e67ca391bd592b546788}{DOUBLE\_RANDOM\_NUMBER}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00107}00107     .api\_url = \textcolor{stringliteral}{"{}https://\%s/api/2.0/double?min=\%lf\&max=\%lf\&quantity=\%lu"{}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00108}00108     .domain\_address = \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00109}00109     .samples = \mbox{\hyperlink{qrandom_8c_add4b840def087badeb91b36c8f030664}{DEFAULT\_NUMBER\_OF\_SAMPLES}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00110}00110     .min\_range\_i = MIN\_VALUE\_INT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00111}00111     .max\_range\_i = MAX\_VALUE\_INT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00112}00112     .min\_range\_f = MIN\_VALUE\_FLOAT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00113}00113     .max\_range\_f = MAX\_VALUE\_FLOAT}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00114}00114   \},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00115}00115   \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00116}00116     .type = \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa8d4c32330e975e3b4a302a8fd354065b}{FLOAT\_RANDOM\_NUMBER}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00117}00117     .api\_url = \textcolor{stringliteral}{"{}https://\%s/api/2.0/double?min=\%lf\&max=\%lf\&quantity=\%lu"{}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00118}00118     .domain\_address = \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00119}00119     .samples = \mbox{\hyperlink{qrandom_8c_add4b840def087badeb91b36c8f030664}{DEFAULT\_NUMBER\_OF\_SAMPLES}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00120}00120     .min\_range\_i = MIN\_VALUE\_INT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00121}00121     .max\_range\_i = MAX\_VALUE\_INT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00122}00122     .min\_range\_f = MIN\_VALUE\_FLOAT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00123}00123     .max\_range\_f = MAX\_VALUE\_FLOAT}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00124}00124   \},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00125}00125   \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00126}00126     .type = \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa91e68db3a996cb6ff8818eb59aba956e}{STREAM\_BINARY}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00127}00127     .api\_url = \textcolor{stringliteral}{"{}https://\%s/api/2.0/streambytes?size=\%lu"{}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00128}00128     .domain\_address = \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00129}00129     .samples = \mbox{\hyperlink{qrandom_8c_add4b840def087badeb91b36c8f030664}{DEFAULT\_NUMBER\_OF\_SAMPLES}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00130}00130     .min\_range\_i = MIN\_VALUE\_INT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00131}00131     .max\_range\_i = MAX\_VALUE\_INT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00132}00132     .min\_range\_f = MIN\_VALUE\_FLOAT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00133}00133     .max\_range\_f = MAX\_VALUE\_FLOAT}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00134}00134   \}, }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00135}00135   \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00136}00136     .type = \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa84f6761e4b3c8cee4ccd21a55b42f9f4}{PERFORMANCE\_REQUEST}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00137}00137     .api\_url = \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00138}00138     .domain\_address = \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00139}00139     .samples = \mbox{\hyperlink{qrandom_8c_add4b840def087badeb91b36c8f030664}{DEFAULT\_NUMBER\_OF\_SAMPLES}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00140}00140     .min\_range\_i = MIN\_VALUE\_INT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00141}00141     .max\_range\_i = MAX\_VALUE\_INT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00142}00142     .min\_range\_f = MIN\_VALUE\_FLOAT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00143}00143     .max\_range\_f = MAX\_VALUE\_FLOAT}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00144}00144   \},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00145}00145   \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00146}00146     .type = \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa22b82f0dc01b082b9780e62d30babfde}{FIRMWARE\_INFO\_REQUEST}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00147}00147     .api\_url = \textcolor{stringliteral}{"{}https://\%s/api/2.0/firmwareinfo"{}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00148}00148     .domain\_address = \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00149}00149     .samples = \mbox{\hyperlink{qrandom_8c_add4b840def087badeb91b36c8f030664}{DEFAULT\_NUMBER\_OF\_SAMPLES}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00150}00150     .min\_range\_i = MIN\_VALUE\_INT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00151}00151     .max\_range\_i = MAX\_VALUE\_INT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00152}00152     .min\_range\_f = MIN\_VALUE\_FLOAT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00153}00153     .max\_range\_f = MAX\_VALUE\_FLOAT}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00154}00154   \},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00155}00155   \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00156}00156     .type = \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa5f2a0eb9f5b2c5d64e00f2d884ce20ba}{SYSTEM\_INFO\_REQUEST}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00157}00157     .api\_url = \textcolor{stringliteral}{"{}https://\%s/api/2.0/systeminfo"{}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00158}00158     .domain\_address = \textcolor{stringliteral}{"{}"{}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00159}00159     .samples = \mbox{\hyperlink{qrandom_8c_add4b840def087badeb91b36c8f030664}{DEFAULT\_NUMBER\_OF\_SAMPLES}},}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00160}00160     .min\_range\_i = MIN\_VALUE\_INT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00161}00161     .max\_range\_i = MAX\_VALUE\_INT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00162}00162     .min\_range\_f = MIN\_VALUE\_FLOAT,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00163}00163     .max\_range\_f = MAX\_VALUE\_FLOAT}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00164}00164   \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00165}00165 \};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00166}00166 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00167}00167 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00168}00168 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00169}00169 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00170}00170 \textcolor{keyword}{static} CURL *p\_curl\_handle = NULL;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00171}00171 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00172}00172 \textcolor{keyword}{static} \textcolor{keywordtype}{size\_t} curl\_write\_cbk(\textcolor{keywordtype}{void} *content, }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00173}00173               \textcolor{keywordtype}{size\_t} size, }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00174}00174               \textcolor{keywordtype}{size\_t} nmemb, }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00175}00175               \textcolor{keywordtype}{void} *userp);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00176}00176 \textcolor{keyword}{static} \textcolor{keywordtype}{void} create\_req\_url(e\_req\_type\_t req\_type, \textcolor{keywordtype}{char} *api\_url);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00177}00177 \textcolor{keyword}{static} \textcolor{keywordtype}{int} execute\_request(\textcolor{keywordtype}{char} *url, \textcolor{keywordtype}{void} *buffer);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00178}00178 \textcolor{keyword}{static} \textcolor{keywordtype}{int} execute\_stream\_request(\textcolor{keywordtype}{char} *url, \textcolor{keywordtype}{void} *buffer);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00179}00179 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00180}\mbox{\hyperlink{qrng_8c_a722703e4302df6bf5a8ab29f2cce7e59}{00180}} \textcolor{keywordtype}{int} \mbox{\hyperlink{qrng_8c_a722703e4302df6bf5a8ab29f2cce7e59}{qrng\_open}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char} *device\_domain\_address)\{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00181}00181 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00182}00182     \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00183}00183     \textcolor{keywordtype}{size\_t} i = 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00184}00184     \textcolor{keywordflow}{if} (device\_domain\_address[0] != \textcolor{charliteral}{'\(\backslash\)0'}) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00185}00185       \textcolor{keywordflow}{for} (i = 0 ; i < \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aae6871b1e45c6e46fa5c21bd36754b048}{NUMBER\_OF\_REQUESTS}}; i++) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00186}00186         strncpy(api\_types[i].domain\_address, device\_domain\_address, DOMAIN\_ADDRESS\_LENGTH);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00187}00187       \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00188}00188 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00189}00189       }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00190}00190       \textcolor{keywordflow}{if}(curl\_global\_init(CURL\_GLOBAL\_ALL)!=0) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00191}00191     fprintf(stderr, \textcolor{stringliteral}{"{}Error in curl\_global\_init"{}});}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00192}00192     retval = -\/1;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00193}00193     }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00194}00194       \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00195}00195       \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00196}00196     p\_curl\_handle = curl\_easy\_init();}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00197}00197     \textcolor{keywordflow}{if} (!p\_curl\_handle) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00198}00198           fprintf(stderr, \textcolor{stringliteral}{"{}Error in curl\_easy\_init"{}});}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00199}00199           curl\_global\_cleanup();}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00200}00200           retval = -\/2;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00201}00201     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00202}00202         \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00203}00203 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00204}00204 \textcolor{preprocessor}{\#ifdef DEBUG}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00205}00205           (void)curl\_easy\_setopt(p\_curl\_handle, CURLOPT\_VERBOSE, 1L);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00206}00206 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00207}00207           (void)curl\_easy\_setopt(p\_curl\_handle, CURLOPT\_SSL\_VERIFYHOST, 0L);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00208}00208 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00209}00209           (void)curl\_easy\_setopt(p\_curl\_handle, CURLOPT\_SSL\_VERIFYPEER, 0L);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00210}00210                 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00211}00211           (void)curl\_easy\_setopt(p\_curl\_handle, CURLOPT\_FAILONERROR, 1L);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00212}00212     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00213}00213       \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00214}00214     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00215}00215     \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00216}00216       retval = -\/3;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00217}00217     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00218}00218     \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00219}00219  }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00220}00220 \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00221}00221 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00222}00222 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00223}\mbox{\hyperlink{qrng_8c_ac11a56e95649a115157e5453a9dde45a}{00223}} \textcolor{keywordtype}{void} \mbox{\hyperlink{qrng_8c_ac11a56e95649a115157e5453a9dde45a}{qrng\_close}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00224}00224 \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00225}00225     \textcolor{keywordflow}{if} (p\_curl\_handle) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00226}00226     curl\_easy\_cleanup(p\_curl\_handle);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00227}00227         curl\_global\_cleanup();}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00228}00228     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00229}00229 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00230}00230 \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00231}00231 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00232}00232 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00233}\mbox{\hyperlink{qrng_8c_a8ad8faa8dd32d5318a555fecc19240f3}{00233}} \textcolor{keywordtype}{int} \mbox{\hyperlink{qrng_8c_a8ad8faa8dd32d5318a555fecc19240f3}{qrng\_random\_stream}}(FILE *stream, \textcolor{keywordtype}{size\_t} size)}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00234}00234 \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00235}00235   \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00236}00236   \textcolor{keywordtype}{char} final\_url[URL\_MAX\_LENGTH] = \{0\};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00237}00237   api\_types[\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa91e68db3a996cb6ff8818eb59aba956e}{STREAM\_BINARY}}].samples = size;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00238}00238   create\_req\_url(\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa91e68db3a996cb6ff8818eb59aba956e}{STREAM\_BINARY}}, final\_url);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00239}00239   retval = execute\_stream\_request(final\_url, (\textcolor{keywordtype}{void} *)stream);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00240}00240   \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00241}00241 \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00242}00242 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00243}00243 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00244}\mbox{\hyperlink{qrng_8c_a4fa90401c1662fddcef5957bbed5ebf4}{00244}} \textcolor{keywordtype}{int} \mbox{\hyperlink{qrng_8c_a4fa90401c1662fddcef5957bbed5ebf4}{qrng\_random\_double}}(\textcolor{keywordtype}{double} min, \textcolor{keywordtype}{double} max, \textcolor{keywordtype}{size\_t} samples, \textcolor{keywordtype}{double} *buffer)}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00245}00245 \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00246}00246     \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00247}00247 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00248}00248     \textcolor{keywordtype}{char} final\_url[URL\_MAX\_LENGTH]=\{0\};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00249}00249 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00250}00250     }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00251}00251     \mbox{\hyperlink{structmemory__t}{memory\_t}} mem\_buffer;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00252}00252     }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00253}00253     api\_types[\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aab36b7ae0d2a8e67ca391bd592b546788}{DOUBLE\_RANDOM\_NUMBER}}].samples = samples;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00254}00254     api\_types[\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aab36b7ae0d2a8e67ca391bd592b546788}{DOUBLE\_RANDOM\_NUMBER}}].min\_range\_f = min;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00255}00255     api\_types[\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aab36b7ae0d2a8e67ca391bd592b546788}{DOUBLE\_RANDOM\_NUMBER}}].max\_range\_f = max;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00256}00256     }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00257}00257     memset(\&mem\_buffer, 0, \textcolor{keyword}{sizeof}(mem\_buffer));}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00258}00258 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00259}00259     create\_req\_url(\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aab36b7ae0d2a8e67ca391bd592b546788}{DOUBLE\_RANDOM\_NUMBER}}, final\_url);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00260}00260 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00261}00261 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00262}00262     retval = execute\_request(final\_url, (\textcolor{keywordtype}{void} *)\&mem\_buffer);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00263}00263       }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00264}00264     \textcolor{keywordflow}{if} (!retval) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00265}00265       \textcolor{comment}{/* parse values array */}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00266}00266       \textcolor{keywordtype}{char} *random\_values\_string = mem\_buffer.memory;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00267}00267       \textcolor{comment}{/* Skip first character because it's [ */}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00268}00268       random\_values\_string ++;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00269}00269       \textcolor{comment}{/* Skip last character because is ] */}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00270}00270       random\_values\_string[strlen(random\_values\_string)-\/1]=0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00271}00271       \textcolor{keywordtype}{char} *token = strtok(random\_values\_string,\textcolor{stringliteral}{"{},"{}});}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00272}00272       \textcolor{keywordtype}{size\_t} i = 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00273}00273         }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00274}00274       \textcolor{keywordflow}{for} (i = 0; i < samples; i++) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00275}00275         buffer[i] = atof(token);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00276}00276         token = strtok(NULL, \textcolor{stringliteral}{"{},"{}});}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00277}00277       \}   }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00278}00278     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00279}00279     \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00280}00280       fprintf(stderr, \textcolor{stringliteral}{"{}could not execute curl request"{}});}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00281}00281     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00282}00282 \textcolor{preprocessor}{\#ifndef NO\_DYNAMIC\_MEMORY\_ALLOCATION    }}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00283}00283     \textcolor{keywordflow}{if} (mem\_buffer.memory) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00284}00284       free(mem\_buffer.memory);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00285}00285     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00286}00286 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00287}00287     \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00288}00288 \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00289}00289 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00290}\mbox{\hyperlink{qrng_8c_a2c5528ce6b077d99098bab24ce9f67c1}{00290}} \textcolor{keywordtype}{int} \mbox{\hyperlink{qrng_8c_a2c5528ce6b077d99098bab24ce9f67c1}{qrng\_random\_float}}(\textcolor{keywordtype}{float} min, \textcolor{keywordtype}{float} max, \textcolor{keywordtype}{size\_t} samples, \textcolor{keywordtype}{float} *buffer)}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00291}00291 \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00292}00292     \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00293}00293 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00294}00294     \textcolor{keywordtype}{char} final\_url[URL\_MAX\_LENGTH]=\{0\};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00295}00295 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00296}00296     }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00297}00297     \mbox{\hyperlink{structmemory__t}{memory\_t}} mem\_buffer;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00298}00298 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00299}00299     api\_types[\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa8d4c32330e975e3b4a302a8fd354065b}{FLOAT\_RANDOM\_NUMBER}}].samples = samples;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00300}00300     api\_types[\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa8d4c32330e975e3b4a302a8fd354065b}{FLOAT\_RANDOM\_NUMBER}}].min\_range\_f = min;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00301}00301     api\_types[\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa8d4c32330e975e3b4a302a8fd354065b}{FLOAT\_RANDOM\_NUMBER}}].max\_range\_f = max;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00302}00302     }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00303}00303     memset(\&mem\_buffer, 0, \textcolor{keyword}{sizeof}(mem\_buffer));}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00304}00304 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00305}00305     create\_req\_url(\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa8d4c32330e975e3b4a302a8fd354065b}{FLOAT\_RANDOM\_NUMBER}}, final\_url);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00306}00306 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00307}00307 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00308}00308     retval = execute\_request(final\_url, (\textcolor{keywordtype}{void} *)\&mem\_buffer);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00309}00309       }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00310}00310     \textcolor{keywordflow}{if} (!retval) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00311}00311       \textcolor{comment}{/* parse values array */}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00312}00312       \textcolor{keywordtype}{char} *random\_values\_string = mem\_buffer.memory;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00313}00313       \textcolor{comment}{/* Skip first character because it's [ */}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00314}00314       random\_values\_string ++;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00315}00315       \textcolor{comment}{/* Skip last character because is ] */}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00316}00316       random\_values\_string[strlen(random\_values\_string)-\/1]=0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00317}00317       \textcolor{keywordtype}{char} *token = strtok(random\_values\_string,\textcolor{stringliteral}{"{},"{}});}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00318}00318       \textcolor{keywordtype}{size\_t} i = 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00319}00319       }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00320}00320       \textcolor{keywordflow}{for} (i = 0; i < samples; i++) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00321}00321         buffer[i] = atof(token);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00322}00322         token = strtok(NULL, \textcolor{stringliteral}{"{},"{}});}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00323}00323       \}   }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00324}00324     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00325}00325     \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00326}00326       fprintf(stderr, \textcolor{stringliteral}{"{}could not execute curl request"{}});}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00327}00327     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00328}00328 \textcolor{preprocessor}{\#ifndef NO\_DYNAMIC\_MEMORY\_ALLOCATION    }}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00329}00329     \textcolor{keywordflow}{if} (mem\_buffer.memory) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00330}00330       free(mem\_buffer.memory);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00331}00331     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00332}00332 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00333}00333     \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00334}00334 \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00335}00335 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00336}\mbox{\hyperlink{qrng_8c_ad5962c31d7b292a19b670531ddedae30}{00336}} \textcolor{keywordtype}{int} \mbox{\hyperlink{qrng_8c_ad5962c31d7b292a19b670531ddedae30}{qrng\_random\_int64}}(int64\_t min, int64\_t max, \textcolor{keywordtype}{size\_t} samples, int64\_t *buffer)}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00337}00337 \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00338}00338     \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00339}00339 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00340}00340     \textcolor{keywordtype}{char} final\_url[URL\_MAX\_LENGTH]=\{0\};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00341}00341 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00342}00342     }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00343}00343     \mbox{\hyperlink{structmemory__t}{memory\_t}} mem\_buffer;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00344}00344 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00345}00345     api\_types[\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aac2b349c39cb9b5b10dbcfbd6fe69a84f}{INT\_RANDOM\_NUMBER}}].samples = samples;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00346}00346     api\_types[\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aac2b349c39cb9b5b10dbcfbd6fe69a84f}{INT\_RANDOM\_NUMBER}}].min\_range\_i = min;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00347}00347     api\_types[\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aac2b349c39cb9b5b10dbcfbd6fe69a84f}{INT\_RANDOM\_NUMBER}}].max\_range\_i = max;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00348}00348 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00349}00349     memset(\&mem\_buffer, 0, \textcolor{keyword}{sizeof}(mem\_buffer));}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00350}00350 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00351}00351     create\_req\_url(\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aac2b349c39cb9b5b10dbcfbd6fe69a84f}{INT\_RANDOM\_NUMBER}}, final\_url);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00352}00352 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00353}00353 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00354}00354     retval = execute\_request(final\_url, (\textcolor{keywordtype}{void} *)\&mem\_buffer);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00355}00355       }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00356}00356     \textcolor{keywordflow}{if} (!retval) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00357}00357       \textcolor{comment}{/* parse values array */}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00358}00358       \textcolor{keywordtype}{char} *random\_values\_string = mem\_buffer.memory;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00359}00359       \textcolor{comment}{/* Skip first character because it's [ */}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00360}00360       random\_values\_string ++;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00361}00361       \textcolor{comment}{/* Skip last character because is ] */}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00362}00362       random\_values\_string[strlen(random\_values\_string)-\/1]=0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00363}00363       \textcolor{keywordtype}{char} *token = strtok(random\_values\_string,\textcolor{stringliteral}{"{},"{}});}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00364}00364       \textcolor{keywordtype}{size\_t} i = 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00365}00365         }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00366}00366       \textcolor{keywordflow}{for} (i = 0; i < samples; i++) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00367}00367         buffer[i] = atoll(token);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00368}00368         token = strtok(NULL, \textcolor{stringliteral}{"{},"{}});}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00369}00369       \}   }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00370}00370     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00371}00371     \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00372}00372       fprintf(stderr, \textcolor{stringliteral}{"{}could not execute curl request"{}});}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00373}00373     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00374}00374     }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00375}00375 \textcolor{preprocessor}{\#ifndef NO\_DYNAMIC\_MEMORY\_ALLOCATION        }}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00376}00376     \textcolor{keywordflow}{if} (mem\_buffer.memory) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00377}00377       free(mem\_buffer.memory);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00378}00378     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00379}00379 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00380}00380     \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00381}00381 \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00382}00382 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00383}\mbox{\hyperlink{qrng_8c_aa98a78c89b2e3f7eee40660490baee6c}{00383}} \textcolor{keywordtype}{int} \mbox{\hyperlink{qrng_8c_aa98a78c89b2e3f7eee40660490baee6c}{qrng\_random\_int32}}(int32\_t min, int32\_t max, \textcolor{keywordtype}{size\_t} samples, int32\_t *buffer)}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00384}00384 \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00385}00385     \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00386}00386 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00387}00387     \textcolor{keywordtype}{char} final\_url[URL\_MAX\_LENGTH]=\{0\};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00388}00388 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00389}00389     }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00390}00390     \mbox{\hyperlink{structmemory__t}{memory\_t}} mem\_buffer;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00391}00391 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00392}00392 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00393}00393     api\_types[\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aaf271ed74082ceeee311dac09ac4eeefa}{SHORT\_RANDOM\_NUMBER}}].samples = samples;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00394}00394     api\_types[\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aaf271ed74082ceeee311dac09ac4eeefa}{SHORT\_RANDOM\_NUMBER}}].min\_range\_i = min;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00395}00395     api\_types[\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aaf271ed74082ceeee311dac09ac4eeefa}{SHORT\_RANDOM\_NUMBER}}].max\_range\_i = max;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00396}00396 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00397}00397     memset(\&mem\_buffer, 0, \textcolor{keyword}{sizeof}(mem\_buffer));}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00398}00398 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00399}00399     create\_req\_url(\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aaf271ed74082ceeee311dac09ac4eeefa}{SHORT\_RANDOM\_NUMBER}}, final\_url);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00400}00400 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00401}00401 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00402}00402     retval = execute\_request(final\_url, (\textcolor{keywordtype}{void} *)\&mem\_buffer);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00403}00403       }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00404}00404     \textcolor{keywordflow}{if} (!retval) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00405}00405       \textcolor{comment}{/* parse values array */}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00406}00406       \textcolor{keywordtype}{char} *random\_values\_string = mem\_buffer.memory;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00407}00407       \textcolor{comment}{/* Skip first character because it's [ */}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00408}00408       random\_values\_string ++;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00409}00409       \textcolor{comment}{/* Skip last character because is ] */}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00410}00410       random\_values\_string[strlen(random\_values\_string)-\/1]=0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00411}00411       \textcolor{keywordtype}{char} *token = strtok(random\_values\_string,\textcolor{stringliteral}{"{},"{}});}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00412}00412       \textcolor{keywordtype}{size\_t} i = 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00413}00413         }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00414}00414       \textcolor{keywordflow}{for} (i = 0; i < samples; i++) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00415}00415         buffer[i] = atol(token);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00416}00416         token = strtok(NULL, \textcolor{stringliteral}{"{},"{}});}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00417}00417       \}   }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00418}00418     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00419}00419     \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00420}00420       fprintf(stderr, \textcolor{stringliteral}{"{}could not execute curl request"{}});}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00421}00421     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00422}00422 \textcolor{preprocessor}{\#ifndef NO\_DYNAMIC\_MEMORY\_ALLOCATION        }}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00423}00423     \textcolor{keywordflow}{if} (mem\_buffer.memory) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00424}00424       free(mem\_buffer.memory);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00425}00425     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00426}00426 \textcolor{preprocessor}{\#endif   }}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00427}00427     \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00428}00428 \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00429}00429 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00430}00430 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00431}\mbox{\hyperlink{qrng_8c_a720a56cf423984312a8454c0e883cf3e}{00431}} \textcolor{keywordtype}{int} \mbox{\hyperlink{qrng_8c_a720a56cf423984312a8454c0e883cf3e}{qrng\_firmware\_info}}(\textcolor{keywordtype}{void} *buffer) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00432}00432   \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00433}00433   \textcolor{keywordtype}{char} final\_url[URL\_MAX\_LENGTH] = \{0\};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00434}00434   create\_req\_url(\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa22b82f0dc01b082b9780e62d30babfde}{FIRMWARE\_INFO\_REQUEST}}, final\_url);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00435}00435   retval = execute\_stream\_request(final\_url, (\textcolor{keywordtype}{void} *)buffer);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00436}00436   \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00437}00437 \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00438}00438 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00439}\mbox{\hyperlink{qrng_8c_af43a0f42bfbc5f7785824e3a8b05bb2f}{00439}} \textcolor{keywordtype}{int} \mbox{\hyperlink{qrng_8c_af43a0f42bfbc5f7785824e3a8b05bb2f}{qrng\_system\_info}}(\textcolor{keywordtype}{void} *buffer) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00440}00440   \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00441}00441   \textcolor{keywordtype}{char} final\_url[URL\_MAX\_LENGTH] = \{0\};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00442}00442   create\_req\_url(\mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa5f2a0eb9f5b2c5d64e00f2d884ce20ba}{SYSTEM\_INFO\_REQUEST}}, final\_url);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00443}00443   retval = execute\_stream\_request(final\_url, (\textcolor{keywordtype}{void} *)buffer);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00444}00444   \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00445}00445 \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00446}00446 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00447}00447 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00448}00448 \textcolor{keywordtype}{int} execute\_request(\textcolor{keywordtype}{char} *url, \textcolor{keywordtype}{void} *buffer) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00449}00449   CURLcode error = CURLE\_OK;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00450}00450 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00451}00451   \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00452}00452 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00453}00453 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00454}00454 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00455}00455   (void)curl\_easy\_setopt(p\_curl\_handle, CURLOPT\_URL, url);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00456}00456   (void)curl\_easy\_setopt(p\_curl\_handle, CURLOPT\_WRITEFUNCTION, \&curl\_write\_cbk); \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00457}00457   (void)curl\_easy\_setopt(p\_curl\_handle, CURLOPT\_WRITEDATA, buffer);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00458}00458   error = curl\_easy\_perform(p\_curl\_handle);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00459}00459   }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00460}00460   \textcolor{keywordflow}{if}(error != CURLE\_OK) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00461}00461     fprintf(stderr, \textcolor{stringliteral}{"{}curl\_easy\_perform() failed: \%s\(\backslash\)n"{}}, curl\_easy\_strerror(error));}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00462}00462     retval = -\/1;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00463}00463   \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00464}00464   \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00465}00465     \textcolor{comment}{//do nothing}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00466}00466   \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00467}00467   }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00468}00468   \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00469}00469 \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00470}00470 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00471}00471 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00472}00472 \textcolor{keywordtype}{int} execute\_stream\_request(\textcolor{keywordtype}{char} *url, \textcolor{keywordtype}{void} *buffer) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00473}00473     CURLcode error = CURLE\_OK;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00474}00474     \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00475}00475 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00476}00476     (void)curl\_easy\_setopt(p\_curl\_handle, CURLOPT\_URL, url);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00477}00477     (void)curl\_easy\_setopt(p\_curl\_handle, CURLOPT\_WRITEDATA, buffer);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00478}00478 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00479}00479     error = curl\_easy\_perform(p\_curl\_handle);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00480}00480     \textcolor{keywordflow}{if}(error != CURLE\_OK) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00481}00481     fprintf(stderr, \textcolor{stringliteral}{"{}curl\_easy\_perform() failed: \%s\(\backslash\)n"{}}, curl\_easy\_strerror(error));}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00482}00482         retval = -\/1;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00483}00483     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00484}00484     \textcolor{keywordflow}{else} \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00485}00485     \textcolor{comment}{//do nothing}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00486}00486     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00487}00487   }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00488}00488     \textcolor{keywordflow}{return} retval;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00489}00489 \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00490}00490 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00491}00491 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00492}00492 \textcolor{keywordtype}{void} create\_req\_url(e\_req\_type\_t req\_type, \textcolor{keywordtype}{char} *api\_url)}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00493}00493 \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00494}00494 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00495}00495   \textcolor{keywordflow}{switch}(req\_type) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00496}00496   \textcolor{keywordflow}{case} \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aaf271ed74082ceeee311dac09ac4eeefa}{SHORT\_RANDOM\_NUMBER}}:}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00497}00497   \textcolor{keywordflow}{case} \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aac2b349c39cb9b5b10dbcfbd6fe69a84f}{INT\_RANDOM\_NUMBER}}:}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00498}00498     snprintf(api\_url, URL\_MAX\_LENGTH, api\_types[req\_type].api\_url,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00499}00499              api\_types[req\_type].domain\_address,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00500}00500              api\_types[req\_type].min\_range\_i,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00501}00501              api\_types[req\_type].max\_range\_i,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00502}00502              api\_types[req\_type].samples);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00503}00503     \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00504}00504   \textcolor{keywordflow}{case} \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aab36b7ae0d2a8e67ca391bd592b546788}{DOUBLE\_RANDOM\_NUMBER}}:}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00505}00505   \textcolor{keywordflow}{case} \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa8d4c32330e975e3b4a302a8fd354065b}{FLOAT\_RANDOM\_NUMBER}}:}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00506}00506     snprintf(api\_url, URL\_MAX\_LENGTH, api\_types[req\_type].api\_url,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00507}00507              api\_types[req\_type].domain\_address,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00508}00508              api\_types[req\_type].min\_range\_f,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00509}00509              api\_types[req\_type].max\_range\_f,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00510}00510              api\_types[req\_type].samples);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00511}00511     \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00512}00512   \textcolor{keywordflow}{case} \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa91e68db3a996cb6ff8818eb59aba956e}{STREAM\_BINARY}}:}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00513}00513     snprintf(api\_url, URL\_MAX\_LENGTH, api\_types[req\_type].api\_url,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00514}00514              api\_types[req\_type].domain\_address,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00515}00515              api\_types[req\_type].samples);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00516}00516     \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00517}00517   \textcolor{keywordflow}{case} \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa84f6761e4b3c8cee4ccd21a55b42f9f4}{PERFORMANCE\_REQUEST}}:}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00518}00518     \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00519}00519   \textcolor{keywordflow}{case} \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa22b82f0dc01b082b9780e62d30babfde}{FIRMWARE\_INFO\_REQUEST}}:}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00520}00520     snprintf(api\_url, URL\_MAX\_LENGTH, api\_types[req\_type].api\_url,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00521}00521         api\_types[req\_type].domain\_address);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00522}00522     \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00523}00523   \textcolor{keywordflow}{case} \mbox{\hyperlink{qrandom_8c_ac611032455a6e4bbe3c346aa521a553aa5f2a0eb9f5b2c5d64e00f2d884ce20ba}{SYSTEM\_INFO\_REQUEST}}:}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00524}00524     snprintf(api\_url, URL\_MAX\_LENGTH, api\_types[req\_type].api\_url,}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00525}00525         api\_types[req\_type].domain\_address);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00526}00526     \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00527}00527   \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00528}00528     \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00529}00529   \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00530}00530 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00531}00531 \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00532}00532 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00533}00533 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00534}00534 \textcolor{keywordtype}{size\_t} curl\_write\_cbk(\textcolor{keywordtype}{void} *content, \textcolor{keywordtype}{size\_t} size, \textcolor{keywordtype}{size\_t} nmemb, \textcolor{keywordtype}{void} *userp)}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00535}00535 \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00536}00536 \textcolor{preprocessor}{\#ifdef NO\_DYNAMIC\_MEMORY\_ALLOCATION}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00537}00537   \textcolor{keywordtype}{size\_t} real\_size = size *nmemb;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00538}00538   \mbox{\hyperlink{structmemory__t}{memory\_t}} *mem = (\mbox{\hyperlink{structmemory__t}{memory\_t}} *)userp;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00539}00539   \textcolor{keywordtype}{size\_t} available\_space = TOTAL\_MAX\_SIZE\_RESPONSE -\/ (mem-\/>size + real\_size + 1);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00540}00540   \textcolor{keywordflow}{if} (available\_space > (real\_size + 1)) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00541}00541     memcpy(\&(mem-\/>memory[mem-\/>size]), content, real\_size);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00542}00542     mem-\/>size += real\_size;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00543}00543     mem-\/>memory[mem-\/>size] = 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00544}00544     \textcolor{keywordflow}{return} real\_size;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00545}00545   \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00546}00546   fprintf(stderr, \textcolor{stringliteral}{"{}Static buffer full!\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00547}00547   \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00548}00548 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00549}00549     \textcolor{keywordtype}{size\_t} real\_size = size * nmemb;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00550}00550     \mbox{\hyperlink{structmemory__t}{memory\_t}} *mem = (\mbox{\hyperlink{structmemory__t}{memory\_t}} *)userp;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00551}00551     \textcolor{keywordtype}{char} *ptr = realloc(mem-\/>memory, mem-\/>size + real\_size + 1);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00552}00552     \textcolor{keywordflow}{if} (!ptr) \{}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00553}00553     fprintf(stderr, \textcolor{stringliteral}{"{}Not enough memory (realloc returned NULL)\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00554}00554     \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00555}00555     \}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00556}00556 }
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00557}00557     mem-\/>memory = ptr;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00558}00558     memcpy(\&(mem-\/>memory[mem-\/>size]), content, real\_size);}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00559}00559     mem-\/>size += real\_size;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00560}00560     mem-\/>memory[mem-\/>size] = 0;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00561}00561     \textcolor{keywordflow}{return} real\_size;}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00562}00562 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{qrng_8c_source_l00563}00563 \}}
+
+\end{DoxyCode}

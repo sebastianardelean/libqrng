@@ -1,0 +1,259 @@
+\hypertarget{randint32_8c}{}\doxysection{examples/randint32/randint32.c File Reference}
+\label{randint32_8c}\index{examples/randint32/randint32.c@{examples/randint32/randint32.c}}
+
+
+API for interacting with IDQ\textquotesingle{}s Quantis Appliance.  
+
+
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$qrng.\+h$>$}\newline
+Include dependency graph for randint32.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d6/df9/randint32_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{randint32_8c_a3b6a35b8be8405a9db72cc5dea97954b}{PROGRAM\+\_\+\+NAME}}~\char`\"{}randint32\char`\"{}
+\begin{DoxyCompactList}\small\item\em A macro for the program name. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{randint32_8c_a1c6d5de492ac61ad29aec7aa9a436bbf}{VERSION}}~\char`\"{}1.\+0.\+0\char`\"{}
+\begin{DoxyCompactList}\small\item\em A macro for the program version. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{randint32_8c_a7e5da39fd3a4d5e827323372d91723aa}{AUTHORS}}~\char`\"{}Sebastian M. Ardelean\char`\"{}
+\begin{DoxyCompactList}\small\item\em A macro for the author. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{randint32_8c_add4b840def087badeb91b36c8f030664}{DEFAULT\+\_\+\+NUMBER\+\_\+\+OF\+\_\+\+SAMPLES}}~1u
+\begin{DoxyCompactList}\small\item\em A macro for defining the default number of samples to request. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{randint32_8c_aafc3bb4ff712fa49ecd07011b6b3d477}{DEFAULT\+\_\+\+MIN\+\_\+\+VALUE\+\_\+I}}~0
+\begin{DoxyCompactList}\small\item\em A macro for defining the default minimum integer number. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{randint32_8c_a696575d98f699666d5b06038c77d18ea}{DEFAULT\+\_\+\+MAX\+\_\+\+VALUE\+\_\+I}}~100
+\begin{DoxyCompactList}\small\item\em A macro for defining the default maximum integer number. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{randint32_8c_a8f848f05b9593c04e3f4df1a99b28734}{DOMAIN\+\_\+\+ADDR\+\_\+\+LENGTH}}~256u
+\begin{DoxyCompactList}\small\item\em A macro for defining the IDQ\textquotesingle{}s Quantis Appliance domain name address. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{randint32_8c_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+API for interacting with IDQ\textquotesingle{}s Quantis Appliance. 
+
+\begin{DoxyAuthor}{Author}
+Sebastian Mihai Ardelean \href{mailto:sebastian.ardelean@cs.upt.ro}{\texttt{ sebastian.\+ardelean@cs.\+upt.\+ro}} 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+24 May 2023 
+\end{DoxyDate}
+
+
+Definition in file \mbox{\hyperlink{randint32_8c_source}{randint32.\+c}}.
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{randint32_8c_a7e5da39fd3a4d5e827323372d91723aa}\label{randint32_8c_a7e5da39fd3a4d5e827323372d91723aa}} 
+\index{randint32.c@{randint32.c}!AUTHORS@{AUTHORS}}
+\index{AUTHORS@{AUTHORS}!randint32.c@{randint32.c}}
+\doxysubsubsection{\texorpdfstring{AUTHORS}{AUTHORS}}
+{\footnotesize\ttfamily \#define AUTHORS~\char`\"{}Sebastian M. Ardelean\char`\"{}}
+
+
+
+A macro for the author. 
+
+
+
+Definition at line \mbox{\hyperlink{randint32_8c_source_l00053}{53}} of file \mbox{\hyperlink{randint32_8c_source}{randint32.\+c}}.
+
+\mbox{\Hypertarget{randint32_8c_a696575d98f699666d5b06038c77d18ea}\label{randint32_8c_a696575d98f699666d5b06038c77d18ea}} 
+\index{randint32.c@{randint32.c}!DEFAULT\_MAX\_VALUE\_I@{DEFAULT\_MAX\_VALUE\_I}}
+\index{DEFAULT\_MAX\_VALUE\_I@{DEFAULT\_MAX\_VALUE\_I}!randint32.c@{randint32.c}}
+\doxysubsubsection{\texorpdfstring{DEFAULT\_MAX\_VALUE\_I}{DEFAULT\_MAX\_VALUE\_I}}
+{\footnotesize\ttfamily \#define DEFAULT\+\_\+\+MAX\+\_\+\+VALUE\+\_\+I~100}
+
+
+
+A macro for defining the default maximum integer number. 
+
+
+
+Definition at line \mbox{\hyperlink{randint32_8c_source_l00074}{74}} of file \mbox{\hyperlink{randint32_8c_source}{randint32.\+c}}.
+
+\mbox{\Hypertarget{randint32_8c_aafc3bb4ff712fa49ecd07011b6b3d477}\label{randint32_8c_aafc3bb4ff712fa49ecd07011b6b3d477}} 
+\index{randint32.c@{randint32.c}!DEFAULT\_MIN\_VALUE\_I@{DEFAULT\_MIN\_VALUE\_I}}
+\index{DEFAULT\_MIN\_VALUE\_I@{DEFAULT\_MIN\_VALUE\_I}!randint32.c@{randint32.c}}
+\doxysubsubsection{\texorpdfstring{DEFAULT\_MIN\_VALUE\_I}{DEFAULT\_MIN\_VALUE\_I}}
+{\footnotesize\ttfamily \#define DEFAULT\+\_\+\+MIN\+\_\+\+VALUE\+\_\+I~0}
+
+
+
+A macro for defining the default minimum integer number. 
+
+
+
+Definition at line \mbox{\hyperlink{randint32_8c_source_l00067}{67}} of file \mbox{\hyperlink{randint32_8c_source}{randint32.\+c}}.
+
+\mbox{\Hypertarget{randint32_8c_add4b840def087badeb91b36c8f030664}\label{randint32_8c_add4b840def087badeb91b36c8f030664}} 
+\index{randint32.c@{randint32.c}!DEFAULT\_NUMBER\_OF\_SAMPLES@{DEFAULT\_NUMBER\_OF\_SAMPLES}}
+\index{DEFAULT\_NUMBER\_OF\_SAMPLES@{DEFAULT\_NUMBER\_OF\_SAMPLES}!randint32.c@{randint32.c}}
+\doxysubsubsection{\texorpdfstring{DEFAULT\_NUMBER\_OF\_SAMPLES}{DEFAULT\_NUMBER\_OF\_SAMPLES}}
+{\footnotesize\ttfamily \#define DEFAULT\+\_\+\+NUMBER\+\_\+\+OF\+\_\+\+SAMPLES~1u}
+
+
+
+A macro for defining the default number of samples to request. 
+
+
+
+Definition at line \mbox{\hyperlink{randint32_8c_source_l00060}{60}} of file \mbox{\hyperlink{randint32_8c_source}{randint32.\+c}}.
+
+\mbox{\Hypertarget{randint32_8c_a8f848f05b9593c04e3f4df1a99b28734}\label{randint32_8c_a8f848f05b9593c04e3f4df1a99b28734}} 
+\index{randint32.c@{randint32.c}!DOMAIN\_ADDR\_LENGTH@{DOMAIN\_ADDR\_LENGTH}}
+\index{DOMAIN\_ADDR\_LENGTH@{DOMAIN\_ADDR\_LENGTH}!randint32.c@{randint32.c}}
+\doxysubsubsection{\texorpdfstring{DOMAIN\_ADDR\_LENGTH}{DOMAIN\_ADDR\_LENGTH}}
+{\footnotesize\ttfamily \#define DOMAIN\+\_\+\+ADDR\+\_\+\+LENGTH~256u}
+
+
+
+A macro for defining the IDQ\textquotesingle{}s Quantis Appliance domain name address. 
+
+
+
+Definition at line \mbox{\hyperlink{randint32_8c_source_l00081}{81}} of file \mbox{\hyperlink{randint32_8c_source}{randint32.\+c}}.
+
+\mbox{\Hypertarget{randint32_8c_a3b6a35b8be8405a9db72cc5dea97954b}\label{randint32_8c_a3b6a35b8be8405a9db72cc5dea97954b}} 
+\index{randint32.c@{randint32.c}!PROGRAM\_NAME@{PROGRAM\_NAME}}
+\index{PROGRAM\_NAME@{PROGRAM\_NAME}!randint32.c@{randint32.c}}
+\doxysubsubsection{\texorpdfstring{PROGRAM\_NAME}{PROGRAM\_NAME}}
+{\footnotesize\ttfamily \#define PROGRAM\+\_\+\+NAME~\char`\"{}randint32\char`\"{}}
+
+
+
+A macro for the program name. 
+
+
+
+Definition at line \mbox{\hyperlink{randint32_8c_source_l00039}{39}} of file \mbox{\hyperlink{randint32_8c_source}{randint32.\+c}}.
+
+\mbox{\Hypertarget{randint32_8c_a1c6d5de492ac61ad29aec7aa9a436bbf}\label{randint32_8c_a1c6d5de492ac61ad29aec7aa9a436bbf}} 
+\index{randint32.c@{randint32.c}!VERSION@{VERSION}}
+\index{VERSION@{VERSION}!randint32.c@{randint32.c}}
+\doxysubsubsection{\texorpdfstring{VERSION}{VERSION}}
+{\footnotesize\ttfamily \#define VERSION~\char`\"{}1.\+0.\+0\char`\"{}}
+
+
+
+A macro for the program version. 
+
+
+
+Definition at line \mbox{\hyperlink{randint32_8c_source_l00046}{46}} of file \mbox{\hyperlink{randint32_8c_source}{randint32.\+c}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{randint32_8c_a3c04138a5bfe5d72780bb7e82a18e627}\label{randint32_8c_a3c04138a5bfe5d72780bb7e82a18e627}} 
+\index{randint32.c@{randint32.c}!main@{main}}
+\index{main@{main}!randint32.c@{randint32.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{randint32_8c_source_l00089}{89}} of file \mbox{\hyperlink{randint32_8c_source}{randint32.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00090 \{}
+\DoxyCodeLine{00091 }
+\DoxyCodeLine{00092     \textcolor{keywordtype}{int} opt = -\/1;}
+\DoxyCodeLine{00093     \textcolor{keywordtype}{char} domain\_addr[\mbox{\hyperlink{randint32_8c_a8f848f05b9593c04e3f4df1a99b28734}{DOMAIN\_ADDR\_LENGTH}}] = \textcolor{stringliteral}{"{}\(\backslash\)0"{}};}
+\DoxyCodeLine{00094     \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{00095     int32\_t *data32 = NULL;}
+\DoxyCodeLine{00096 }
+\DoxyCodeLine{00097     \textcolor{keywordtype}{size\_t} i = 0;}
+\DoxyCodeLine{00098 }
+\DoxyCodeLine{00099 }
+\DoxyCodeLine{00100 }
+\DoxyCodeLine{00101 }
+\DoxyCodeLine{00102     uint32\_t number\_of\_samples = \mbox{\hyperlink{randint32_8c_add4b840def087badeb91b36c8f030664}{DEFAULT\_NUMBER\_OF\_SAMPLES}};}
+\DoxyCodeLine{00103     int64\_t min\_value\_i = \mbox{\hyperlink{randint32_8c_aafc3bb4ff712fa49ecd07011b6b3d477}{DEFAULT\_MIN\_VALUE\_I}};}
+\DoxyCodeLine{00104     int64\_t max\_value\_i = \mbox{\hyperlink{randint32_8c_a696575d98f699666d5b06038c77d18ea}{DEFAULT\_MAX\_VALUE\_I}};}
+\DoxyCodeLine{00105 }
+\DoxyCodeLine{00106 }
+\DoxyCodeLine{00107     \textcolor{keywordflow}{if} (argc == 1) \{}
+\DoxyCodeLine{00108         print\_help();}
+\DoxyCodeLine{00109         exit(EXIT\_FAILURE);}
+\DoxyCodeLine{00110 }
+\DoxyCodeLine{00111     \}}
+\DoxyCodeLine{00112     \textcolor{keywordflow}{while} ((opt = getopt(argc, argv, \textcolor{stringliteral}{"{}ha:s:i:I:"{}})) != -\/1) \{}
+\DoxyCodeLine{00113         \textcolor{keywordflow}{switch} (opt) \{}
+\DoxyCodeLine{00114             \textcolor{keywordflow}{case} \textcolor{charliteral}{'h'}:}
+\DoxyCodeLine{00115                 print\_help();}
+\DoxyCodeLine{00116                 exit(EXIT\_SUCCESS);}
+\DoxyCodeLine{00117                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00118             \textcolor{keywordflow}{case} \textcolor{charliteral}{'a'}:}
+\DoxyCodeLine{00119                 strncpy(domain\_addr, optarg, strlen(optarg));}
+\DoxyCodeLine{00120                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00121             \textcolor{keywordflow}{case} \textcolor{charliteral}{'s'}:}
+\DoxyCodeLine{00122                 number\_of\_samples = atol(optarg);}
+\DoxyCodeLine{00123         \textcolor{keywordflow}{if} (number\_of\_samples < 1) \{}
+\DoxyCodeLine{00124             number\_of\_samples = \mbox{\hyperlink{randint32_8c_add4b840def087badeb91b36c8f030664}{DEFAULT\_NUMBER\_OF\_SAMPLES}};}
+\DoxyCodeLine{00125         \}}
+\DoxyCodeLine{00126                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00127             \textcolor{keywordflow}{case} \textcolor{charliteral}{'i'}:}
+\DoxyCodeLine{00128                 min\_value\_i = atoll(optarg);}
+\DoxyCodeLine{00129                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00130             \textcolor{keywordflow}{case} \textcolor{charliteral}{'I'}:}
+\DoxyCodeLine{00131                 max\_value\_i = atoll(optarg);}
+\DoxyCodeLine{00132                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00133             \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00134                 print\_help();}
+\DoxyCodeLine{00135                 exit(EXIT\_FAILURE);}
+\DoxyCodeLine{00136         \}}
+\DoxyCodeLine{00137     \}}
+\DoxyCodeLine{00138 }
+\DoxyCodeLine{00139 }
+\DoxyCodeLine{00140 }
+\DoxyCodeLine{00141     \textcolor{keywordflow}{if} (min\_value\_i > max\_value\_i) \{}
+\DoxyCodeLine{00142     print\_help();}
+\DoxyCodeLine{00143     exit(EXIT\_FAILURE);}
+\DoxyCodeLine{00144     \}}
+\DoxyCodeLine{00145 }
+\DoxyCodeLine{00146 }
+\DoxyCodeLine{00147     \textcolor{comment}{/*Initialize qrng library*/}}
+\DoxyCodeLine{00148     retval = \mbox{\hyperlink{qrng_8c_a722703e4302df6bf5a8ab29f2cce7e59}{qrng\_open}}(domain\_addr);}
+\DoxyCodeLine{00149     \textcolor{keywordflow}{if} (retval) \{}
+\DoxyCodeLine{00150         exit(EXIT\_FAILURE);}
+\DoxyCodeLine{00151     \}}
+\DoxyCodeLine{00152 }
+\DoxyCodeLine{00153 }
+\DoxyCodeLine{00154     data32 = malloc(number\_of\_samples * \textcolor{keyword}{sizeof}(int32\_t));}
+\DoxyCodeLine{00155     \textcolor{keywordflow}{if} (data32) \{}
+\DoxyCodeLine{00156       \textcolor{keywordflow}{if} (\mbox{\hyperlink{qrng_8c_aa98a78c89b2e3f7eee40660490baee6c}{qrng\_random\_int32}}(min\_value\_i, max\_value\_i, number\_of\_samples, data32) == 0) \{}
+\DoxyCodeLine{00157         \textcolor{comment}{//print the value to stdout}}
+\DoxyCodeLine{00158         \textcolor{keywordflow}{for} (i = 0; i < number\_of\_samples; i++) \{}
+\DoxyCodeLine{00159           printf(\textcolor{stringliteral}{"{}\%d "{}}, data32[i]);}
+\DoxyCodeLine{00160         \}}
+\DoxyCodeLine{00161       \}}
+\DoxyCodeLine{00162       }
+\DoxyCodeLine{00163     \}}
+\DoxyCodeLine{00164 }
+\DoxyCodeLine{00165 }
+\DoxyCodeLine{00166     \mbox{\hyperlink{qrng_8c_ac11a56e95649a115157e5453a9dde45a}{qrng\_close}}();}
+\DoxyCodeLine{00167     \textcolor{keywordflow}{if} (data32 != NULL) \{}
+\DoxyCodeLine{00168         free(data32);}
+\DoxyCodeLine{00169     \}}
+\DoxyCodeLine{00170 }
+\DoxyCodeLine{00171     exit(EXIT\_SUCCESS);}
+\DoxyCodeLine{00172 \}}
+
+\end{DoxyCode}

@@ -1,0 +1,345 @@
+\hypertarget{main_8py}{}\doxysection{examples/knapsack-\/ga/main.py File Reference}
+\label{main_8py}\index{examples/knapsack-\/ga/main.py@{examples/knapsack-\/ga/main.py}}
+
+
+libqrng -\/ library for interacting with IDQ\textquotesingle{}s Quantis Appliance \# \# Copyright (C) 2023 Sebastian Mihai Ardelean \# \# This program is free software\+: you can redistribute it and/or modify \# it under the terms of the GNU General Public License as published by \# the Free Software Foundation, either version 3 of the License, or \# (at your option) any later version.  
+
+
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{main_8py_aa878224a530420d7dcabceb6f5573055}{main.\+to\+\_\+binary}} (value, number\+\_\+of\+\_\+bits, lsb=False)
+\item 
+def \mbox{\hyperlink{main_8py_a9a051368d7f29c0523805063298a9c5e}{main.\+to\+\_\+decimal}} (x)
+\item 
+def \mbox{\hyperlink{main_8py_ab499f8f7eec024cd53833906878a5141}{main.\+on\+\_\+generation\+\_\+callback}} (current\+\_\+generation, best\+\_\+solution, best\+\_\+fitness)
+\item 
+def \mbox{\hyperlink{main_8py_a7201f42307676aa43e44d6228fb43eab}{main.\+fitness\+\_\+function}} (solution\+\_\+idx, solution)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{main_8py_a7adf79a93d4ee570068aa2f7854e186f}{main.\+MAX\+\_\+\+ALLOWED\+\_\+\+MASS}} = 20
+\item 
+int \mbox{\hyperlink{main_8py_a4014a23cd75e9b89541f8826c9e0bb0f}{main.\+TOTAL\+\_\+\+VALUE}} = 0
+\item 
+list \mbox{\hyperlink{main_8py_a1a728cf0037023b38459e057a0255a22}{main.\+items}} = \mbox{[}(10, 96), (13, 38), (15, 71), (1, 88), (4, 93), (18, 32), (16, 85), (7, 50), (15, 30), (13, 90), (18, 3), (7, 61), (4, 41), (19, 35), (16, 19), (14, 18), (13, 56), (1, 74), (19, 32), (3, 42), (10, 43), (3, 29), (3, 5), (18, 14), (7, 93), (19, 32), (3, 11), (3, 85), (19, 44), (2, 55), (2, 95), (13, 76)\mbox{]}
+\item 
+\mbox{\hyperlink{main_8py_a6c7f6da40ae366aca2514aaa1b920383}{main.\+solution}}
+\item 
+\mbox{\hyperlink{main_8py_a21dd126aa8f72123d6f2c134f6c83dab}{main.\+fitness}}
+\item 
+\mbox{\hyperlink{main_8py_a8be88261b457e3a6c5d4cdd368e40712}{main.\+chromosome\+\_\+size}}
+\item 
+\mbox{\hyperlink{main_8py_ad756bea96c3b489aeecc52a3872da17e}{main.\+gene\+\_\+low}}
+\item 
+\mbox{\hyperlink{main_8py_a26ea1b7bf48f5187ab38f9f89e7cda01}{main.\+gene\+\_\+high}}
+\item 
+\mbox{\hyperlink{main_8py_a9db0285bee05a0f0c5dbb5583e7a3fe0}{main.\+population\+\_\+size}}
+\item 
+\mbox{\hyperlink{main_8py_a789a7c30de1723c2cbe04ad9fcc3647e}{main.\+mutation\+\_\+rate}}
+\item 
+\mbox{\hyperlink{main_8py_a24dc240b7c6cc1c811a173b014874e1d}{main.\+crossover\+\_\+rate}}
+\item 
+\mbox{\hyperlink{main_8py_aeb679c141f736fcb2fad37bf4c0f9a71}{main.\+fitness\+\_\+func}}
+\item 
+\mbox{\hyperlink{main_8py_ac388559bd6db3fe82e62578087adf870}{main.\+number\+\_\+of\+\_\+generations}}
+\item 
+\mbox{\hyperlink{main_8py_aaa02c70e803354d38289f73bf8bc4546}{main.\+crossover\+\_\+type}}
+\item 
+\mbox{\hyperlink{main_8py_a65290677b53bc7d6e040336b79e67a02}{main.\+selection\+\_\+type}}
+\item 
+\mbox{\hyperlink{main_8py_a18572ed686b9b4e669b4c205dd5643c1}{main.\+stop\+\_\+criteria\+\_\+saturate}}
+\item 
+\mbox{\hyperlink{main_8py_aef7c899b5e9c8b0b972e1c84102c0eb5}{main.\+on\+\_\+generation\+\_\+cbk}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+libqrng -\/ library for interacting with IDQ\textquotesingle{}s Quantis Appliance \# \# Copyright (C) 2023 Sebastian Mihai Ardelean \# \# This program is free software\+: you can redistribute it and/or modify \# it under the terms of the GNU General Public License as published by \# the Free Software Foundation, either version 3 of the License, or \# (at your option) any later version. 
+
+\# \# This program is distributed in the hope that it will be useful, \# but WITHOUT ANY WARRANTY; without even the implied warranty of \# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the \# GNU General Public License for more details. \# \# You should have received a copy of the GNU General Public License \# along with this program. If not, see \href{https://www.gnu.org/licenses/}{\texttt{ https\+://www.\+gnu.\+org/licenses/}}. \#
+
+\# \begin{DoxyAuthor}{Author}
+Sebastian Mihai Ardelean \href{mailto:sebastian.ardelean@cs.upt.ro}{\texttt{ sebastian.\+ardelean@cs.\+upt.\+ro}} \# 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+24 May 2023 \#
+\end{DoxyDate}
+API for interacting with IDQ\textquotesingle{}s Quantis Appliance \# 
+
+Definition in file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{main_8py_a7201f42307676aa43e44d6228fb43eab}\label{main_8py_a7201f42307676aa43e44d6228fb43eab}} 
+\index{main.py@{main.py}!fitness\_function@{fitness\_function}}
+\index{fitness\_function@{fitness\_function}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{fitness\_function()}{fitness\_function()}}
+{\footnotesize\ttfamily def main.\+fitness\+\_\+function (\begin{DoxyParamCaption}\item[{}]{solution\+\_\+idx,  }\item[{}]{solution }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00061}{61}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00061 \textcolor{keyword}{def }fitness\_function(solution\_idx, solution): }
+\DoxyCodeLine{00062     total\_value = 0 }
+\DoxyCodeLine{00063     total\_weight = 0 }
+\DoxyCodeLine{00064     \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(0,len(solution)): }
+\DoxyCodeLine{00065         \textcolor{keywordflow}{if} solution[i] == 1: }
+\DoxyCodeLine{00066             item = items[i] }
+\DoxyCodeLine{00067             total\_value+=item[1] }
+\DoxyCodeLine{00068  }
+\DoxyCodeLine{00069     \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(0, len(solution)): }
+\DoxyCodeLine{00070         \textcolor{keywordflow}{if} solution[i] == 1: }
+\DoxyCodeLine{00071             item = items[i] }
+\DoxyCodeLine{00072             total\_weight+=item[0] }
+\DoxyCodeLine{00073  }
+\DoxyCodeLine{00074     \textcolor{keywordflow}{if} total\_weight < MAX\_ALLOWED\_MASS: }
+\DoxyCodeLine{00075         \textcolor{keywordflow}{return} total\_value }
+\DoxyCodeLine{00076     \textcolor{keywordflow}{return} 0 }
+\DoxyCodeLine{00077  }
+\DoxyCodeLine{00078  }
+\DoxyCodeLine{00079  }
+\DoxyCodeLine{00080  }
+\DoxyCodeLine{00081  }
+
+\end{DoxyCode}
+\mbox{\Hypertarget{main_8py_ab499f8f7eec024cd53833906878a5141}\label{main_8py_ab499f8f7eec024cd53833906878a5141}} 
+\index{main.py@{main.py}!on\_generation\_callback@{on\_generation\_callback}}
+\index{on\_generation\_callback@{on\_generation\_callback}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{on\_generation\_callback()}{on\_generation\_callback()}}
+{\footnotesize\ttfamily def main.\+on\+\_\+generation\+\_\+callback (\begin{DoxyParamCaption}\item[{}]{current\+\_\+generation,  }\item[{}]{best\+\_\+solution,  }\item[{}]{best\+\_\+fitness }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00055}{55}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00055 \textcolor{keyword}{def }on\_generation\_callback(current\_generation, best\_solution,best\_fitness): }
+\DoxyCodeLine{00056     print(\textcolor{stringliteral}{"{}Generation: "{}}, current\_generation) }
+\DoxyCodeLine{00057     print(\textcolor{stringliteral}{"{}Best solution \{0\} Fitness \{1\}"{}}.format(best\_solution, best\_fitness)) }
+\DoxyCodeLine{00058     \textcolor{keywordflow}{return} 0 }
+\DoxyCodeLine{00059  }
+\DoxyCodeLine{00060  }
+
+\end{DoxyCode}
+\mbox{\Hypertarget{main_8py_aa878224a530420d7dcabceb6f5573055}\label{main_8py_aa878224a530420d7dcabceb6f5573055}} 
+\index{main.py@{main.py}!to\_binary@{to\_binary}}
+\index{to\_binary@{to\_binary}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{to\_binary()}{to\_binary()}}
+{\footnotesize\ttfamily def main.\+to\+\_\+binary (\begin{DoxyParamCaption}\item[{}]{value,  }\item[{}]{number\+\_\+of\+\_\+bits,  }\item[{}]{lsb = {\ttfamily False} }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00033}{33}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00033 \textcolor{keyword}{def }to\_binary(value, number\_of\_bits, lsb=False): }
+\DoxyCodeLine{00034     \textcolor{keywordflow}{if} lsb: }
+\DoxyCodeLine{00035         \textcolor{keywordflow}{return} np.flip(np.array(list(np.binary\_repr(value, number\_of\_bits)), dtype=int)) }
+\DoxyCodeLine{00036     \textcolor{keywordflow}{return} np.array(list(np.binary\_repr(value, number\_of\_bits)), dtype=int) }
+\DoxyCodeLine{00037  }
+\DoxyCodeLine{00038  }
+
+\end{DoxyCode}
+\mbox{\Hypertarget{main_8py_a9a051368d7f29c0523805063298a9c5e}\label{main_8py_a9a051368d7f29c0523805063298a9c5e}} 
+\index{main.py@{main.py}!to\_decimal@{to\_decimal}}
+\index{to\_decimal@{to\_decimal}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{to\_decimal()}{to\_decimal()}}
+{\footnotesize\ttfamily def main.\+to\+\_\+decimal (\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00039}{39}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00039 \textcolor{keyword}{def }to\_decimal(x): }
+\DoxyCodeLine{00040     x = np.flip(x) }
+\DoxyCodeLine{00041     y = 0 }
+\DoxyCodeLine{00042     \textcolor{keywordflow}{for} i, j \textcolor{keywordflow}{in} enumerate(x): }
+\DoxyCodeLine{00043         y += j << i }
+\DoxyCodeLine{00044     \textcolor{keywordflow}{return} y }
+\DoxyCodeLine{00045  }
+\DoxyCodeLine{00046  }
+
+\end{DoxyCode}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{main_8py_a8be88261b457e3a6c5d4cdd368e40712}\label{main_8py_a8be88261b457e3a6c5d4cdd368e40712}} 
+\index{main.py@{main.py}!chromosome\_size@{chromosome\_size}}
+\index{chromosome\_size@{chromosome\_size}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{chromosome\_size}{chromosome\_size}}
+{\footnotesize\ttfamily main.\+chromosome\+\_\+size}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00084}{84}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+\mbox{\Hypertarget{main_8py_a24dc240b7c6cc1c811a173b014874e1d}\label{main_8py_a24dc240b7c6cc1c811a173b014874e1d}} 
+\index{main.py@{main.py}!crossover\_rate@{crossover\_rate}}
+\index{crossover\_rate@{crossover\_rate}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{crossover\_rate}{crossover\_rate}}
+{\footnotesize\ttfamily main.\+crossover\+\_\+rate}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00089}{89}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+\mbox{\Hypertarget{main_8py_aaa02c70e803354d38289f73bf8bc4546}\label{main_8py_aaa02c70e803354d38289f73bf8bc4546}} 
+\index{main.py@{main.py}!crossover\_type@{crossover\_type}}
+\index{crossover\_type@{crossover\_type}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{crossover\_type}{crossover\_type}}
+{\footnotesize\ttfamily main.\+crossover\+\_\+type}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00092}{92}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+\mbox{\Hypertarget{main_8py_a21dd126aa8f72123d6f2c134f6c83dab}\label{main_8py_a21dd126aa8f72123d6f2c134f6c83dab}} 
+\index{main.py@{main.py}!fitness@{fitness}}
+\index{fitness@{fitness}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{fitness}{fitness}}
+{\footnotesize\ttfamily main.\+fitness}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00083}{83}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+\mbox{\Hypertarget{main_8py_aeb679c141f736fcb2fad37bf4c0f9a71}\label{main_8py_aeb679c141f736fcb2fad37bf4c0f9a71}} 
+\index{main.py@{main.py}!fitness\_func@{fitness\_func}}
+\index{fitness\_func@{fitness\_func}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{fitness\_func}{fitness\_func}}
+{\footnotesize\ttfamily main.\+fitness\+\_\+func}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00090}{90}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+\mbox{\Hypertarget{main_8py_a26ea1b7bf48f5187ab38f9f89e7cda01}\label{main_8py_a26ea1b7bf48f5187ab38f9f89e7cda01}} 
+\index{main.py@{main.py}!gene\_high@{gene\_high}}
+\index{gene\_high@{gene\_high}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{gene\_high}{gene\_high}}
+{\footnotesize\ttfamily main.\+gene\+\_\+high}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00086}{86}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+\mbox{\Hypertarget{main_8py_ad756bea96c3b489aeecc52a3872da17e}\label{main_8py_ad756bea96c3b489aeecc52a3872da17e}} 
+\index{main.py@{main.py}!gene\_low@{gene\_low}}
+\index{gene\_low@{gene\_low}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{gene\_low}{gene\_low}}
+{\footnotesize\ttfamily main.\+gene\+\_\+low}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00085}{85}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+\mbox{\Hypertarget{main_8py_a1a728cf0037023b38459e057a0255a22}\label{main_8py_a1a728cf0037023b38459e057a0255a22}} 
+\index{main.py@{main.py}!items@{items}}
+\index{items@{items}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{items}{items}}
+{\footnotesize\ttfamily list main.\+items = \mbox{[}(10, 96), (13, 38), (15, 71), (1, 88), (4, 93), (18, 32), (16, 85), (7, 50), (15, 30), (13, 90), (18, 3), (7, 61), (4, 41), (19, 35), (16, 19), (14, 18), (13, 56), (1, 74), (19, 32), (3, 42), (10, 43), (3, 29), (3, 5), (18, 14), (7, 93), (19, 32), (3, 11), (3, 85), (19, 44), (2, 55), (2, 95), (13, 76)\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00052}{52}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+\mbox{\Hypertarget{main_8py_a7adf79a93d4ee570068aa2f7854e186f}\label{main_8py_a7adf79a93d4ee570068aa2f7854e186f}} 
+\index{main.py@{main.py}!MAX\_ALLOWED\_MASS@{MAX\_ALLOWED\_MASS}}
+\index{MAX\_ALLOWED\_MASS@{MAX\_ALLOWED\_MASS}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{MAX\_ALLOWED\_MASS}{MAX\_ALLOWED\_MASS}}
+{\footnotesize\ttfamily int main.\+MAX\+\_\+\+ALLOWED\+\_\+\+MASS = 20}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00047}{47}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+\mbox{\Hypertarget{main_8py_a789a7c30de1723c2cbe04ad9fcc3647e}\label{main_8py_a789a7c30de1723c2cbe04ad9fcc3647e}} 
+\index{main.py@{main.py}!mutation\_rate@{mutation\_rate}}
+\index{mutation\_rate@{mutation\_rate}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{mutation\_rate}{mutation\_rate}}
+{\footnotesize\ttfamily main.\+mutation\+\_\+rate}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00088}{88}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+\mbox{\Hypertarget{main_8py_ac388559bd6db3fe82e62578087adf870}\label{main_8py_ac388559bd6db3fe82e62578087adf870}} 
+\index{main.py@{main.py}!number\_of\_generations@{number\_of\_generations}}
+\index{number\_of\_generations@{number\_of\_generations}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{number\_of\_generations}{number\_of\_generations}}
+{\footnotesize\ttfamily main.\+number\+\_\+of\+\_\+generations}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00091}{91}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+\mbox{\Hypertarget{main_8py_aef7c899b5e9c8b0b972e1c84102c0eb5}\label{main_8py_aef7c899b5e9c8b0b972e1c84102c0eb5}} 
+\index{main.py@{main.py}!on\_generation\_cbk@{on\_generation\_cbk}}
+\index{on\_generation\_cbk@{on\_generation\_cbk}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{on\_generation\_cbk}{on\_generation\_cbk}}
+{\footnotesize\ttfamily main.\+on\+\_\+generation\+\_\+cbk}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00095}{95}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+\mbox{\Hypertarget{main_8py_a9db0285bee05a0f0c5dbb5583e7a3fe0}\label{main_8py_a9db0285bee05a0f0c5dbb5583e7a3fe0}} 
+\index{main.py@{main.py}!population\_size@{population\_size}}
+\index{population\_size@{population\_size}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{population\_size}{population\_size}}
+{\footnotesize\ttfamily main.\+population\+\_\+size}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00087}{87}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+\mbox{\Hypertarget{main_8py_a65290677b53bc7d6e040336b79e67a02}\label{main_8py_a65290677b53bc7d6e040336b79e67a02}} 
+\index{main.py@{main.py}!selection\_type@{selection\_type}}
+\index{selection\_type@{selection\_type}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{selection\_type}{selection\_type}}
+{\footnotesize\ttfamily main.\+selection\+\_\+type}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00093}{93}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+\mbox{\Hypertarget{main_8py_a6c7f6da40ae366aca2514aaa1b920383}\label{main_8py_a6c7f6da40ae366aca2514aaa1b920383}} 
+\index{main.py@{main.py}!solution@{solution}}
+\index{solution@{solution}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{solution}{solution}}
+{\footnotesize\ttfamily main.\+solution}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00083}{83}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+\mbox{\Hypertarget{main_8py_a18572ed686b9b4e669b4c205dd5643c1}\label{main_8py_a18572ed686b9b4e669b4c205dd5643c1}} 
+\index{main.py@{main.py}!stop\_criteria\_saturate@{stop\_criteria\_saturate}}
+\index{stop\_criteria\_saturate@{stop\_criteria\_saturate}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{stop\_criteria\_saturate}{stop\_criteria\_saturate}}
+{\footnotesize\ttfamily main.\+stop\+\_\+criteria\+\_\+saturate}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00094}{94}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+
+\mbox{\Hypertarget{main_8py_a4014a23cd75e9b89541f8826c9e0bb0f}\label{main_8py_a4014a23cd75e9b89541f8826c9e0bb0f}} 
+\index{main.py@{main.py}!TOTAL\_VALUE@{TOTAL\_VALUE}}
+\index{TOTAL\_VALUE@{TOTAL\_VALUE}!main.py@{main.py}}
+\doxysubsubsection{\texorpdfstring{TOTAL\_VALUE}{TOTAL\_VALUE}}
+{\footnotesize\ttfamily int main.\+TOTAL\+\_\+\+VALUE = 0}
+
+
+
+Definition at line \mbox{\hyperlink{main_8py_source_l00048}{48}} of file \mbox{\hyperlink{main_8py_source}{main.\+py}}.
+

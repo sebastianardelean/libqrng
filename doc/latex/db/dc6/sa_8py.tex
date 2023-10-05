@@ -1,0 +1,159 @@
+\hypertarget{sa_8py}{}\doxysection{examples/simulated-\/annealing/sa.py File Reference}
+\label{sa_8py}\index{examples/simulated-\/annealing/sa.py@{examples/simulated-\/annealing/sa.py}}
+
+
+libqrng -\/ library for interacting with IDQ\textquotesingle{}s Quantis Appliance \# \# Copyright (C) 2023 Sebastian Mihai Ardelean \# \# This program is free software\+: you can redistribute it and/or modify \# it under the terms of the GNU General Public License as published by \# the Free Software Foundation, either version 3 of the License, or \# (at your option) any later version.  
+
+
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classsa_1_1Sa}{sa.\+Sa}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{sa_8py_afdaf71ebaceccda8947dd3ad0c53b9bc}{sa.\+f}} (x)
+\item 
+def \mbox{\hyperlink{sa_8py_aa33e318aecefd40d7b57cf3b0a2bf423}{sa.\+generate\+\_\+initial\+\_\+state}} (sa\+\_\+instance)
+\item 
+def \mbox{\hyperlink{sa_8py_a152a369ae376a01d407a7482c7865d77}{sa.\+cost\+\_\+function}} (x)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+tuple \mbox{\hyperlink{sa_8py_a35aa4090776c8500312664f936587f44}{sa.\+interval}} = (-\/10, 10)
+\item 
+\mbox{\hyperlink{sa_8py_aabf1f9cdbd2144657a1ec0c7d9a6786b}{sa.\+sa\+\_\+instance}}
+\item 
+\mbox{\hyperlink{sa_8py_a01f384d1123d2d6a583f59f48559a2dd}{sa.\+state}}
+\item 
+\mbox{\hyperlink{sa_8py_ac0fe4e2651dd955780ef11ab5a009ad5}{sa.\+cost}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+libqrng -\/ library for interacting with IDQ\textquotesingle{}s Quantis Appliance \# \# Copyright (C) 2023 Sebastian Mihai Ardelean \# \# This program is free software\+: you can redistribute it and/or modify \# it under the terms of the GNU General Public License as published by \# the Free Software Foundation, either version 3 of the License, or \# (at your option) any later version. 
+
+\# \# This program is distributed in the hope that it will be useful, \# but WITHOUT ANY WARRANTY; without even the implied warranty of \# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the \# GNU General Public License for more details. \# \# You should have received a copy of the GNU General Public License \# along with this program. If not, see \href{https://www.gnu.org/licenses/}{\texttt{ https\+://www.\+gnu.\+org/licenses/}}. \#
+
+\# \begin{DoxyAuthor}{Author}
+Sebastian Mihai Ardelean \href{mailto:sebastian.ardelean@cs.upt.ro}{\texttt{ sebastian.\+ardelean@cs.\+upt.\+ro}} \# 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+24 May 2023 \#
+\end{DoxyDate}
+API for interacting with IDQ\textquotesingle{}s Quantis Appliance \# 
+
+Definition in file \mbox{\hyperlink{sa_8py_source}{sa.\+py}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{sa_8py_a152a369ae376a01d407a7482c7865d77}\label{sa_8py_a152a369ae376a01d407a7482c7865d77}} 
+\index{sa.py@{sa.py}!cost\_function@{cost\_function}}
+\index{cost\_function@{cost\_function}!sa.py@{sa.py}}
+\doxysubsubsection{\texorpdfstring{cost\_function()}{cost\_function()}}
+{\footnotesize\ttfamily def sa.\+cost\+\_\+function (\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{sa_8py_source_l00128}{128}} of file \mbox{\hyperlink{sa_8py_source}{sa.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00128 \textcolor{keyword}{def }cost\_function(x): }
+\DoxyCodeLine{00129     \textcolor{keywordflow}{return} f(x) }
+\DoxyCodeLine{00130  }
+
+\end{DoxyCode}
+\mbox{\Hypertarget{sa_8py_afdaf71ebaceccda8947dd3ad0c53b9bc}\label{sa_8py_afdaf71ebaceccda8947dd3ad0c53b9bc}} 
+\index{sa.py@{sa.py}!f@{f}}
+\index{f@{f}!sa.py@{sa.py}}
+\doxysubsubsection{\texorpdfstring{f()}{f()}}
+{\footnotesize\ttfamily def sa.\+f (\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb} Function to minimize.\end{DoxyVerb}
+ 
+
+Definition at line \mbox{\hyperlink{sa_8py_source_l00120}{120}} of file \mbox{\hyperlink{sa_8py_source}{sa.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00120 \textcolor{keyword}{def }f(x): }
+\DoxyCodeLine{00121     \textcolor{stringliteral}{"{}"{}"{} Function to minimize."{}"{}"{}} }
+\DoxyCodeLine{00122     \textcolor{keywordflow}{return} x**2 }
+\DoxyCodeLine{00123  }
+
+\end{DoxyCode}
+\mbox{\Hypertarget{sa_8py_aa33e318aecefd40d7b57cf3b0a2bf423}\label{sa_8py_aa33e318aecefd40d7b57cf3b0a2bf423}} 
+\index{sa.py@{sa.py}!generate\_initial\_state@{generate\_initial\_state}}
+\index{generate\_initial\_state@{generate\_initial\_state}!sa.py@{sa.py}}
+\doxysubsubsection{\texorpdfstring{generate\_initial\_state()}{generate\_initial\_state()}}
+{\footnotesize\ttfamily def sa.\+generate\+\_\+initial\+\_\+state (\begin{DoxyParamCaption}\item[{}]{sa\+\_\+instance }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{sa_8py_source_l00124}{124}} of file \mbox{\hyperlink{sa_8py_source}{sa.\+py}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00124 \textcolor{keyword}{def }generate\_initial\_state(sa\_instance): }
+\DoxyCodeLine{00125     a, b = sa\_instance.problem\_domain }
+\DoxyCodeLine{00126     \textcolor{keywordflow}{return} a + (b -\/ a) * uniform(0,1,1)[0] }
+\DoxyCodeLine{00127  }
+
+\end{DoxyCode}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{sa_8py_ac0fe4e2651dd955780ef11ab5a009ad5}\label{sa_8py_ac0fe4e2651dd955780ef11ab5a009ad5}} 
+\index{sa.py@{sa.py}!cost@{cost}}
+\index{cost@{cost}!sa.py@{sa.py}}
+\doxysubsubsection{\texorpdfstring{cost}{cost}}
+{\footnotesize\ttfamily sa.\+cost}
+
+
+
+Definition at line \mbox{\hyperlink{sa_8py_source_l00139}{139}} of file \mbox{\hyperlink{sa_8py_source}{sa.\+py}}.
+
+\mbox{\Hypertarget{sa_8py_a35aa4090776c8500312664f936587f44}\label{sa_8py_a35aa4090776c8500312664f936587f44}} 
+\index{sa.py@{sa.py}!interval@{interval}}
+\index{interval@{interval}!sa.py@{sa.py}}
+\doxysubsubsection{\texorpdfstring{interval}{interval}}
+{\footnotesize\ttfamily tuple sa.\+interval = (-\/10, 10)}
+
+
+
+Definition at line \mbox{\hyperlink{sa_8py_source_l00132}{132}} of file \mbox{\hyperlink{sa_8py_source}{sa.\+py}}.
+
+\mbox{\Hypertarget{sa_8py_aabf1f9cdbd2144657a1ec0c7d9a6786b}\label{sa_8py_aabf1f9cdbd2144657a1ec0c7d9a6786b}} 
+\index{sa.py@{sa.py}!sa\_instance@{sa\_instance}}
+\index{sa\_instance@{sa\_instance}!sa.py@{sa.py}}
+\doxysubsubsection{\texorpdfstring{sa\_instance}{sa\_instance}}
+{\footnotesize\ttfamily sa.\+sa\+\_\+instance}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001 =  Sa(}
+\DoxyCodeLine{00002                  \textcolor{comment}{\#generate\_initial\_state\_hndl = generate\_initial\_state,}}
+\DoxyCodeLine{00003                  problem\_domain=interval,}
+\DoxyCodeLine{00004                  on\_cost\_hdl=cost\_function,}
+\DoxyCodeLine{00005                  max\_steps=200}
+\DoxyCodeLine{00006                  )}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{sa_8py_source_l00133}{133}} of file \mbox{\hyperlink{sa_8py_source}{sa.\+py}}.
+
+\mbox{\Hypertarget{sa_8py_a01f384d1123d2d6a583f59f48559a2dd}\label{sa_8py_a01f384d1123d2d6a583f59f48559a2dd}} 
+\index{sa.py@{sa.py}!state@{state}}
+\index{state@{state}!sa.py@{sa.py}}
+\doxysubsubsection{\texorpdfstring{state}{state}}
+{\footnotesize\ttfamily sa.\+state}
+
+
+
+Definition at line \mbox{\hyperlink{sa_8py_source_l00139}{139}} of file \mbox{\hyperlink{sa_8py_source}{sa.\+py}}.
+

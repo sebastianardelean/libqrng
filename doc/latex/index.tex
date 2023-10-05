@@ -1,0 +1,120 @@
+\label{index_md_README}%
+\Hypertarget{index_md_README}%
+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ \{=org\}}
+\DoxyCodeLine{\#+STARTUP: inlineimages}
+
+\end{DoxyCode}
+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ \{=org\}}
+\DoxyCodeLine{\#+BIBLIOGRAPHY: refs.bib}
+
+\end{DoxyCode}
+ \hypertarget{index_autotoc_md0}{}\doxysection{Lib\+Qrng}\label{index_autotoc_md0}
+\hypertarget{index_autotoc_md1}{}\doxysubsection{Introduction}\label{index_autotoc_md1}
+Through the software solution presented in this paper, we provide a method to interact with IDQ\textbackslash{}\textquotesingle{}s Quantis Appliance network-\/attached device---a quantum random number generator that securely generates high-\/quality random numbers \mbox{[}@noauthor\+\_\+quantis\+\_\+nodate\mbox{]}---through REST API. We deliver an easy-\/to-\/extend solution for various programming languages and integrated projects. As such, our solution\textbackslash{}\textquotesingle{}s implementation supports the straightforward use of quantum-\/generated random numbers in applications and research areas in which the output of the experiments is highly dependent on the quality of random numbers.
+
+In the current form, {\itshape libqrng} offers access to IDQ\textbackslash{}\textquotesingle{}s Quantis Appliance through an API that can be easily integrated into applications that need true random numbers. The library is written in C language and is currently available as a library only on GNU/\+Linux-\/based operating systems. We decided to implement it as a library in native C since, to the best of our knowledge, it can be easily used with other programming languages via Foreign Function Interface (FFI). As a proof of concept, we implement Python bindings to {\itshape libqrng} and provide examples of how to request random numbers from IDQ\textbackslash{}\textquotesingle{}s device.
+
+We designed the software stack we provide to be easily extended to different scientific programming languages and scientific/engineering fields, such as cryptography\mbox{[}@bruce1996applied\mbox{]}, Monte-\/\+Carlo methods\mbox{[}@ferrenberg1992monte\mbox{]}, heuristic algorithms\mbox{[}@navarro2022review\mbox{]}, industrial testing and labeling, hazard games, \mbox{[}@stipvcevic2011quantum\mbox{]}, etc.\hypertarget{index_autotoc_md2}{}\doxysubsection{Software Architecture}\label{index_autotoc_md2}
+IDQ\textbackslash{}\textquotesingle{}s Quantis Appliance device is connected to the Local Area Network so that the random bytes are retrieved using REST APIs via HTTPS protocol. As we show in Figure \mbox{[}fig\+:archblock\mbox{]}(fig\+:archblock), our proposed solution for using the IDQ\textbackslash{}\textquotesingle{}s Quantis Appliance devices comprises 3 software layers\+: the {\itshape libqrng} library (which uses {\itshape libcurl} to request data from the device by GET requests), the Foreign Function Interface used for calling the library API from different programming languages (currently we support the Python programming language by utilizing the Python extension), and the Application Layer (for which we provide application examples that use the library directly or through the Foreign Function Interface).
+
+!\mbox{[}The overview of using {\itshape libqrng} with IDQ\textbackslash{}\textquotesingle{}s Quantis Appliance network-\/attached device. Quantis Appliance connects to a Cloud Platform; {\itshape libqrng} performs the request to retrieve random numbers using REST APIs via HTTP/\+HTTPS protocol.\mbox{]}(./images/arch\+\_\+block.png \char`\"{}archblock\char`\"{})
+
+Our {\itshape libqrng} is a shared object that exports APIs to request random bytes from the IDQ Quantis Appliance. Figure \mbox{[}fig\+:libqrng\+\_\+init\mbox{]}(fig\+:libqrng\+\_\+init) presents the library\textbackslash{}\textquotesingle{}s initialization sequence. As shown, the library uses {\itshape libcurl} to perform network requests. The {\ttfamily device\+\_\+domain\+\_\+address} parameter is mandatory since it represents the IP address of the quantum random generator device. Figures \mbox{[}fig\+:libqrng\+\_\+stream\mbox{]}(fig\+:libqrng\+\_\+stream), \mbox{[}fig\+:libqrng\+\_\+double\mbox{]}(fig\+:libqrng\+\_\+double), and \mbox{[}fig\+:libqrng\+\_\+int\mbox{]}(fig\+:libqrng\+\_\+int) present the sequences that retrieve the random bytes from the device and perform an interaction with {\itshape libcurl}. The API to get a stream of random bytes, as shown in Figure \mbox{[}fig\+:libqrng\+\_\+stream\mbox{]}(fig\+:libqrng\+\_\+stream), is {\ttfamily qrng\+\_\+random\+\_\+stream} and accepts 2 parameters\+: the {\ttfamily stream} buffer that stores the bytes, and the {\ttfamily size} of the requested stream. The APIs for getting random integers (32-\/bit or 64-\/bit integers) or doubles (float or double values), as presented in Figures \mbox{[}fig\+:libqrng\+\_\+double\mbox{]}(fig\+:libqrng\+\_\+double) and \mbox{[}fig\+:libqrng\+\_\+int\mbox{]}(fig\+:libqrng\+\_\+int), accept 4 parameters\+: {\ttfamily min} (inclusive) and {\ttfamily max} (exclusive) that represent the number\textbackslash{}\textquotesingle{}s range, {\ttfamily samples} that represent the number of requested samples, and {\ttfamily buffer} that stores the values. Figure \mbox{[}fig\+:libqrng\+\_\+close\mbox{]}(fig\+:libqrng\+\_\+close) presents the cleanup sequence.
+
+!\mbox{[}Sequence diagram presenting the initialization of {\itshape libqrng} and the interaction with {\itshape libcurl}.\mbox{]}(./images/libqrng\+\_\+initialization.png \char`\"{}libqrng\+\_\+init\char`\"{})
+
+
+
+!\mbox{[}Sequence diagram presenting the option to get a random double value in a specified range \$\href{./images/libqrng_double_value.png}{\texttt{ min,max)\$.}}
+
+!\mbox{[}Sequence diagram presenting the option to get a random integer value on 64 bits in a specified range \$\href{./images/libqrng_int64.png}{\texttt{ min,max)\$.}}
+
+!\mbox{[}Sequence diagram presenting the cleanup of {\itshape libqrng} and the interaction with {\itshape libcurl}.\mbox{]}(./images/libqrng\+\_\+cleanup.png \char`\"{}libqrng\+\_\+close\char`\"{})\hypertarget{index_autotoc_md3}{}\doxysubsection{Getting started}\label{index_autotoc_md3}
+\hypertarget{index_autotoc_md4}{}\doxysubsubsection{Prerequisites}\label{index_autotoc_md4}
+
+\begin{DoxyEnumerate}
+\item Operating System
+\begin{DoxyItemize}
+\item Linux based distribution
+\end{DoxyItemize}
+\item Dependencies
+\begin{DoxyItemize}
+\item gcc (GNU C Compiler)
+\item libc (GNU C Library)
+\item Make
+\item libcurl-\/dev
+\item Python
+\end{DoxyItemize}
+\end{DoxyEnumerate}\hypertarget{index_autotoc_md5}{}\doxysubsubsection{Installation}\label{index_autotoc_md5}
+
+\begin{DoxyEnumerate}
+\item Clone the repository or download the code.
+
+{\ttfamily git clone \href{https://github.com/sebastianardelean/libqrng.git}{\texttt{ https\+://github.\+com/sebastianardelean/libqrng.\+git}}}
+\item Change directory to {\ttfamily src}.
+
+{\ttfamily cd src}
+\item Build and install the {\itshape libqrng} library.
+
+{\ttfamily make \&\& make install}
+\end{DoxyEnumerate}
+
+The make script will build the library and create the shared object. The install target will copy the shared object libqrng.\+so.\+1.\+0 to {\ttfamily /usr/local/lib} and will create the symlinks to {\ttfamily /usr/local/lib/libqrng.so.\+1.\+0} and {\ttfamily /usr/local/lib/libqrng.so}.
+
+The Python FFI is {\bfseries{not built and installed by default}}. To use the Python bindings, first build and install succcessfully {\itshape libqrng} following the above mentioned steps. Then, the next steps must be followed\+:
+
+
+\begin{DoxyEnumerate}
+\item Change directory to {\ttfamily bindings/python}.
+
+{\ttfamily cd bindings/python}
+\item Build and install.
+
+{\ttfamily make \&\& make install}
+\end{DoxyEnumerate}
+
+Another option to install the {\itshape libqrng} library is to download the amd64 binaries provided as deb packages (only if you\textbackslash{}\textquotesingle{}re using Debian based Linux distributions) or as tar.\+gz archives. The deb package can be installed using {\ttfamily dpkg -\/i package\+\_\+name}.
+
+If you choose to use the tar.\+gz archive\+:
+
+
+\begin{DoxyEnumerate}
+\item Extract the content of the archive. {\ttfamily tar -\/xvf archive\+\_\+name}
+\item Make the install script executable. {\ttfamily chmod +x install.\+sh}
+\item Run the install script. The install script will copy the shared object to {\ttfamily /usr/lib/}, create the symlinks and run {\ttfamily ldconfig}. {\ttfamily ./install.sh}
+\end{DoxyEnumerate}
+
+{\bfseries{Note}} The amd64 binaries provided for download do not include the Python binding library!\hypertarget{index_autotoc_md6}{}\doxysubsection{Examples}\label{index_autotoc_md6}
+In {\ttfamily examples} directory we provide examples of using each API of the library. As such, we provide the following examples\+:
+
+
+\begin{DoxyEnumerate}
+\item {\ttfamily fwversion} to get the firmware version.
+\item {\ttfamily randbytestream} to request streams of random bytes.
+\item {\ttfamily randdouble} to request random double values.
+\item {\ttfamily randfloat} to request random float values.
+\item {\ttfamily randint32} to request random 32-\/bit integer values.
+\item {\ttfamily randint64} to request random 64-\/bit integer values.
+\item {\ttfamily sysinfo} to request the system informations.
+\item {\ttfamily knapsack-\/ga} presents the use of the Python bindings and {\ttfamily libqrng} to implement the genetic algorithm for solving the knapsack problem.
+\item {\ttfamily simulated-\/annealing} presents the use of the Python bindings and {\ttfamily libqrng} to implement the simulated annealing.
+\item {\ttfamily qrand} is a command-\/line tool that uses all the capabilities of the {\ttfamily libqrng} to request random values.
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ \{=org\}}
+\DoxyCodeLine{\#+CITE\_EXPORT: csl \string~/.emacs.d/ieee.csl}
+
+\end{DoxyCode}
+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ \{=org\}}
+\DoxyCodeLine{\#+PRINT\_BIBLIOGRAPHY:}
+
+\end{DoxyCode}
+ 

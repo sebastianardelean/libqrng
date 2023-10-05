@@ -1,0 +1,172 @@
+\hypertarget{sysinfo_8c}{}\doxysection{examples/sysinfo/sysinfo.c File Reference}
+\label{sysinfo_8c}\index{examples/sysinfo/sysinfo.c@{examples/sysinfo/sysinfo.c}}
+
+
+API for interacting with IDQ\textquotesingle{}s Quantis Appliance.  
+
+
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$qrng.\+h$>$}\newline
+Include dependency graph for sysinfo.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{d3/d85/sysinfo_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{sysinfo_8c_a3b6a35b8be8405a9db72cc5dea97954b}{PROGRAM\+\_\+\+NAME}}~\char`\"{}sysinfo\char`\"{}
+\begin{DoxyCompactList}\small\item\em A macro for the program name. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{sysinfo_8c_a1c6d5de492ac61ad29aec7aa9a436bbf}{VERSION}}~\char`\"{}1.\+0.\+0\char`\"{}
+\begin{DoxyCompactList}\small\item\em A macro for the program version. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{sysinfo_8c_a7e5da39fd3a4d5e827323372d91723aa}{AUTHORS}}~\char`\"{}Sebastian M. Ardelean\char`\"{}
+\begin{DoxyCompactList}\small\item\em A macro for the author. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{sysinfo_8c_a8f848f05b9593c04e3f4df1a99b28734}{DOMAIN\+\_\+\+ADDR\+\_\+\+LENGTH}}~256u
+\begin{DoxyCompactList}\small\item\em A macro for defining the IDQ\textquotesingle{}s Quantis Appliance domain name address. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{sysinfo_8c_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char $\ast$$\ast$argv)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+API for interacting with IDQ\textquotesingle{}s Quantis Appliance. 
+
+\begin{DoxyAuthor}{Author}
+Sebastian Mihai Ardelean \href{mailto:sebastian.ardelean@cs.upt.ro}{\texttt{ sebastian.\+ardelean@cs.\+upt.\+ro}} 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+31 May 2023 
+\end{DoxyDate}
+
+
+Definition in file \mbox{\hyperlink{sysinfo_8c_source}{sysinfo.\+c}}.
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{sysinfo_8c_a7e5da39fd3a4d5e827323372d91723aa}\label{sysinfo_8c_a7e5da39fd3a4d5e827323372d91723aa}} 
+\index{sysinfo.c@{sysinfo.c}!AUTHORS@{AUTHORS}}
+\index{AUTHORS@{AUTHORS}!sysinfo.c@{sysinfo.c}}
+\doxysubsubsection{\texorpdfstring{AUTHORS}{AUTHORS}}
+{\footnotesize\ttfamily \#define AUTHORS~\char`\"{}Sebastian M. Ardelean\char`\"{}}
+
+
+
+A macro for the author. 
+
+
+
+Definition at line \mbox{\hyperlink{sysinfo_8c_source_l00054}{54}} of file \mbox{\hyperlink{sysinfo_8c_source}{sysinfo.\+c}}.
+
+\mbox{\Hypertarget{sysinfo_8c_a8f848f05b9593c04e3f4df1a99b28734}\label{sysinfo_8c_a8f848f05b9593c04e3f4df1a99b28734}} 
+\index{sysinfo.c@{sysinfo.c}!DOMAIN\_ADDR\_LENGTH@{DOMAIN\_ADDR\_LENGTH}}
+\index{DOMAIN\_ADDR\_LENGTH@{DOMAIN\_ADDR\_LENGTH}!sysinfo.c@{sysinfo.c}}
+\doxysubsubsection{\texorpdfstring{DOMAIN\_ADDR\_LENGTH}{DOMAIN\_ADDR\_LENGTH}}
+{\footnotesize\ttfamily \#define DOMAIN\+\_\+\+ADDR\+\_\+\+LENGTH~256u}
+
+
+
+A macro for defining the IDQ\textquotesingle{}s Quantis Appliance domain name address. 
+
+
+
+Definition at line \mbox{\hyperlink{sysinfo_8c_source_l00063}{63}} of file \mbox{\hyperlink{sysinfo_8c_source}{sysinfo.\+c}}.
+
+\mbox{\Hypertarget{sysinfo_8c_a3b6a35b8be8405a9db72cc5dea97954b}\label{sysinfo_8c_a3b6a35b8be8405a9db72cc5dea97954b}} 
+\index{sysinfo.c@{sysinfo.c}!PROGRAM\_NAME@{PROGRAM\_NAME}}
+\index{PROGRAM\_NAME@{PROGRAM\_NAME}!sysinfo.c@{sysinfo.c}}
+\doxysubsubsection{\texorpdfstring{PROGRAM\_NAME}{PROGRAM\_NAME}}
+{\footnotesize\ttfamily \#define PROGRAM\+\_\+\+NAME~\char`\"{}sysinfo\char`\"{}}
+
+
+
+A macro for the program name. 
+
+
+
+Definition at line \mbox{\hyperlink{sysinfo_8c_source_l00040}{40}} of file \mbox{\hyperlink{sysinfo_8c_source}{sysinfo.\+c}}.
+
+\mbox{\Hypertarget{sysinfo_8c_a1c6d5de492ac61ad29aec7aa9a436bbf}\label{sysinfo_8c_a1c6d5de492ac61ad29aec7aa9a436bbf}} 
+\index{sysinfo.c@{sysinfo.c}!VERSION@{VERSION}}
+\index{VERSION@{VERSION}!sysinfo.c@{sysinfo.c}}
+\doxysubsubsection{\texorpdfstring{VERSION}{VERSION}}
+{\footnotesize\ttfamily \#define VERSION~\char`\"{}1.\+0.\+0\char`\"{}}
+
+
+
+A macro for the program version. 
+
+
+
+Definition at line \mbox{\hyperlink{sysinfo_8c_source_l00047}{47}} of file \mbox{\hyperlink{sysinfo_8c_source}{sysinfo.\+c}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{sysinfo_8c_a3c04138a5bfe5d72780bb7e82a18e627}\label{sysinfo_8c_a3c04138a5bfe5d72780bb7e82a18e627}} 
+\index{sysinfo.c@{sysinfo.c}!main@{main}}
+\index{main@{main}!sysinfo.c@{sysinfo.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{sysinfo_8c_source_l00071}{71}} of file \mbox{\hyperlink{sysinfo_8c_source}{sysinfo.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00072 \{}
+\DoxyCodeLine{00073 }
+\DoxyCodeLine{00074     \textcolor{keywordtype}{int} opt = -\/1;}
+\DoxyCodeLine{00075     \textcolor{keywordtype}{char} domain\_addr[\mbox{\hyperlink{sysinfo_8c_a8f848f05b9593c04e3f4df1a99b28734}{DOMAIN\_ADDR\_LENGTH}}] = \textcolor{stringliteral}{"{}\(\backslash\)0"{}};}
+\DoxyCodeLine{00076     \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{00077 }
+\DoxyCodeLine{00078 }
+\DoxyCodeLine{00079 }
+\DoxyCodeLine{00080     \textcolor{keywordflow}{if} (argc == 1) \{}
+\DoxyCodeLine{00081         print\_help();}
+\DoxyCodeLine{00082         exit(EXIT\_FAILURE);}
+\DoxyCodeLine{00083 }
+\DoxyCodeLine{00084     \}}
+\DoxyCodeLine{00085     \textcolor{keywordflow}{while} ((opt = getopt(argc, argv, \textcolor{stringliteral}{"{}ha:"{}})) != -\/1) \{}
+\DoxyCodeLine{00086         \textcolor{keywordflow}{switch} (opt) \{}
+\DoxyCodeLine{00087             \textcolor{keywordflow}{case} \textcolor{charliteral}{'h'}:}
+\DoxyCodeLine{00088                 print\_help();}
+\DoxyCodeLine{00089                 exit(EXIT\_SUCCESS);}
+\DoxyCodeLine{00090                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00091             \textcolor{keywordflow}{case} \textcolor{charliteral}{'a'}:}
+\DoxyCodeLine{00092                 strncpy(domain\_addr, optarg, strlen(optarg));}
+\DoxyCodeLine{00093                 \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00094             \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00095                 print\_help();}
+\DoxyCodeLine{00096                 exit(EXIT\_FAILURE);}
+\DoxyCodeLine{00097         \}}
+\DoxyCodeLine{00098     \}}
+\DoxyCodeLine{00099 }
+\DoxyCodeLine{00100 }
+\DoxyCodeLine{00101 }
+\DoxyCodeLine{00102     \textcolor{comment}{/*Initialize qrng library*/}}
+\DoxyCodeLine{00103     retval = \mbox{\hyperlink{qrng_8c_a722703e4302df6bf5a8ab29f2cce7e59}{qrng\_open}}(domain\_addr);}
+\DoxyCodeLine{00104     \textcolor{keywordflow}{if} (retval) \{}
+\DoxyCodeLine{00105         exit(EXIT\_FAILURE);}
+\DoxyCodeLine{00106     \}}
+\DoxyCodeLine{00107 }
+\DoxyCodeLine{00108 }
+\DoxyCodeLine{00109     (void)\mbox{\hyperlink{qrng_8c_af43a0f42bfbc5f7785824e3a8b05bb2f}{qrng\_system\_info}}(stdout);}
+\DoxyCodeLine{00110 }
+\DoxyCodeLine{00111 }
+\DoxyCodeLine{00112     \mbox{\hyperlink{qrng_8c_ac11a56e95649a115157e5453a9dde45a}{qrng\_close}}();}
+\DoxyCodeLine{00113     }
+\DoxyCodeLine{00114     exit(EXIT\_SUCCESS);}
+\DoxyCodeLine{00115 \}}
+
+\end{DoxyCode}

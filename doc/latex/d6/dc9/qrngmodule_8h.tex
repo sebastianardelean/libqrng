@@ -1,0 +1,244 @@
+\hypertarget{qrngmodule_8h}{}\doxysection{bindings/python/qrngmodule.h File Reference}
+\label{qrngmodule_8h}\index{bindings/python/qrngmodule.h@{bindings/python/qrngmodule.h}}
+
+
+API for interacting with IDQ\textquotesingle{}s Quantis Appliance.  
+
+
+{\ttfamily \#include $<$Python.\+h$>$}\newline
+Include dependency graph for qrngmodule.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=245pt]{dc/db4/qrngmodule_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{da/d8f/qrngmodule_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Py\+Object $\ast$ \mbox{\hyperlink{qrngmodule_8h_af4c70b1c1d178b29934202e6af1cf534}{qrand\+\_\+init}} (Py\+Object $\ast$self, Py\+Object $\ast$args)
+\begin{DoxyCompactList}\small\item\em Initialization function This function must be called to initialize libqrng. \end{DoxyCompactList}\item 
+Py\+Object $\ast$ \mbox{\hyperlink{qrngmodule_8h_a3ff3abd3b2a5a599a22661a23e76456f}{qrand\+\_\+close}} (Py\+Object $\ast$self)
+\begin{DoxyCompactList}\small\item\em Close function. This function must be called to clean-\/up libqrng. \end{DoxyCompactList}\item 
+Py\+Object $\ast$ \mbox{\hyperlink{qrngmodule_8h_a141d27ad9d47a655e23db276edd55830}{qrand\+\_\+rand\+\_\+int}} (Py\+Object $\ast$self, Py\+Object $\ast$args)
+\begin{DoxyCompactList}\small\item\em Generate random @int@ values. This function generates random @int@ values in the specified interval. \end{DoxyCompactList}\item 
+Py\+Object $\ast$ \mbox{\hyperlink{qrngmodule_8h_aa011ad73dfc2489b57a2901c0426d780}{qrand\+\_\+rand\+\_\+float}} (Py\+Object $\ast$self, Py\+Object $\ast$args)
+\begin{DoxyCompactList}\small\item\em Generate random @float@ values. This function generates random @float@ values in the specified interval. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+API for interacting with IDQ\textquotesingle{}s Quantis Appliance. 
+
+\begin{DoxyAuthor}{Author}
+Sebastian Mihai Ardelean \href{mailto:sebastian.ardelean@cs.upt.ro}{\texttt{ sebastian.\+ardelean@cs.\+upt.\+ro}} 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+24 May 2023 
+\end{DoxyDate}
+
+
+Definition in file \mbox{\hyperlink{qrngmodule_8h_source}{qrngmodule.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{qrngmodule_8h_a3ff3abd3b2a5a599a22661a23e76456f}\label{qrngmodule_8h_a3ff3abd3b2a5a599a22661a23e76456f}} 
+\index{qrngmodule.h@{qrngmodule.h}!qrand\_close@{qrand\_close}}
+\index{qrand\_close@{qrand\_close}!qrngmodule.h@{qrngmodule.h}}
+\doxysubsubsection{\texorpdfstring{qrand\_close()}{qrand\_close()}}
+{\footnotesize\ttfamily Py\+Object $\ast$ qrand\+\_\+close (\begin{DoxyParamCaption}\item[{Py\+Object $\ast$}]{self }\end{DoxyParamCaption})}
+
+
+
+Close function. This function must be called to clean-\/up libqrng. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & argument points to the module object for module-\/level functions; for a method it would point to the object instance. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Always returns 0, SUCCESS. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{qrngmodule_8c_source_l00050}{50}} of file \mbox{\hyperlink{qrngmodule_8c_source}{qrngmodule.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00051 \{}
+\DoxyCodeLine{00052   \mbox{\hyperlink{qrng_8c_ac11a56e95649a115157e5453a9dde45a}{qrng\_close}}();}
+\DoxyCodeLine{00053   \textcolor{keywordflow}{return} Py\_BuildValue(\textcolor{stringliteral}{"{}i"{}}, 0);}
+\DoxyCodeLine{00054 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{qrngmodule_8h_af4c70b1c1d178b29934202e6af1cf534}\label{qrngmodule_8h_af4c70b1c1d178b29934202e6af1cf534}} 
+\index{qrngmodule.h@{qrngmodule.h}!qrand\_init@{qrand\_init}}
+\index{qrand\_init@{qrand\_init}!qrngmodule.h@{qrngmodule.h}}
+\doxysubsubsection{\texorpdfstring{qrand\_init()}{qrand\_init()}}
+{\footnotesize\ttfamily Py\+Object $\ast$ qrand\+\_\+init (\begin{DoxyParamCaption}\item[{Py\+Object $\ast$}]{self,  }\item[{Py\+Object $\ast$}]{args }\end{DoxyParamCaption})}
+
+
+
+Initialization function This function must be called to initialize libqrng. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & argument points to the module object for module-\/level functions; for a method it would point to the object instance. \\
+\hline
+{\em args} & argument will be a pointer to a Python tuple object containing the arguments. IDQ\textquotesingle{}s Quantis Appliance domain address must be specified in this parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Function returns 0 on SUCCESS, and -\/1 if libqrng fails. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+On failure, the function performs clean-\/up. 
+\end{DoxyNote}
+
+
+Definition at line \mbox{\hyperlink{qrngmodule_8c_source_l00036}{36}} of file \mbox{\hyperlink{qrngmodule_8c_source}{qrngmodule.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00037 \{}
+\DoxyCodeLine{00038 }
+\DoxyCodeLine{00039   \textcolor{keywordtype}{int} retval = 0;}
+\DoxyCodeLine{00040   \textcolor{keywordtype}{char} *device\_domain\_address;}
+\DoxyCodeLine{00041   \textcolor{keywordflow}{if} (!PyArg\_ParseTuple(args, \textcolor{stringliteral}{"{}s"{}}, \&device\_domain\_address)) \{}
+\DoxyCodeLine{00042     \textcolor{keywordflow}{return} NULL;}
+\DoxyCodeLine{00043   \}}
+\DoxyCodeLine{00044   retval = \mbox{\hyperlink{qrng_8c_a722703e4302df6bf5a8ab29f2cce7e59}{qrng\_open}}(device\_domain\_address);}
+\DoxyCodeLine{00045   \textcolor{keywordflow}{return} Py\_BuildValue(\textcolor{stringliteral}{"{}i"{}}, retval);}
+\DoxyCodeLine{00046   }
+\DoxyCodeLine{00047   }
+\DoxyCodeLine{00048 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{qrngmodule_8h_aa011ad73dfc2489b57a2901c0426d780}\label{qrngmodule_8h_aa011ad73dfc2489b57a2901c0426d780}} 
+\index{qrngmodule.h@{qrngmodule.h}!qrand\_rand\_float@{qrand\_rand\_float}}
+\index{qrand\_rand\_float@{qrand\_rand\_float}!qrngmodule.h@{qrngmodule.h}}
+\doxysubsubsection{\texorpdfstring{qrand\_rand\_float()}{qrand\_rand\_float()}}
+{\footnotesize\ttfamily Py\+Object $\ast$ qrand\+\_\+rand\+\_\+float (\begin{DoxyParamCaption}\item[{Py\+Object $\ast$}]{self,  }\item[{Py\+Object $\ast$}]{args }\end{DoxyParamCaption})}
+
+
+
+Generate random @float@ values. This function generates random @float@ values in the specified interval. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & argument points to the module object for module-\/level functions; for a method it would point to the object instance. \\
+\hline
+{\em args} & argument will be a pointer to a Python tuple object containing the arguments. Min, max and number of samples must be specified in this parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Function returns 0 on SUCCESS, and -\/1 if libqrnq fails. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{qrngmodule_8c_source_l00091}{91}} of file \mbox{\hyperlink{qrngmodule_8c_source}{qrngmodule.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00092 \{}
+\DoxyCodeLine{00093   \textcolor{keywordtype}{double} min = 0.0;}
+\DoxyCodeLine{00094   \textcolor{keywordtype}{double} max = 1.0;}
+\DoxyCodeLine{00095   \textcolor{keywordtype}{size\_t} samples = 0;}
+\DoxyCodeLine{00096   \textcolor{keywordtype}{size\_t} i =0;}
+\DoxyCodeLine{00097   \textcolor{keywordtype}{double} *data;}
+\DoxyCodeLine{00098     \textcolor{keywordflow}{if} (!PyArg\_ParseTuple(args, \textcolor{stringliteral}{"{}ddK"{}}, \&min, \&max, \&samples)) \{}
+\DoxyCodeLine{00099     \textcolor{keywordflow}{return} NULL;}
+\DoxyCodeLine{00100   \}}
+\DoxyCodeLine{00101 }
+\DoxyCodeLine{00102   data = malloc(samples * \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{double}));}
+\DoxyCodeLine{00103   \textcolor{keywordflow}{if} (!data) \{}
+\DoxyCodeLine{00104     \textcolor{keywordflow}{return} NULL;}
+\DoxyCodeLine{00105   \}}
+\DoxyCodeLine{00106 }
+\DoxyCodeLine{00107   \textcolor{keywordflow}{if} (\mbox{\hyperlink{qrng_8c_a4fa90401c1662fddcef5957bbed5ebf4}{qrng\_random\_double}}(min, max, samples, data)) \{}
+\DoxyCodeLine{00108     \textcolor{keywordflow}{return} NULL;}
+\DoxyCodeLine{00109   \}}
+\DoxyCodeLine{00110   }
+\DoxyCodeLine{00111   PyObject *pylist\_results = PyList\_New(samples);}
+\DoxyCodeLine{00112   \textcolor{keywordflow}{for} (i = 0; i < samples; i++) \{}
+\DoxyCodeLine{00113     PyObject *py\_value = Py\_BuildValue(\textcolor{stringliteral}{"{}d"{}}, data[i]);}
+\DoxyCodeLine{00114     PyList\_SetItem(pylist\_results, i, py\_value);}
+\DoxyCodeLine{00115   \}}
+\DoxyCodeLine{00116 }
+\DoxyCodeLine{00117   free(data);}
+\DoxyCodeLine{00118   \textcolor{keywordflow}{return} pylist\_results;}
+\DoxyCodeLine{00119   }
+\DoxyCodeLine{00120   }
+\DoxyCodeLine{00121   \textcolor{keywordflow}{return} NULL;}
+\DoxyCodeLine{00122 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{qrngmodule_8h_a141d27ad9d47a655e23db276edd55830}\label{qrngmodule_8h_a141d27ad9d47a655e23db276edd55830}} 
+\index{qrngmodule.h@{qrngmodule.h}!qrand\_rand\_int@{qrand\_rand\_int}}
+\index{qrand\_rand\_int@{qrand\_rand\_int}!qrngmodule.h@{qrngmodule.h}}
+\doxysubsubsection{\texorpdfstring{qrand\_rand\_int()}{qrand\_rand\_int()}}
+{\footnotesize\ttfamily Py\+Object $\ast$ qrand\+\_\+rand\+\_\+int (\begin{DoxyParamCaption}\item[{Py\+Object $\ast$}]{self,  }\item[{Py\+Object $\ast$}]{args }\end{DoxyParamCaption})}
+
+
+
+Generate random @int@ values. This function generates random @int@ values in the specified interval. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & argument points to the module object for module-\/level functions; for a method it would point to the object instance. \\
+\hline
+{\em args} & argument will be a pointer to a Python tuple object containing the arguments. Min, max and number of samples must be specified in this parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Function returns 0 on SUCCESS, and -\/1 if libqrnq fails. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{qrngmodule_8c_source_l00057}{57}} of file \mbox{\hyperlink{qrngmodule_8c_source}{qrngmodule.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00058 \{}
+\DoxyCodeLine{00059   int64\_t min = 0;}
+\DoxyCodeLine{00060   int64\_t max = 0;}
+\DoxyCodeLine{00061   \textcolor{keywordtype}{size\_t} samples = 0;}
+\DoxyCodeLine{00062   \textcolor{keywordtype}{size\_t} i = 0;}
+\DoxyCodeLine{00063   int64\_t *data;}
+\DoxyCodeLine{00064   \textcolor{keywordflow}{if} (!PyArg\_ParseTuple(args, \textcolor{stringliteral}{"{}LLK"{}}, \&min, \&max, \&samples)) \{}
+\DoxyCodeLine{00065     \textcolor{keywordflow}{return} NULL;}
+\DoxyCodeLine{00066   \}}
+\DoxyCodeLine{00067 }
+\DoxyCodeLine{00068   data = malloc(samples * \textcolor{keyword}{sizeof}(int64\_t));}
+\DoxyCodeLine{00069   \textcolor{keywordflow}{if} (!data) \{}
+\DoxyCodeLine{00070     \textcolor{keywordflow}{return} NULL;}
+\DoxyCodeLine{00071   \}}
+\DoxyCodeLine{00072 }
+\DoxyCodeLine{00073   \textcolor{keywordflow}{if} (\mbox{\hyperlink{qrng_8c_ad5962c31d7b292a19b670531ddedae30}{qrng\_random\_int64}}(min, max, samples, data)) \{}
+\DoxyCodeLine{00074     \textcolor{keywordflow}{return} NULL;}
+\DoxyCodeLine{00075   \}}
+\DoxyCodeLine{00076   }
+\DoxyCodeLine{00077   PyObject *pylist\_results = PyList\_New(samples);}
+\DoxyCodeLine{00078   \textcolor{keywordflow}{for} (i = 0; i < samples; i++) \{}
+\DoxyCodeLine{00079     PyObject *py\_value = Py\_BuildValue(\textcolor{stringliteral}{"{}L"{}}, data[i]);}
+\DoxyCodeLine{00080     PyList\_SetItem(pylist\_results, i, py\_value);}
+\DoxyCodeLine{00081   \}}
+\DoxyCodeLine{00082 }
+\DoxyCodeLine{00083   free(data);}
+\DoxyCodeLine{00084   \textcolor{keywordflow}{return} pylist\_results;}
+\DoxyCodeLine{00085   }
+\DoxyCodeLine{00086   }
+\DoxyCodeLine{00087   \textcolor{keywordflow}{return} NULL;}
+\DoxyCodeLine{00088 \}}
+
+\end{DoxyCode}

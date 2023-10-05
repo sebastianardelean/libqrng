@@ -1,0 +1,49 @@
+\hypertarget{qrngmodule_8h_source}{}\doxysection{qrngmodule.\+h}
+\label{qrngmodule_8h_source}\index{bindings/python/qrngmodule.h@{bindings/python/qrngmodule.h}}
+\mbox{\hyperlink{qrngmodule_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00001}00001 \textcolor{comment}{/****************************************************************************}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00002}00002 \textcolor{comment}{ * libqrng -\/ library for interacting with IDQ's Quantis Appliance           *}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00003}00003 \textcolor{comment}{ *                                                                          *}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00004}00004 \textcolor{comment}{ * Copyright (C) 2023  Sebastian Mihai Ardelean                             *}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00005}00005 \textcolor{comment}{ *                                                                          *}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00006}00006 \textcolor{comment}{ * This program is free software: you can redistribute it and/or modify     *}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00007}00007 \textcolor{comment}{ * it under the terms of the GNU General Public License as published by     *}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00008}00008 \textcolor{comment}{ * the Free Software Foundation, either version 3 of the License, or        *}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00009}00009 \textcolor{comment}{ * (at your option) any later version.                                      *}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00010}00010 \textcolor{comment}{ *                                                                          *}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00011}00011 \textcolor{comment}{ * This program is distributed in the hope that it will be useful,          *}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00012}00012 \textcolor{comment}{ * but WITHOUT ANY WARRANTY; without even the implied warranty of           *}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00013}00013 \textcolor{comment}{ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            *}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00014}00014 \textcolor{comment}{ * GNU General Public License for more details.                             *}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00015}00015 \textcolor{comment}{ *                                                                          *}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00016}00016 \textcolor{comment}{ * You should have received a copy of the GNU General Public License        *}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00017}00017 \textcolor{comment}{ * along with this program.  If not, see <https://www.gnu.org/licenses/>.   *}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00018}00018 \textcolor{comment}{ ****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00019}00019 }
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00026}00026 \textcolor{preprocessor}{\#ifndef Py\_QRNGMODULE\_H}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00027}00027 \textcolor{preprocessor}{\#define Py\_QRNGMODULE\_H}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00028}00028 }
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00029}00029 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00030}00030 \textcolor{keyword}{extern} \textcolor{stringliteral}{"{}C"{}} \{}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00031}00031 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00032}00032 }
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00033}00033 \textcolor{preprocessor}{\#include <Python.h>}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00034}00034 }
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00043}00043 PyObject* \mbox{\hyperlink{qrngmodule_8h_af4c70b1c1d178b29934202e6af1cf534}{qrand\_init}}(PyObject *self, PyObject *args);}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00044}00044 }
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00051}00051 PyObject* \mbox{\hyperlink{qrngmodule_8h_a3ff3abd3b2a5a599a22661a23e76456f}{qrand\_close}}(PyObject *self);}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00052}00052 }
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00060}00060 PyObject* \mbox{\hyperlink{qrngmodule_8h_a141d27ad9d47a655e23db276edd55830}{qrand\_rand\_int}}(PyObject *self, PyObject *args);}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00061}00061 }
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00069}00069 PyObject* \mbox{\hyperlink{qrngmodule_8h_aa011ad73dfc2489b57a2901c0426d780}{qrand\_rand\_float}}(PyObject *self, PyObject *args);}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00070}00070 }
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00071}00071 }
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00072}00072   }
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00073}00073 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00074}00074 \}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00075}00075 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00076}00076 }
+\DoxyCodeLine{\Hypertarget{qrngmodule_8h_source_l00077}00077 \textcolor{preprocessor}{\#endif }\textcolor{comment}{/* !defined(Py\_QRNGMODULE\_H) */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}
