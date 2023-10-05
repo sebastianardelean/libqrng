@@ -1,0 +1,188 @@
+```{=org}
+#+STARTUP: inlineimages
+```
+```{=org}
+#+BIBLIOGRAPHY: refs.bib
+```
+# LibQrng
+
+## Introduction
+
+Through the software solution presented in this paper, we provide a
+method to interact with IDQ\'s Quantis Appliance network-attached
+device---a quantum random number generator that securely generates
+high-quality random numbers [@noauthor_quantis_nodate]---through REST
+API. We deliver an easy-to-extend solution for various programming
+languages and integrated projects. As such, our solution\'s
+implementation supports the straightforward use of quantum-generated
+random numbers in applications and research areas in which the output of
+the experiments is highly dependent on the quality of random numbers.
+
+In the current form, *libqrng* offers access to IDQ\'s Quantis Appliance
+through an API that can be easily integrated into applications that need
+true random numbers. The library is written in C language and is
+currently available as a library only on GNU/Linux-based operating
+systems. We decided to implement it as a library in native C since, to
+the best of our knowledge, it can be easily used with other programming
+languages via Foreign Function Interface (FFI). As a proof of concept,
+we implement Python bindings to *libqrng* and provide examples of how to
+request random numbers from IDQ\'s device.
+
+We designed the software stack we provide to be easily extended to
+different scientific programming languages and scientific/engineering
+fields, such as cryptography[@bruce1996applied], Monte-Carlo
+methods[@ferrenberg1992monte], heuristic algorithms[@navarro2022review],
+industrial testing and labeling, hazard games, [@stipvcevic2011quantum],
+etc.
+
+## Software Architecture
+
+IDQ\'s Quantis Appliance device is connected to the Local Area Network
+so that the random bytes are retrieved using REST APIs via HTTPS
+protocol. As we show in Figure [fig:archblock](fig:archblock), our
+proposed solution for using the IDQ\'s Quantis Appliance devices
+comprises 3 software layers: the *libqrng* library (which uses *libcurl*
+to request data from the device by GET requests), the Foreign Function
+Interface used for calling the library API from different programming
+languages (currently we support the Python programming language by
+utilizing the Python extension), and the Application Layer (for which we
+provide application examples that use the library directly or through
+the Foreign Function Interface).
+
+![The overview of using *libqrng* with IDQ\'s Quantis Appliance
+network-attached device. Quantis Appliance connects to a Cloud Platform;
+*libqrng* performs the request to retrieve random numbers using REST
+APIs via HTTP/HTTPS protocol.](./images/arch_block.png "archblock")
+
+Our *libqrng* is a shared object that exports APIs to request random
+bytes from the IDQ Quantis Appliance. Figure
+[fig:libqrng_init](fig:libqrng_init) presents the library\'s
+initialization sequence. As shown, the library uses *libcurl* to perform
+network requests. The `device_domain_address` parameter is mandatory
+since it represents the IP address of the quantum random generator
+device. Figures [fig:libqrng_stream](fig:libqrng_stream),
+[fig:libqrng_double](fig:libqrng_double), and
+[fig:libqrng_int](fig:libqrng_int) present the sequences that retrieve
+the random bytes from the device and perform an interaction with
+*libcurl*. The API to get a stream of random bytes, as shown in Figure
+[fig:libqrng_stream](fig:libqrng_stream), is `qrng_random_stream` and
+accepts 2 parameters: the `stream` buffer that stores the bytes, and the
+`size` of the requested stream. The APIs for getting random integers
+(32-bit or 64-bit integers) or doubles (float or double values), as
+presented in Figures [fig:libqrng_double](fig:libqrng_double) and
+[fig:libqrng_int](fig:libqrng_int), accept 4 parameters: `min`
+(inclusive) and `max` (exclusive) that represent the number\'s range,
+`samples` that represent the number of requested samples, and `buffer`
+that stores the values. Figure [fig:libqrng_close](fig:libqrng_close)
+presents the cleanup sequence.
+
+![Sequence diagram presenting the initialization of *libqrng* and the
+interaction with
+*libcurl*.](./images/libqrng_initialization.png "libqrng_init")
+
+![Sequence diagram presenting the option to get streams of random
+values.](./images/libqrng_random_stream.png "libqrng_stream")
+
+![Sequence diagram presenting the option to get a random double value in
+a specified range
+$[min,max)$.](./images/libqrng_double_value.png "libqrng_double")
+
+![Sequence diagram presenting the option to get a random integer value
+on 64 bits in a specified range
+$[min,max)$.](./images/libqrng_int64.png "libqrng_int")
+
+![Sequence diagram presenting the cleanup of *libqrng* and the
+interaction with
+*libcurl*.](./images/libqrng_cleanup.png "libqrng_close")
+
+## Getting started
+
+### Prerequisites
+
+1.  Operating System
+
+    -   Linux based distribution
+
+2.  Dependencies
+
+    -   gcc (GNU C Compiler)
+    -   libc (GNU C Library)
+    -   Make
+    -   libcurl-dev
+    -   Python
+
+### Installation
+
+1.  Clone the repository or download the code.
+
+    `git clone https://github.com/sebastianardelean/libqrng.git`
+
+2.  Change directory to `src`.
+
+    `cd src`
+
+3.  Build and install the *libqrng* library.
+
+    `make && make install`
+
+The make script will build the library and create the shared object. The
+install target will copy the shared object libqrng.so.1.0 to
+`/usr/local/lib` and will create the symlinks to
+`/usr/local/lib/libqrng.so.1.0` and `/usr/local/lib/libqrng.so`.
+
+The Python FFI is **not built and installed by default**. To use the
+Python bindings, first build and install succcessfully *libqrng*
+following the above mentioned steps. Then, the next steps must be
+followed:
+
+1.  Change directory to `bindings/python`.
+
+    `cd bindings/python`
+
+2.  Build and install.
+
+    `make && make install`
+
+Another option to install the *libqrng* library is to download the amd64
+binaries provided as deb packages (only if you\'re using Debian based
+Linux distributions) or as tar.gz archives. The deb package can be
+installed using `dpkg -i package_name`.
+
+If you choose to use the tar.gz archive:
+
+1.  Extract the content of the archive. `tar -xvf archive_name`
+
+2.  Make the install script executable. `chmod +x install.sh`
+
+3.  Run the install script. The install script will copy the shared
+    object to `/usr/lib/`, create the symlinks and run `ldconfig`.
+    `./install.sh`
+
+**Note** The amd64 binaries provided for download do not include the
+Python binding library!
+
+## Examples
+
+In `examples` directory we provide examples of using each API of the
+library. As such, we provide the following examples:
+
+1.  `fwversion` to get the firmware version.
+2.  `randbytestream` to request streams of random bytes.
+3.  `randdouble` to request random double values.
+4.  `randfloat` to request random float values.
+5.  `randint32` to request random 32-bit integer values.
+6.  `randint64` to request random 64-bit integer values.
+7.  `sysinfo` to request the system informations.
+8.  `knapsack-ga` presents the use of the Python bindings and `libqrng`
+    to implement the genetic algorithm for solving the knapsack problem.
+9.  `simulated-annealing` presents the use of the Python bindings and
+    `libqrng` to implement the simulated annealing.
+10. `qrand` is a command-line tool that uses all the capabilities of the
+    `libqrng` to request random values.
+
+```{=org}
+#+CITE_EXPORT: csl ~/.emacs.d/ieee.csl
+```
+```{=org}
+#+PRINT_BIBLIOGRAPHY:
+```
