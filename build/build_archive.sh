@@ -123,8 +123,10 @@ function create_archive() {
     #Compile library
     compile_install_library ../src $2
     cp ../lib/libqrng.so.1.0 $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE
+    cp ../src/qrng.h $WORKING_DIRECTORY/$SW_NAME-$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER-$BUILD_DATE\_$ARCH-$TYPE
 
 
+      
     # Clean project
     clean_project ../examples/qrand
 
@@ -144,6 +146,7 @@ function create_archive() {
 
     echo "#!/bin/bash" >> install.sh
     echo "cp  *.so.* /usr/lib" >> install.sh
+    echo "cp  *.h /usr/include" >> install.sh
     echo "ln -sf /usr/lib/libqrng.so.1.0 /usr/lib/libqrng.so" >> install.sh
     echo "ldconfig" >> install.sh
 
