@@ -54,21 +54,21 @@ function compile_install_library() {            #function will accept 1 paramete
 
 
 function extract_version() {                                    #function has no parameter
-    versionFile=$(ls ../examples/qrand/ | grep version.*)            #list qrand directory and send result to grep to extract the file version.hpp
+    versionFile=$(ls ./ | grep version.*)            #list qrand directory and send result to grep to extract the file version.hpp
     
     #grep previous values from version.hpp
-    MAJOR_VERSION=$(grep -Eo 'MAJOR_VERSION\s([0-9]{1,3})' ../examples/qrand/$versionFile | grep -Eo '[0-9]{1,3}')
+    MAJOR_VERSION=$(grep -Eo 'MAJOR_VERSION\s([0-9]{1,3})' ./$versionFile | grep -Eo '[0-9]{1,3}')
     ERROR_NUMBER=$(echo $?)             #get error number
     if [ $ERROR_NUMBER -ne 0 ]; then
         exit $ERROR_CODE
     fi
     
-    MINOR_VERSION=$(grep -Eo 'MINOR_VERSION\s([0-9]{1,3})' ../examples/qrand/$versionFile | grep -Eo '[0-9]{1,3}')
+    MINOR_VERSION=$(grep -Eo 'MINOR_VERSION\s([0-9]{1,3})' ./$versionFile | grep -Eo '[0-9]{1,3}')
     ERROR_NUMBER=$(echo $?)             #get error number
     if [ $ERROR_NUMBER -ne 0 ]; then
         exit $ERROR_CODE
     fi
-    BUILD_NUMBER=$(grep -Eo 'BUILD_NUMBER\s([0-9]{1,3})' ../examples/qrand/$versionFile | grep -Eo '[0-9]{1,3}')
+    BUILD_NUMBER=$(grep -Eo 'BUILD_NUMBER\s([0-9]{1,3})' ./$versionFile | grep -Eo '[0-9]{1,3}')
     ERROR_NUMBER=$(echo $?)             #get error number
     if [ $ERROR_NUMBER -ne 0 ]; then
         exit $ERROR_CODE
@@ -76,13 +76,13 @@ function extract_version() {                                    #function has no
     
     #increment version logic
     BUILD_NUMBER=`expr $BUILD_NUMBER + 1`
-    if [ $BUILD_NUMBER -eq 256 ]; then
+    if [ $BUILD_NUMBER -eq 9 ]; then
         MINOR_VERSION=`expr $MINOR_VERSION + 1`
         BUILD_NUMBER=0
         
     fi
     
-    if [ $MINOR_VERSION -eq 256 ]; then
+    if [ $MINOR_VERSION -eq 9 ]; then
         MINOR_VERSION=0
         MAJOR_VERSION=`expr $MAJOR_VERSION + 1`
     fi
@@ -94,11 +94,11 @@ function extract_version() {                                    #function has no
 }
 
 function set_new_version_number() {                                             #function has no parameters
-    versionFile=$(ls ../examples/qrand/ | grep version.*)                                    #list qrand directory and send result to grep to extract the file version.hpp
-    sed -i "s/.*MAJOR_VERSION.*/#define MAJOR_VERSION ${MAJOR_VERSION}/" ../examples/qrand/$versionFile
-    sed -i "s/.*MINOR_VERSION.*/#define MINOR_VERSION ${MINOR_VERSION}/" ../examples/qrand/$versionFile
-    sed -i "s/.*BUILD_NUMBER.*/#define BUILD_NUMBER ${BUILD_NUMBER}/" ../examples/qrand/$versionFile
-    sed -i "s/.*BUILD_DATE.*/#define BUILD_DATE \"${BUILD_DATE}\"/" ../examples/qrand/$versionFile
+    versionFile=$(ls ./ | grep version.*)                                    #list qrand directory and send result to grep to extract the file version.hpp
+    sed -i "s/.*MAJOR_VERSION.*/#define MAJOR_VERSION ${MAJOR_VERSION}/" ./$versionFile
+    sed -i "s/.*MINOR_VERSION.*/#define MINOR_VERSION ${MINOR_VERSION}/" ./$versionFile
+    sed -i "s/.*BUILD_NUMBER.*/#define BUILD_NUMBER ${BUILD_NUMBER}/" ./$versionFile
+    sed -i "s/.*BUILD_DATE.*/#define BUILD_DATE \"${BUILD_DATE}\"/" ./$versionFile
     }
 
 
