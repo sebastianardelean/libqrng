@@ -1,4 +1,5 @@
 CC=gcc
+FLAGS=
 CFLAGS=-Wall -c -g -fPIC -Wno-parentheses -fno-strict-aliasing $(FLAGS)
 LFLAGS=-shared -Wl,-soname,libqrng
 SRC=$(wildcard *.c)
@@ -23,7 +24,7 @@ create_dir:
 	$(CC) $(CFLAGS) -o $@ $<
 
 link: copy_objects
-	$(CC) $(LFLAGS) $(OBJ) -o ../lib/$(SO_FILE)
+	$(CC) $(LFLAGS) $(OBJ) -lcurl -o ../lib/$(SO_FILE)
 	rm ../lib/*.o
 
 install:
