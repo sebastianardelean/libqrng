@@ -45,8 +45,8 @@
 
 typedef enum {
   BYTES_RANDOM_NUMBER = 0,
-  SHORT_RANDOM_NUMBER,
-  INT_RANDOM_NUMBER,
+  INT16_RANDOM_NUMBER,
+  INT32_RANDOM_NUMBER,
   DOUBLE_RANDOM_NUMBER,
   FLOAT_RANDOM_NUMBER,
   STREAM_BINARY,
@@ -94,7 +94,7 @@ static s_api_t api_types[] = {
     .max_range_f = MAX_VALUE_FLOAT
   },
   {
-    .type = SHORT_RANDOM_NUMBER,
+    .type = INT16_RANDOM_NUMBER,
     .api_url = "https://%s/api/2.0/short?min=%d&max=%d&quantity=%lu",
     .domain_address = "",
     .samples = DEFAULT_NUMBER_OF_SAMPLES,
@@ -104,7 +104,7 @@ static s_api_t api_types[] = {
     .max_range_f = MAX_VALUE_FLOAT
   },
   {
-    .type = INT_RANDOM_NUMBER,
+    .type = INT32_RANDOM_NUMBER,
     .api_url = "https://%s/api/2.0/int?min=%ld&max=%ld&quantity=%lu",
     .domain_address = "",
     .samples = DEFAULT_NUMBER_OF_SAMPLES,
@@ -402,13 +402,13 @@ int qrng_random_int16(int16_t min, int16_t max, size_t samples, int16_t *buffer)
     
     memory_t mem_buffer;
 
-    api_types[SHORT_RANDOM_NUMBER].samples = samples;
-    api_types[SHORT_RANDOM_NUMBER].min_range_i = min;
-    api_types[SHORT_RANDOM_NUMBER].max_range_i = max;
+    api_types[INT16_RANDOM_NUMBER].samples = samples;
+    api_types[INT16_RANDOM_NUMBER].min_range_i = min;
+    api_types[INT16_RANDOM_NUMBER].max_range_i = max;
 
     memset(&mem_buffer, 0, sizeof(mem_buffer));
 
-    create_req_url(SHORT_RANDOM_NUMBER, final_url);
+    create_req_url(INT16_RANDOM_NUMBER, final_url);
 
 
     retval = execute_request(final_url, (void *)&mem_buffer);
@@ -450,13 +450,13 @@ int qrng_random_int32(int32_t min, int32_t max, size_t samples, int32_t *buffer)
     memory_t mem_buffer;
 
 
-    api_types[INT_RANDOM_NUMBER].samples = samples;
-    api_types[INT_RANDOM_NUMBER].min_range_i = min;
-    api_types[INT_RANDOM_NUMBER].max_range_i = max;
+    api_types[INT32_RANDOM_NUMBER].samples = samples;
+    api_types[INT32_RANDOM_NUMBER].min_range_i = min;
+    api_types[INT32_RANDOM_NUMBER].max_range_i = max;
 
     memset(&mem_buffer, 0, sizeof(mem_buffer));
 
-    create_req_url(INT_RANDOM_NUMBER, final_url);
+    create_req_url(INT32_RANDOM_NUMBER, final_url);
 
 
     retval = execute_request(final_url, (void *)&mem_buffer);
@@ -558,8 +558,8 @@ void create_req_url(e_req_type_t req_type, char *api_url)
              api_types[req_type].domain_address,
              api_types[req_type].samples);
     break;
-  case SHORT_RANDOM_NUMBER:
-  case INT_RANDOM_NUMBER:
+  case INT16_RANDOM_NUMBER:
+  case INT32_RANDOM_NUMBER:
     snprintf(api_url, URL_MAX_LENGTH, api_types[req_type].api_url,
              api_types[req_type].domain_address,
              api_types[req_type].min_range_i,
