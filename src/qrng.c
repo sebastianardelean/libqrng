@@ -63,8 +63,8 @@ typedef struct
   const char *api_url;
   char domain_address[DOMAIN_ADDRESS_LENGTH];
   size_t samples;
-  int64_t min_range_i;
-  int64_t max_range_i;
+  int16_t min_range_i;
+  int16_t max_range_i;
   double min_range_f;
   double max_range_f;
 }s_api_t;
@@ -393,7 +393,7 @@ int qrng_random_bytes(size_t samples, uint8_t *buffer)
 }
 
 
-int qrng_random_int64(int64_t min, int64_t max, size_t samples, int64_t *buffer)
+int qrng_random_int16(int16_t min, int16_t max, size_t samples, int16_t *buffer)
 {
     int retval = 0;
 
@@ -402,13 +402,13 @@ int qrng_random_int64(int64_t min, int64_t max, size_t samples, int64_t *buffer)
     
     memory_t mem_buffer;
 
-    api_types[INT_RANDOM_NUMBER].samples = samples;
-    api_types[INT_RANDOM_NUMBER].min_range_i = min;
-    api_types[INT_RANDOM_NUMBER].max_range_i = max;
+    api_types[SHORT_RANDOM_NUMBER].samples = samples;
+    api_types[SHORT_RANDOM_NUMBER].min_range_i = min;
+    api_types[SHORT_RANDOM_NUMBER].max_range_i = max;
 
     memset(&mem_buffer, 0, sizeof(mem_buffer));
 
-    create_req_url(INT_RANDOM_NUMBER, final_url);
+    create_req_url(SHORT_RANDOM_NUMBER, final_url);
 
 
     retval = execute_request(final_url, (void *)&mem_buffer);
@@ -450,13 +450,13 @@ int qrng_random_int32(int32_t min, int32_t max, size_t samples, int32_t *buffer)
     memory_t mem_buffer;
 
 
-    api_types[SHORT_RANDOM_NUMBER].samples = samples;
-    api_types[SHORT_RANDOM_NUMBER].min_range_i = min;
-    api_types[SHORT_RANDOM_NUMBER].max_range_i = max;
+    api_types[INT_RANDOM_NUMBER].samples = samples;
+    api_types[INT_RANDOM_NUMBER].min_range_i = min;
+    api_types[INT_RANDOM_NUMBER].max_range_i = max;
 
     memset(&mem_buffer, 0, sizeof(mem_buffer));
 
-    create_req_url(SHORT_RANDOM_NUMBER, final_url);
+    create_req_url(INT_RANDOM_NUMBER, final_url);
 
 
     retval = execute_request(final_url, (void *)&mem_buffer);
