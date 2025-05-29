@@ -1,5 +1,5 @@
 /****************************************************************************
- * randint64 - Quantum Random Number Generator using IDQ's Quantis Appliance  *
+ * randint16 - Quantum Random Number Generator using IDQ's Quantis Appliance  *
  *                                                                          *
  * Copyright (C) 2023  Sebastian Mihai Ardelean                             *
  *                                                                          *
@@ -18,7 +18,7 @@
  ****************************************************************************/
 
 /**
- * @file randint64.c
+ * @file randint16.c
  * @author Sebastian Mihai Ardelean <sebastian.ardelean@cs.upt.ro>
  * @date 24 May 2023
  * @brief API for interacting with IDQ's Quantis Appliance
@@ -30,12 +30,13 @@
 #include <string.h>
 #include <qrng.h>
 
+
 /**
  * @def PROGRAM_NAME
  * @brief A macro for the program name.
  *
  */
-#define PROGRAM_NAME "randint64"
+#define PROGRAM_NAME "randint16"
 
 /**
  * @def VERSION
@@ -91,17 +92,16 @@ int main(int argc, char **argv)
     int opt = -1;
     char domain_addr[DOMAIN_ADDR_LENGTH] = "\0";
     int retval = 0;
-    int64_t *data64 = NULL;
+    int16_t *data16 = NULL;
+
     size_t i = 0;
 
 
 
 
-    uint32_t number_of_samples = DEFAULT_NUMBER_OF_SAMPLES;
+    size_t number_of_samples = DEFAULT_NUMBER_OF_SAMPLES;
     int64_t min_value_i = DEFAULT_MIN_VALUE_I;
     int64_t max_value_i = DEFAULT_MAX_VALUE_I;
-
-
 
 
     if (argc == 1) {
@@ -137,6 +137,7 @@ int main(int argc, char **argv)
     }
 
 
+
     if (min_value_i > max_value_i) {
 	print_help();
 	exit(EXIT_FAILURE);
@@ -150,25 +151,23 @@ int main(int argc, char **argv)
     }
 
 
-    data64 = malloc(number_of_samples * sizeof(int64_t));
-    if (data64) {
-      if (qrng_random_int64(min_value_i, max_value_i, number_of_samples, data64) == 0) {
+    data16 = malloc(number_of_samples * sizeof(int16_t));
+    if (data16) {
+      if (qrng_random_int16(min_value_i, max_value_i, number_of_samples, data16) == 0) {
         //print the value to stdout
         for (i = 0; i < number_of_samples; i++) {
-          printf("%ld ", data64[i]);
+          printf("%d ", data16[i]);
         }
       }
+      
     }
-    
+
 
     qrng_close();
-    
-
-    if (data64 != NULL) {
-        free(data64);
+    if (data16 != NULL) {
+        free(data16);
     }
 
-    
     exit(EXIT_SUCCESS);
 }
 
@@ -182,6 +181,5 @@ void print_help(void)
     fprintf(stderr, "-s \t number of samples. [Default 1]\n");
     fprintf(stderr, "-i \t min value int64. [Default 0]\n");
     fprintf(stderr, "-I \t max value int64. [Default 100]\n");
-
 }
 
