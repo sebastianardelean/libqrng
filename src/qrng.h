@@ -83,6 +83,16 @@ int qrng_random_float(float min, float max, size_t samples, float *buffer);
  */    
 int qrng_random_int64(int64_t min, int64_t max, size_t samples, int64_t *buffer);
 
+
+
+/**
+ * @brief Generate random @int8@ values.
+ * This function generates random @int8@ values.
+ * @param samples number of values to generate.
+ * @param buffer array of type @int64@ in which the values will be stored.
+ * @return This function returns 0 on SUCCESS, -1 if the internal buffer cannot be initialized, or if libcurl cannot perform the request.
+ */    
+int qrng_random_bytes(size_t samples, uint8_t *buffer);
 /**
  * @brief Generate random @int32@ values.
  * This function generates random @int32@ values in the specified interval.

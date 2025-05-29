@@ -44,7 +44,8 @@
 
 
 typedef enum {
-  SHORT_RANDOM_NUMBER = 0,
+  BYTES_RANDOM_NUMBER = 0,
+  SHORT_RANDOM_NUMBER,
   INT_RANDOM_NUMBER,
   DOUBLE_RANDOM_NUMBER,
   FLOAT_RANDOM_NUMBER,
@@ -81,7 +82,17 @@ typedef struct {
 }memory_t;
 #endif
 
-static s_api_t api_types[]={
+static s_api_t api_types[] = {
+  {
+    .type = BYTES_RANDOM_NUMBER,
+    .api_url = "https://%s/api/2.0/hexbytes?quantity=%lu&dataLength=1",
+    .domain_address = "",
+    .samples = DEFAULT_NUMBER_OF_SAMPLES,
+    .min_range_i = MIN_VALUE_INT,
+    .max_range_i = MAX_VALUE_INT,
+    .min_range_f = MIN_VALUE_FLOAT,
+    .max_range_f = MAX_VALUE_FLOAT
+  },
   {
     .type = SHORT_RANDOM_NUMBER,
     .api_url = "https://%s/api/2.0/short?min=%d&max=%d&quantity=%lu",
@@ -333,6 +344,55 @@ int qrng_random_float(float min, float max, size_t samples, float *buffer)
     return retval;
 }
 
+
+int qrng_random_bytes(size_t samples, uint8_t *buffer)
+{
+    int retval = 0;
+    char final_url[URL_MAX_LENGTH] = {0};
+    
+    memory_t mem_buffer;
+    api_types[BYTES_RANDOM_NUMBER].samples = samples;
+    
+    memset(&mem_buffer, 0, sizeof(mem_buffer));
+    create_req_url(BYTES_RANDOM_NUMBER, final_url);
+    
+    retval = execute_request(final_url, (void *)&mem_buffer);
+
+    if (!retval) {
+      /* parse values array */
+      char *random_values_string = mem_buffer.memory;
+      /* Skip first character because it's [ */
+      random_values_string ++;
+      /* Skip last character because is ] */
+      random_values_string[strlen(random_values_string)-1]=0;
+      char *token = strtok(random_values_string,",");
+      size_t i = 0;
+        
+      for (i = 0; i < samples && token != NULL; i++) {
+        /* Remove quotes */
+        token++;
+        token[strlen(token) - 1] = '\0';
+
+
+        uint8_t value = (uint8_t)strtol(token, NULL, 16);
+        buffer[i] = value;
+    //    printf("Parsed byte: %2x\n", value);
+        token = strtok(NULL, ",");
+      }   
+    }
+    else {
+      fprintf(stderr, "could not execute curl request");
+    }
+    
+#ifndef NO_DYNAMIC_MEMORY_ALLOCATION        
+    if (mem_buffer.memory) {
+      free(mem_buffer.memory);
+    }
+#endif
+    return retval;
+}
+
+
 int qrng_random_int64(int64_t min, int64_t max, size_t samples, int64_t *buffer)
 {
     int retval = 0;
@@ -374,7 +434,7 @@ int qrng_random_int64(int64_t min, int64_t max, size_t samples, int64_t *buffer)
     
 #ifndef NO_DYNAMIC_MEMORY_ALLOCATION        
     if (mem_buffer.memory) {
-      free(mem_buffer.memory);
+free(mem_buffer.memory);
     }
 #endif
     return retval;
@@ -493,6 +553,11 @@ void create_req_url(e_req_type_t req_type, char *api_url)
 {
 
   switch(req_type) {
+  case BYTES_RANDOM_NUMBER:
+    snprintf(api_url, URL_MAX_LENGTH, api_types[req_type].api_url,
+             api_types[req_type].domain_address,
+             api_types[req_type].samples);
+    break;
   case SHORT_RANDOM_NUMBER:
   case INT_RANDOM_NUMBER:
     snprintf(api_url, URL_MAX_LENGTH, api_types[req_type].api_url,
