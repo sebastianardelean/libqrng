@@ -30,7 +30,6 @@
 #include <string.h>
 #include <qrng.h>
 
-
 /**
  * @def PROGRAM_NAME
  * @brief A macro for the program name.
@@ -93,15 +92,16 @@ int main(int argc, char **argv)
     char domain_addr[DOMAIN_ADDR_LENGTH] = "\0";
     int retval = 0;
     int32_t *data32 = NULL;
-
     size_t i = 0;
 
 
 
 
-    uint32_t number_of_samples = DEFAULT_NUMBER_OF_SAMPLES;
-    int64_t min_value_i = DEFAULT_MIN_VALUE_I;
-    int64_t max_value_i = DEFAULT_MAX_VALUE_I;
+    size_t number_of_samples = DEFAULT_NUMBER_OF_SAMPLES;
+    int32_t min_value_i = DEFAULT_MIN_VALUE_I;
+    int32_t max_value_i = DEFAULT_MAX_VALUE_I;
+
+
 
 
     if (argc == 1) {
@@ -137,7 +137,6 @@ int main(int argc, char **argv)
     }
 
 
-
     if (min_value_i > max_value_i) {
 	print_help();
 	exit(EXIT_FAILURE);
@@ -159,15 +158,17 @@ int main(int argc, char **argv)
           printf("%d ", data32[i]);
         }
       }
-      
     }
-
+    
 
     qrng_close();
+    
+
     if (data32 != NULL) {
         free(data32);
     }
 
+    
     exit(EXIT_SUCCESS);
 }
 
@@ -179,7 +180,8 @@ void print_help(void)
     fprintf(stderr, "-h \t help\n");
     fprintf(stderr, "-a \t domain address.\n");
     fprintf(stderr, "-s \t number of samples. [Default 1]\n");
-    fprintf(stderr, "-i \t min value int64. [Default 0]\n");
-    fprintf(stderr, "-I \t max value int64. [Default 100]\n");
+    fprintf(stderr, "-i \t min value int32. [Default 0]\n");
+    fprintf(stderr, "-I \t max value int32. [Default 100]\n");
+
 }
 

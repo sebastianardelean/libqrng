@@ -3,9 +3,9 @@ CFLAGS=-Wall -Wextra -Wpedantic -c -Wno-parentheses -fno-strict-aliasing -I../..
 LFLAGS=-lqrng -lcurl
 SRC=$(wildcard *.c)
 COMPILE=$(patsubst %.c, %.o, $(SRC))
-OBJ=$(wildcard ../../bin/randint64.o)
+OBJ=$(wildcard ../../bin/randint16.o)
 
-OUT=randint64
+OUT=randint16
 
 
 all: create_dir $(COMPILE) link
