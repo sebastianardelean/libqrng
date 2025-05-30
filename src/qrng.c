@@ -63,8 +63,8 @@ typedef struct
   const char *api_url;
   char domain_address[DOMAIN_ADDRESS_LENGTH];
   size_t samples;
-  int16_t min_range_i;
-  int16_t max_range_i;
+  int32_t min_range_i;
+  int32_t max_range_i;
   double min_range_f;
   double max_range_f;
 }s_api_t;
@@ -105,7 +105,7 @@ static s_api_t api_types[] = {
   },
   {
     .type = INT32_RANDOM_NUMBER,
-    .api_url = "https://%s/api/2.0/int?min=%ld&max=%ld&quantity=%lu",
+    .api_url = "https://%s/api/2.0/int?min=%d&max=%d&quantity=%lu",
     .domain_address = "",
     .samples = DEFAULT_NUMBER_OF_SAMPLES,
     .min_range_i = MIN_VALUE_INT,
@@ -187,6 +187,8 @@ static size_t curl_write_cbk(void *content,
 static void create_req_url(e_req_type_t req_type, char *api_url);
 static int execute_request(char *url, void *buffer);
 static int execute_stream_request(char *url, void *buffer);
+
+static void parse_response_string(char *random_values_string, void *buffer, size_t samples, e_req_type_t request_type);
 
 int qrng_open(const char *device_domain_address){
 
@@ -275,17 +277,7 @@ int qrng_random_double(double min, double max, size_t samples, double *buffer)
     if (!retval) {
       /* parse values array */
       char *random_values_string = mem_buffer.memory;
-      /* Skip first character because it's [ */
-      random_values_string ++;
-      /* Skip last character because is ] */
-      random_values_string[strlen(random_values_string)-1]=0;
-      char *token = strtok(random_values_string,",");
-      size_t i = 0;
-        
-      for (i = 0; i < samples; i++) {
-        buffer[i] = atof(token);
-        token = strtok(NULL, ",");
-      }   
+      parse_response_string(random_values_string, buffer, samples, DOUBLE_RANDOM_NUMBER);
     }
     else {
       fprintf(stderr, "could not execute curl request");
@@ -321,17 +313,8 @@ int qrng_random_float(float min, float max, size_t samples, float *buffer)
     if (!retval) {
       /* parse values array */
       char *random_values_string = mem_buffer.memory;
-      /* Skip first character because it's [ */
-      random_values_string ++;
-      /* Skip last character because is ] */
-      random_values_string[strlen(random_values_string)-1]=0;
-      char *token = strtok(random_values_string,",");
-      size_t i = 0;
-      
-      for (i = 0; i < samples; i++) {
-        buffer[i] = atof(token);
-        token = strtok(NULL, ",");
-      }   
+      parse_response_string(random_values_string, buffer, samples, FLOAT_RANDOM_NUMBER);
+
     }
     else {
       fprintf(stderr, "could not execute curl request");
@@ -361,24 +344,7 @@ int qrng_random_bytes(size_t samples, uint8_t *buffer)
     if (!retval) {
       /* parse values array */
       char *random_values_string = mem_buffer.memory;
-      /* Skip first character because it's [ */
-      random_values_string ++;
-      /* Skip last character because is ] */
-      random_values_string[strlen(random_values_string)-1]=0;
-      char *token = strtok(random_values_string,",");
-      size_t i = 0;
-        
-      for (i = 0; i < samples && token != NULL; i++) {
-        /* Remove quotes */
-        token++;
-        token[strlen(token) - 1] = '\0';
-
-
-        uint8_t value = (uint8_t)strtol(token, NULL, 16);
-        buffer[i] = value;
-    //    printf("Parsed byte: %2x\n", value);
-        token = strtok(NULL, ",");
-      }   
+      parse_response_string(random_values_string, buffer, samples, BYTES_RANDOM_NUMBER);
     }
     else {
       fprintf(stderr, "could not execute curl request");
@@ -416,17 +382,7 @@ int qrng_random_int16(int16_t min, int16_t max, size_t samples, int16_t *buffer)
     if (!retval) {
       /* parse values array */
       char *random_values_string = mem_buffer.memory;
-      /* Skip first character because it's [ */
-      random_values_string ++;
-      /* Skip last character because is ] */
-      random_values_string[strlen(random_values_string)-1]=0;
-      char *token = strtok(random_values_string,",");
-      size_t i = 0;
-        
-      for (i = 0; i < samples; i++) {
-        buffer[i] = atoll(token);
-        token = strtok(NULL, ",");
-      }   
+      parse_response_string(random_values_string, buffer, samples, INT16_RANDOM_NUMBER);
     }
     else {
       fprintf(stderr, "could not execute curl request");
@@ -464,17 +420,7 @@ int qrng_random_int32(int32_t min, int32_t max, size_t samples, int32_t *buffer)
     if (!retval) {
       /* parse values array */
       char *random_values_string = mem_buffer.memory;
-      /* Skip first character because it's [ */
-      random_values_string ++;
-      /* Skip last character because is ] */
-      random_values_string[strlen(random_values_string)-1]=0;
-      char *token = strtok(random_values_string,",");
-      size_t i = 0;
-        
-      for (i = 0; i < samples; i++) {
-        buffer[i] = atol(token);
-        token = strtok(NULL, ",");
-      }   
+      parse_response_string(random_values_string, buffer, samples, INT32_RANDOM_NUMBER);
     }
     else {
       fprintf(stderr, "could not execute curl request");
@@ -625,4 +571,54 @@ size_t curl_write_cbk(void *content, size_t size, size_t nmemb, void *userp)
     mem->memory[mem->size] = 0;
     return real_size;
 #endif
+}
+
+
+void parse_response_string(char *random_values_string, void *buffer, size_t samples, e_req_type_t request_type)
+{
+    /* Skip first character because it's [ */
+    random_values_string ++;
+    /* Skip last character because is ] */
+    random_values_string[strlen(random_values_string)-1]=0;
+    char *token = strtok(random_values_string,",");
+    size_t i = 0;
+
+    switch(request_type) {
+        case BYTES_RANDOM_NUMBER:  
+            for (i = 0; i < samples && token != NULL; i++) {
+                /* Remove quotes */
+                token++;
+                token[strlen(token) - 1] = '\0';
+                uint8_t value = (uint8_t)strtol(token, NULL, 16);
+                ((uint8_t *)buffer)[i] = value;
+                token = strtok(NULL, ",");
+            }
+            break;
+        case INT16_RANDOM_NUMBER:
+            for (i = 0; i < samples; i++) {
+                ((int16_t *)buffer)[i] = (int16_t)strtol(token, NULL, 10);
+                token = strtok(NULL, ",");
+            }
+            break;
+        case INT32_RANDOM_NUMBER:
+            for (i = 0; i < samples; i++) {
+                ((int32_t *)buffer)[i] = strtol(token, NULL, 10);
+                token = strtok(NULL, ",");
+            }
+            break;
+        case DOUBLE_RANDOM_NUMBER:
+            for (i = 0; i < samples; i++) {
+                ((double *)buffer)[i] = strtod(token, NULL);
+                token = strtok(NULL, ",");
+            }
+            break;
+        case FLOAT_RANDOM_NUMBER:
+            for (i = 0; i < samples; i++) {
+                ((float *)buffer)[i] = strtof(token, NULL);
+                token = strtok(NULL, ",");
+            }
+            break;
+        default:
+            break;
+    }
 }
