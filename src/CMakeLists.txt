@@ -1,13 +1,16 @@
 
 set(SOURCE_FILES qrng.c)
 
-set(INCLUDE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+set(INCLUDE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/../include
+                  ${CMAKE_BINARY_DIR}/generated
+)
 
 add_library(qrng SHARED ${SOURCE_FILES})
 
 
 target_include_directories(qrng
     PUBLIC ${INCLUDE_FILES}
+
 )
 target_link_libraries(qrng PRIVATE
 	library_options

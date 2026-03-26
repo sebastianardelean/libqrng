@@ -62,11 +62,30 @@ set(CURL_USE_LIBPSL OFF CACHE BOOL "" FORCE)
 set(CURL_ZLIB OFF CACHE BOOL "" FORCE)
 set(CURL_BROTLI OFF CACHE BOOL "" FORCE)
 set(CURL_ZSTD OFF CACHE BOOL "" FORCE)
+
 FetchContent_MakeAvailable(curl
         
         )
 
 
+set(QRNG_VERSION_MAJOR 1)
+set(QRNG_VERSION_MINOR 2)
+set(QRNG_VERSION_PATCH 3)
+
+configure_file(
+    ${CMAKE_SOURCE_DIR}/include/qrng_version.h.in
+    ${CMAKE_BINARY_DIR}/generated/qrng_version.h
+    @ONLY
+)
+
 add_subdirectory("src")
-add_subdirectory("examples")
+#add_subdirectory("examples/fwversion")
+add_subdirectory("examples/qrand")
+#add_subdirectory("examples/randbytes")
+#add_subdirectory("examples/randbytestream")
+#add_subdirectory("examples/randdouble")
+#add_subdirectory("examples/randfloat")
+#add_subdirectory("examples/randint16")
+#add_subdirectory("examples/randint32")
+#add_subdirectory("examples/sysinfo")
 
