@@ -29,7 +29,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <qrng.h>
-
+#include <qrng_version.h>
 
 
 /**
@@ -38,22 +38,6 @@
  *
  */
 #define PROGRAM_NAME "sysinfo"
-
-/**
- * @def VERSION
- * @brief A macro for the program version.
- *
- */
-#define VERSION "1.0.0"
-
-/**
- * @def AUTHORS
- * @brief A macro for the author.
- *
- */
-#define AUTHORS "Sebastian M. Ardelean"
-
-
 
 /**
  * @def DOMAIN_ADDR_LENGTH
@@ -117,7 +101,7 @@ int main(int argc, char **argv)
 
 void print_help(void)
 {
-    fprintf(stderr, "\n\n\t\t%s version %s\n\n", PROGRAM_NAME, VERSION);
+    fprintf(stderr, "\n\n\t\t%s version %s\n\n", PROGRAM_NAME, QRNG_VERSION_STRING);
     fprintf(stderr, "%s [-h] [-a domain]\n", PROGRAM_NAME);
     fprintf(stderr, "-h \t help\n");
     fprintf(stderr, "-a \t domain address.\n");

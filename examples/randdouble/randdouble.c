@@ -29,7 +29,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <qrng.h>
-
+#include <qrng_version.h>
 
 
 
@@ -40,19 +40,6 @@
  */
 #define PROGRAM_NAME "randdouble"
 
-/**
- * @def VERSION
- * @brief A macro for the program version.
- *
- */
-#define VERSION "1.0.0"
-
-/**
- * @def AUTHORS
- * @brief A macro for the author.
- *
- */
-#define AUTHORS "Sebastian M. Ardelean"
 
 /**
  * @def DEFAULT_NUMBER_OF_SAMPLES
@@ -178,7 +165,7 @@ int main(int argc, char **argv)
 
 void print_help(void)
 {
-    fprintf(stderr, "\n\n\t\t%s version %s\n\n", PROGRAM_NAME, VERSION);
+    fprintf(stderr, "\n\n\t\t%s version %s\n\n", PROGRAM_NAME, QRNG_VERSION_STRING);
     fprintf(stderr, "%s [-h] [-a domain] [-s no of samples] [-m min double value] [-M max double value]\n", PROGRAM_NAME);
     fprintf(stderr, "-a \t domain address.\n");
     fprintf(stderr, "-s \t number of samples. [Default 1]\n");
